@@ -8,6 +8,7 @@ class ProductManager {
         this.thumbnail = thumbnail
         this.code = code
         this.stock = stock
+        this.id = 1
     }
     // // Definimos las variables estáticas
     static products = []
@@ -15,17 +16,18 @@ class ProductManager {
     // Método para agregar productos
     addProduct(title, description, price, thumbnail, code, stock){
         ProductManager.products.push(new ProductManager(title, description, price, thumbnail, code, stock,))
+        this.id++
     }
     // Método para mostrar los productos
     getProducts(){
         return ProductManager.products
     }
     // Método para buscar un producto por ID
-    getProductById(ProductId){
-        if (ProductId === this.code) {
-            console.log('hola');
+    getProductById(productId){
+        if(ProductManager.products.some(product => product.code === productId)){
+            console.log(`Producto con código ${productId}`);
         } else {
-            console.log('Not Found');
+            console.log(`Not found`);
         }
     }
 }
@@ -38,7 +40,7 @@ console.log(producto.getProducts());
 producto.addProduct('Producto prueba', 'Este es un producto prueba', 200, 'Sin imagen', 'abc123', 25);
 console.log(producto.getProducts());
 // Prueba del ID autoincrementable
-// producto.addProduct('Producto prueba 2', 'Este es el segundo producto prueba', 100, 'Sin imagen', 'abc223', 1);
-// console.log(producto.getProducts());
+producto.addProduct('Producto prueba 2', 'Este es el segundo producto prueba', 100, 'Sin imagen', 'abc223', 1);
+console.log(producto.getProducts());
 // Prueba del método getProductById
-producto.getProductById('abc123')
+producto.getProductById('abc2223')
