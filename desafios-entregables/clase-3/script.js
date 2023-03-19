@@ -43,4 +43,6 @@ console.log(producto.getProducts());
 producto.addProduct('Producto prueba 2', 'Este es el segundo producto prueba', 100, 'Sin imagen', 'abc223', 1);
 console.log(producto.getProducts());
 // Prueba del método getProductById
-producto.getProductById('abc2223')
+producto.getProductById('abc123')
+// Forzamos la prueba del método getProductById
+producto.getProductById('abc1123')
