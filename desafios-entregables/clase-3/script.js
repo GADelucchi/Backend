@@ -41,12 +41,14 @@ class ProductManager {
 
     // Método para mostrar los productos
     getProducts(){
-        return console.log(this.products)
+        console.log(this.products);
+        return this.products
     }
     // Método para buscar un producto por ID
     getProductById(productId){
-        if(this.products.some(product => product.code === productId)){
-            console.log(`Producto con código ${productId} encontrado`);
+        let findId = this.products.find(stock => stock.code === productId)
+        if(findId){
+            console.log(findId);
         } else {
             console.log(`Not found`);
         }
@@ -70,6 +72,6 @@ producto.getProducts();
 producto.addProduct('Producto prueba 4', 'Este es el cuarto producto prueba', 1000, 'Sin imagen', 'abc123', 3);
 producto.getProducts();
 // Prueba del método getProductById
-producto.getProductById('abc123')
+producto.getProductById('abc223')
 // Forzamos la prueba del método getProductById
 producto.getProductById('abc1123')
