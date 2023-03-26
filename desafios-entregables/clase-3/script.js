@@ -41,7 +41,6 @@ class ProductManager {
 
     // Método para mostrar los productos
     getProducts(){
-        console.log(this.products);
         return this.products
     }
     // Método para buscar un producto por ID
@@ -61,16 +60,16 @@ const producto = new ProductManager()
 producto.getProducts();
 // Prueba del método addProduct y revisión de correcto agregado al array
 producto.addProduct('Producto prueba', 'Este es un producto prueba', 200, 'Sin imagen', 'abc123', 25);
-producto.getProducts();
+console.log(producto.getProducts());
 // Prueba del ID autoincrementable
 producto.addProduct('Producto prueba 2', 'Este es el segundo producto prueba', 100, 'Sin imagen', 'abc223', 1);
-producto.getProducts();
+console.log(producto.getProducts());
 // Prueba de validación de propiedades
 producto.addProduct('Producto prueba 3', 'Este es el tercer producto prueba', 50, 'Sin imagen', 'abc333');
-producto.getProducts();
+console.log(producto.getProducts());
 // Prueba de validación de código repetido
 producto.addProduct('Producto prueba 4', 'Este es el cuarto producto prueba', 1000, 'Sin imagen', 'abc123', 3);
-producto.getProducts();
+console.log(producto.getProducts());
 // Prueba del método getProductById
 producto.getProductById('abc223')
 // Forzamos la prueba del método getProductById
