@@ -16,7 +16,7 @@ const fs = promises
 
 const desafio2 = async () => {
     try {
-        let contenido = await fs.readFile(`./package.json`, `utf-8`)
+        let contenido = await fs.readFile(`./2-package.json`, `utf-8`)
         let contenidoParseado = JSON.parse(contenido)
 
         const info = {
@@ -26,7 +26,7 @@ const desafio2 = async () => {
         }
         console.log(info);
 
-        await fs.writeFile(`./info.json`, JSON.stringify(info, null, 2), `utf-8`)
+        await fs.writeFile(`./2-info.json`, JSON.stringify(info, null, 2), `utf-8`)
         
     } catch (error) {
         console.log(error);
