@@ -26,7 +26,7 @@ const desafio2 = async () => {
         }
         console.log(info);
 
-        await fs.writeFile(`./info.json`, JSON.stringify(info), `utf-8`)
+        await fs.writeFile(`./info.json`, JSON.stringify(info, null, 2), `utf-8`)
         
     } catch (error) {
         console.log(error);
