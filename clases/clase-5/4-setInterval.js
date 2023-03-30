@@ -13,4 +13,4 @@ console.log(`Iniciando tarea`);
 contador()
 console.log(`Tarea finalizada`);
 
-// Esto e sun contador asincrónico, en consola primero aparecen los .logs y luego los números, ya que tienen un intervalo
+// Esto es un contador asincrónico, en consola primero aparecen los .logs y luego los números, ya que tienen un intervalo
