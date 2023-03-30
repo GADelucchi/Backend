@@ -7,16 +7,16 @@ class ProductManager {
 
     // Definimos los métodos
     // Método para agregar productos y validar los campos
-    addProduct(title, description, price, thumbnail, code, stock){
+    addProduct(title, description, price, thumbnail, code, stock) {
         // Datos del producto
         const product = {
-        title,
-        description,
-        price,
-        thumbnail,
-        code,
-        stock,
-        id: this.products.length +1
+            title,
+            description,
+            price,
+            thumbnail,
+            code,
+            stock,
+            id: this.products.length + 1
         }
 
         // Validaciones
@@ -29,16 +29,16 @@ class ProductManager {
 
         let findCode = this.products.find(prod => prod.code === product.code)
         if (findCode) return `No se permiten códigos repetidos`;
-        
+
         return this.products.push(product)
-}
+    }
 
     // Método para mostrar los productos
-    getProducts(){
+    getProducts() {
         return this.products
     }
     // Método para buscar un producto por ID
-    getProductById(id){
+    getProductById(id) {
         let findId = this.products.find(product => product.id === id)
         if (!findId) return 'Not found'
         return findId
