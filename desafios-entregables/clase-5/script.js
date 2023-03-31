@@ -7,13 +7,23 @@ class ProductManager {
     // Definimos su constructor
     constructor() {
         this.products = []
-        this.path = './products.json'
+        this.path = `./products.json`
     }
 
     // Definimos los métodos
     // Método para agregar productos y validar los campos
-    addProduct = async (product) => {
+    addProduct = async (title, description, price, thumbnail, code, stock) => {
         try {
+            // Datos del producto
+            const product = {
+                title,
+                description,
+                price,
+                thumbnail,
+                code,
+                stock
+            }
+
             // Validaciones
             if (!product.title ||
                 !product.description ||
@@ -22,11 +32,15 @@ class ProductManager {
                 !product.code ||
                 !product.stock) return console.log(`Error: Todos los campos son obligatorios`);
 
+            let content = await fs.readFile(this.path, `utf-8`)
+            this.products = JSON.parse(content)
+
             let findCode = this.products.find(prod => prod.code === product.code)
             if (findCode) return console.log(`Error: No se permiten códigos repetidos`);
 
+
             this.products.push({ id: this.products.length + 1, ...product })
-            await fs.writeFile(this.path, JSON.stringify(this.products, 'utf-8', '\t'))
+            await fs.writeFile(this.path, JSON.stringify(this.products, null, 2), `utf-8`)
 
             return console.log(`Producto cargado correctamente`);
         }
@@ -39,35 +53,45 @@ class ProductManager {
     // Método para mostrar los productos
     getProducts = async () => {
         try {
-            let content = await fs.readFile(this.path, 'utf-8')
+            let content = await fs.readFile(this.path, `utf-8`)
             this.products = JSON.parse(content)
             return console.log(this.products)
         }
         catch (error) {
-            return console.log(error)
+            return console.log(`Error: archivo vacío`)
         }
     }
 
     // Método para buscar un producto por ID
     getProductById = async (id) => {
-        let findId = this.products.find(product => product.id === id)
-        if (!findId) return 'Not found'
-        return findId
+        try {
+            let content = await fs.readFile(this.path, `utf-8`)
+            this.products = JSON.parse(content)
+            let findId = this.products.find(prod => prod.id === id)
+            if (!findId) return 'Not found'
+            return findId
+        }
+        catch (error) {
+            return console.log(error);
+        }
     }
 
-    updateProducts = async (id, updateProduct) => {
+    updateProducts = async (id, updatedProduct) => {
         try {
-            let product = this.products.find(product => product.id === id)
-            if (!product) return console.log(`Error: Producto no encontrado`);
-            product.title = updateProduct.title
-            product.description = updateProduct.description
-            product.price = updateProduct.price
-            product.thumbnail = updateProduct.thumbnail
-            product.stock = updateProduct.stock
-            product.code = updateProduct.code
+            let content = await fs.readFile(this.path, `utf-8`)
+            this.products = JSON.parse(content)
+            let productAsked = this.products.find(prod => prod.id === id)
 
-            this.products.push(updateProduct)
-            await fs.writeFile(this.path, JSON.stringify(this.products, 'utf-8', '\t'))
+            if (!productAsked) return console.log(`Error: Producto no encontrado`);
+            productAsked.title = updatedProduct.title
+            productAsked.description = updatedProduct.description
+            productAsked.price = updatedProduct.price
+            productAsked.thumbnail = updatedProduct.thumbnail
+            productAsked.stock = updatedProduct.stock
+            productAsked.code = updatedProduct.code
+
+            this.products.push(updatedProduct)
+            await fs.writeFile(this.path, JSON.stringify(this.products, null, 2), `utf-8`)
             return console.log(`Producto modificado exitosamente`);
 
         } catch (error) {
@@ -77,10 +101,12 @@ class ProductManager {
 
     deleteProducts = async (idDelete) => {
         try {
-            const remove = this.product.filter(prod => prod.id !== idDelete)
-            if (!remove) return `Error: ID no encontrado`
-            console.log(remove)
-            await fs.writeFile(this.path, JSON.stringify(remove, 'utf-8', '\t'))
+            let content = await fs.readFile(this.path, `utf-8`)
+            this.products = JSON.parse(content)
+            const removeProduct = this.product.filter(prod => prod.id !== idDelete)
+            if (!removeProduct) return `Error: ID no encontrado`
+            console.log(removeProduct)
+            await fs.writeFile(this.path, JSON.stringify(removeProduct, null, 2), `utf-8`)
             return `Producto eliminado exitosamente`
         }
         catch (error) {
@@ -92,29 +118,29 @@ class ProductManager {
 // Instancia de la clase
 const producto = new ProductManager()
 
-// Prueba del método getProducts
-producto.getProducts();
-
-// // // Prueba del método addProduct y revisión de correcto agregado al array
-// producto.addProduct({
-//     title: 'Producto prueba',
-//     description: 'Este es un producto prueba',
-//     price: 200,
-//     thumbnail: 'Sin imagen',
-//     code: 'abc123',
-//     stock: 25
-// });
+// // Prueba del método getProducts
 // producto.getProducts();
 
+// Prueba del método addProduct y revisión de correcto agregado al array
+producto.addProduct(
+    `Producto prueba`,
+    `Este es un producto prueba`,
+    200,
+    `Sin imagen`,
+    `abc123`,
+    25
+);
+
 // // Prueba del ID autoincrementable
-// producto.addProduct({
-//     title: 'Producto prueba 2',
-//     description: 'Este es el segundo producto prueba',
-//     price: 100,
-//     thumbnail: 'Sin imagen',
-//     code: 'bjd84',
-//     stock: 1
-// });
+// producto.addProduct(
+//     `Producto prueba 2`,
+//     `Este es el segundo producto prueba`,
+//     100,
+//     `Sin imagen`,
+//     `bjd84`,
+//     1
+// );
+
 // producto.getProducts();
 
 // // Prueba de validación de propiedades (no stock)
