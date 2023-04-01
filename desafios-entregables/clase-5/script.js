@@ -1,4 +1,5 @@
-const { promises } = require('fs')
+const { promises, existsSync } = require('fs')
+const { title } = require('process')
 const fs = promises
 
 
@@ -32,12 +33,14 @@ class ProductManager {
                 !product.code ||
                 !product.stock) return console.log(`Error: Todos los campos son obligatorios`);
 
-            let content = await fs.readFile(this.path, `utf-8`)
-            this.products = JSON.parse(content)
+
+            if (existsSync(this.path)) {
+                let content = await fs.readFile(this.path, `utf-8`)
+                content ? this.products = JSON.parse(content) : null
+            }
 
             let findCode = this.products.find(prod => prod.code === product.code)
             if (findCode) return console.log(`Error: No se permiten códigos repetidos`);
-
 
             this.products.push({ id: this.products.length + 1, ...product })
             await fs.writeFile(this.path, JSON.stringify(this.products, null, 2), `utf-8`)
@@ -69,7 +72,7 @@ class ProductManager {
             this.products = JSON.parse(content)
             let findId = this.products.find(prod => prod.id === id)
             if (!findId) return 'Not found'
-            return findId
+            return console.log(findId)
         }
         catch (error) {
             return console.log(error);
@@ -83,14 +86,15 @@ class ProductManager {
             let productAsked = this.products.find(prod => prod.id === id)
 
             if (!productAsked) return console.log(`Error: Producto no encontrado`);
-            productAsked.title = updatedProduct.title
-            productAsked.description = updatedProduct.description
-            productAsked.price = updatedProduct.price
-            productAsked.thumbnail = updatedProduct.thumbnail
-            productAsked.stock = updatedProduct.stock
-            productAsked.code = updatedProduct.code
+            productAsked.title = updatedProduct.title || productAsked.title
+            productAsked.description = updatedProduct.description || productAsked.description
+            productAsked.price = updatedProduct.price || productAsked.price
+            productAsked.thumbnail = updatedProduct.thumbnail || productAsked.thumbnail
+            productAsked.stock = updatedProduct.stock || productAsked.stock
+            productAsked.code = updatedProduct.code || productAsked.code
+            productAsked.id = productAsked.id
 
-            this.products.push(updatedProduct)
+            this.products[this.products.indexOf(productAsked)] = productAsked
             await fs.writeFile(this.path, JSON.stringify(this.products, null, 2), `utf-8`)
             return console.log(`Producto modificado exitosamente`);
 
@@ -103,7 +107,7 @@ class ProductManager {
         try {
             let content = await fs.readFile(this.path, `utf-8`)
             this.products = JSON.parse(content)
-            const removeProduct = this.product.filter(prod => prod.id !== idDelete)
+            const removeProduct = this.products.filter(prod => prod.id !== idDelete)
             if (!removeProduct) return `Error: ID no encontrado`
             console.log(removeProduct)
             await fs.writeFile(this.path, JSON.stringify(removeProduct, null, 2), `utf-8`)
@@ -118,18 +122,18 @@ class ProductManager {
 // Instancia de la clase
 const producto = new ProductManager()
 
-// // Prueba del método getProducts
+// Prueba del método getProducts
 // producto.getProducts();
 
-// Prueba del método addProduct y revisión de correcto agregado al array
-producto.addProduct(
-    `Producto prueba`,
-    `Este es un producto prueba`,
-    200,
-    `Sin imagen`,
-    `abc123`,
-    25
-);
+// // Prueba del método addProduct y revisión de correcto agregado al array
+// producto.addProduct(
+//     `Producto prueba`,
+//     `Este es un producto prueba`,
+//     200,
+//     `Sin imagen`,
+//     `abc123`,
+//     25
+// );
 
 // // Prueba del ID autoincrementable
 // producto.addProduct(
@@ -164,8 +168,17 @@ producto.addProduct(
 // });
 // producto.getProducts();
 
-// Prueba del método getProductById
-// console.log(producto.getProductById(2))
+// // Prueba del método getProductById
+// producto.getProductById(1)
 
 // // Forzamos la prueba del método getProductById
 // console.log(producto.getProductById(5))
+
+// // Modificación de producto
+// producto.updateProducts(1, {
+//     title: `Producto modificado`,
+//     description: `Esta es la descripción del producto modificado`
+// })
+
+// Eliminar producto del archivo
+producto.deleteProducts(1)
