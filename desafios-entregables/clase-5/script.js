@@ -1,6 +1,4 @@
-const { promises, existsSync } = require('fs')
-const { title } = require('process')
-const fs = promises
+const fs = require(`fs`)
 
 
 // Creamos la clase
@@ -34,8 +32,8 @@ class ProductManager {
                 !product.stock) return console.log(`Error: Todos los campos son obligatorios`);
 
 
-            if (existsSync(this.path)) {
-                let content = await fs.readFile(this.path, `utf-8`)
+            if (fs.existsSync(this.path)) {
+                let content = await fs.promises.readFile(this.path, `utf-8`)
                 content ? this.products = JSON.parse(content) : null
             }
 
@@ -43,7 +41,7 @@ class ProductManager {
             if (findCode) return console.log(`Error: No se permiten códigos repetidos`);
 
             this.products.push({ id: this.products.length + 1, ...product })
-            await fs.writeFile(this.path, JSON.stringify(this.products, null, 2), `utf-8`)
+            await fs.promises.writeFile(this.path, JSON.stringify(this.products, null, 2), `utf-8`)
 
             return console.log(`Producto cargado correctamente`);
         }
@@ -56,7 +54,7 @@ class ProductManager {
     // Método para mostrar los productos
     getProducts = async () => {
         try {
-            let content = await fs.readFile(this.path, `utf-8`)
+            await fs.promises.readFile(this.path, `utf-8`)
             this.products = JSON.parse(content)
             return console.log(this.products)
         }
@@ -68,7 +66,7 @@ class ProductManager {
     // Método para buscar un producto por ID
     getProductById = async (id) => {
         try {
-            let content = await fs.readFile(this.path, `utf-8`)
+            let content = await fs.promises.readFile(this.path, `utf-8`)
             this.products = JSON.parse(content)
             let findId = this.products.find(prod => prod.id === id)
             if (!findId) return 'Not found'
@@ -81,7 +79,7 @@ class ProductManager {
 
     updateProducts = async (id, updatedProduct) => {
         try {
-            let content = await fs.readFile(this.path, `utf-8`)
+            let content = await fs.promises.readFile(this.path, `utf-8`)
             this.products = JSON.parse(content)
             let productAsked = this.products.find(prod => prod.id === id)
 
@@ -95,7 +93,7 @@ class ProductManager {
             productAsked.id = productAsked.id
 
             this.products[this.products.indexOf(productAsked)] = productAsked
-            await fs.writeFile(this.path, JSON.stringify(this.products, null, 2), `utf-8`)
+            await fs.promises.writeFile(this.path, JSON.stringify(this.products, null, 2), `utf-8`)
             return console.log(`Producto modificado exitosamente`);
 
         } catch (error) {
@@ -105,12 +103,12 @@ class ProductManager {
 
     deleteProducts = async (idDelete) => {
         try {
-            let content = await fs.readFile(this.path, `utf-8`)
+            let content = await fs.promises.readFile(this.path, `utf-8`)
             this.products = JSON.parse(content)
             const removeProduct = this.products.filter(prod => prod.id !== idDelete)
             if (!removeProduct) return `Error: ID no encontrado`
             console.log(removeProduct)
-            await fs.writeFile(this.path, JSON.stringify(removeProduct, null, 2), `utf-8`)
+            await fs.promises.writeFile(this.path, JSON.stringify(removeProduct, null, 2), `utf-8`)
             return `Producto eliminado exitosamente`
         }
         catch (error) {
@@ -123,7 +121,7 @@ class ProductManager {
 const producto = new ProductManager()
 
 // Prueba del método getProducts
-// producto.getProducts();
+producto.getProducts();
 
 // // Prueba del método addProduct y revisión de correcto agregado al array
 // producto.addProduct(
@@ -180,5 +178,5 @@ const producto = new ProductManager()
 //     description: `Esta es la descripción del producto modificado`
 // })
 
-// Eliminar producto del archivo
-producto.deleteProducts(1)
+// // Eliminar producto del archivo
+// producto.deleteProducts(1)
