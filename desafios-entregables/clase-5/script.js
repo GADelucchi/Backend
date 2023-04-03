@@ -66,7 +66,7 @@ class ProductManager {
     // Método para buscar un producto por ID
     getProductById = async (id) => {
         try {
-            let content = await fs.promises.readFile(this.path, `utf-8`)
+            const content = await fs.promises.readFile(this.path, `utf-8`)
             this.products = JSON.parse(content)
             let findId = this.products.find(prod => prod.id === id)
             if (!findId) return 'Not found'
