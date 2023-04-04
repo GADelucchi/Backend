@@ -56,21 +56,21 @@ class ProductManager {
         try {
             const content = await fs.promises.readFile(this.path, `utf-8`)
             this.products = JSON.parse(content)
-            return console.log(this.products)
+            return this.products
         }
         catch (error) {
-            return console.log(`Error: archivo vacío`)
+            return []
         }
     }
 
     // Método para buscar un producto por ID
-    getProductById = async (id) => {
+    getProductById = async (pid) => {
         try {
             const content = await fs.promises.readFile(this.path, `utf-8`)
             this.products = JSON.parse(content)
-            let findId = this.products.find(prod => prod.id === id)
-            if (!findId) return 'Not found'
-            return console.log(findId)
+            let findId = this.products.find(prod => prod.id === pid)
+            if (!findId) return console.log('Not found')
+            return findId
         }
         catch (error) {
             return console.log(error);
@@ -106,10 +106,10 @@ class ProductManager {
             let content = await fs.promises.readFile(this.path, `utf-8`)
             this.products = JSON.parse(content)
             const removeProduct = this.products.filter(prod => prod.id !== idDelete)
-            if (!removeProduct) return `Error: ID no encontrado`
+            if (!removeProduct) return console.log(`Error: ID no encontrado`)
             console.log(removeProduct)
             await fs.promises.writeFile(this.path, JSON.stringify(removeProduct, null, 2), `utf-8`)
-            return `Producto eliminado exitosamente`
+            return console.log(`Producto eliminado exitosamente`)
         }
         catch (error) {
             return console.log(error)
@@ -117,66 +117,8 @@ class ProductManager {
     }
 }
 
-// Instancia de la clase
-const producto = new ProductManager()
+// const product = new ProductManager()
 
-// Prueba del método getProducts
-producto.getProducts();
+// product.getProductById(1)
 
-// // Prueba del método addProduct y revisión de correcto agregado al array
-// producto.addProduct(
-//     `Producto prueba`,
-//     `Este es un producto prueba`,
-//     200,
-//     `Sin imagen`,
-//     `abc123`,
-//     25
-// );
-
-// // Prueba del ID autoincrementable
-// producto.addProduct(
-//     `Producto prueba 2`,
-//     `Este es el segundo producto prueba`,
-//     100,
-//     `Sin imagen`,
-//     `bjd84`,
-//     1
-// );
-
-// producto.getProducts();
-
-// // Prueba de validación de propiedades (no stock)
-// producto.addProduct({
-//     title: 'Producto prueba 3',
-//     description: 'Este es el tercer producto prueba',
-//     price: 50,
-//     thumbnail: 'Sin imagen',
-//     code: 'abc333'
-// });
-// producto.getProducts();
-
-// // Prueba de validación de código repetido
-// producto.addProduct({
-//     title: 'Producto prueba 4',
-//     description: 'Este es el cuarto producto prueba',
-//     price: 1000,
-//     thumbnail: 'Sin imagen',
-//     code: 'abc123',
-//     stock: 3
-// });
-// producto.getProducts();
-
-// // Prueba del método getProductById
-// producto.getProductById(1)
-
-// // Forzamos la prueba del método getProductById
-// console.log(producto.getProductById(5))
-
-// // Modificación de producto
-// producto.updateProducts(1, {
-//     title: `Producto modificado`,
-//     description: `Esta es la descripción del producto modificado`
-// })
-
-// // Eliminar producto del archivo
-// producto.deleteProducts(1)
+module.exports = ProductManager

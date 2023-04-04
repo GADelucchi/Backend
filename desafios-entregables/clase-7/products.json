@@ -1,0 +1,46 @@
+[
+  {
+    "id": 1,
+    "title": "Remera",
+    "description": "Descripción de remera",
+    "price": 250,
+    "thumbnail": "Sin imagen",
+    "code": "Rem1",
+    "stock": 3
+  },
+  {
+    "id": 2,
+    "title": "Pantalón",
+    "description": "Descripción de pantalón",
+    "price": 1000,
+    "thumbnail": "Sin imagen",
+    "code": "Pan1",
+    "stock": 8
+  },
+  {
+    "id": 3,
+    "title": "Medias",
+    "description": "Descripción de medias",
+    "price": 20,
+    "thumbnail": "Sin imagen",
+    "code": "Med1",
+    "stock": 20
+  },
+  {
+    "id": 4,
+    "title": "Calzones",
+    "description": "Descripción de calzones",
+    "price": 759,
+    "thumbnail": "Sin imagen",
+    "code": "Cal1",
+    "stock": 1
+  },{
+    "id": 5,
+    "title": "Zapatillas",
+    "description": "Descripción de capatillas",
+    "price": 2500,
+    "thumbnail": "Sin imagen",
+    "code": "Zap1",
+    "stock": 10
+  }
+]
