@@ -15,19 +15,11 @@ app.get(`/productos`, async (req, res) => {
         const { limit } = req.query
         const products = await product.getProducts()
         if (!limit) {
-            return res.send({
-                status: `200`,
-                products
-            })
+            return res.status(200).send({products})
         }
-        return res.send({
-            status: `200`,
-            products: products.slice(0, limit)
-        })
+        return res.status(200).send({products: products.slice(0, limit)})
     } catch (error) {
-        res.send({
-            status: `500 Inteernal server error`
-        });
+        res.status(500).send(`500 Internal server error`);
     }
 })
 
@@ -36,13 +28,9 @@ app.get(`/productos/:pid`, async (req, res) => {
         const { pid } = req.params
         const productDb = await product.getProductById(parseInt(pid))
         if (productDb) {
-            return res.send({
-            status: `200`,
-            productDb})
+            return res.status(200).send({productDb})
         } else {
-            return res.send({
-                status: `404 Not found`
-            })
+            return res.status(404).send(`Not found`)
         }
     } catch (error) {
             console.log(error);
