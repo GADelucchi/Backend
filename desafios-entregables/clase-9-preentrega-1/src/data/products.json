@@ -30,5 +30,14 @@
     "stock": 3,
     "category": "Productos",
     "id": 5
+  },
+  {
+    "title": "Producto 6",
+    "description": "Descripción producto 6",
+    "code": "Prod6",
+    "price": 200,
+    "stock": 3,
+    "category": "Productos",
+    "id": 6
   }
 ]

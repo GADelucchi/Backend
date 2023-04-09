@@ -1,5 +1,5 @@
-const { error } = require("console");
 const fs = require(`fs`)
+const { error } = require(`console`);
 
 class ProductsManager {
     constructor() {
@@ -19,20 +19,22 @@ class ProductsManager {
                 thumbnail,
             }
 
+            let parsedProducts
+
             if (!product.title ||
                 !product.description ||
                 !product.code ||
                 !product.price ||
                 !product.stock ||
-                !product.category) return console.log(`Error: Todos los campos son obligatorios`);
+                !product.category) return console.log(`Error: Todos los campos son obligatorios`)
 
             if (fs.existsSync(this.path)) {
                 let content = await fs.promises.readFile(this.path, `utf-8`)
-                let parsedProducts = JSON.parse(content)
+                parsedProducts = JSON.parse(content)
             }
 
             let findCode = parsedProducts.find(prod => prod.code === product.code)
-            if (findCode) return console.log(`Error: No se permiten códigos reproductidos`);
+            if (findCode) return console.log(`Error: No se permiten códigos repetidos`)
 
             if (parsedProducts.length === 0) {
                 product.id = 1
@@ -41,9 +43,12 @@ class ProductsManager {
             }
             parsedProducts.push(product)
             await fs.promises.writeFile(this.path, JSON.stringify(parsedProducts, null, 2), `utf-8`)
-            return console.log(`Producto agregado correctamente`);
+            return console.log(`Producto agregado correctamente`)
         } catch (error) {
-            console.log(error);
+            throw new Error({
+                message: `Error: Algo salió mal`,
+                error: error
+            })
         }
     }
 
@@ -122,12 +127,12 @@ class ProductsManager {
 
 module.exports = ProductsManager
 
-// const productManager = new ProductsManager
+// const productManager = new ProductsManager()
 
 // productManager.addProduct(
-//     `Producto 5`,
-//     `Descripción producto 5`,
-//     `Prod5`,
+//     `Producto 6`,
+//     `Descripción producto 6`,
+//     `Prod6`,
 //     200,
 //     3,
 //     `Productos`
