@@ -1,3 +1,4 @@
+const { error } = require("console");
 const fs = require(`fs`)
 
 class ProductsManager {
@@ -52,7 +53,7 @@ class ProductsManager {
             let parsedProducts = JSON.parse(content)
             return parsedProducts
         } catch (error) {
-            console.log({
+            ({
                 message: `Error: No existe el archivo en la ubicación especificada`,
                 error: error
             });
@@ -64,12 +65,16 @@ class ProductsManager {
             let parsedProducts = await this.getProducts()
 
             let findId = parsedProducts.find(prod => prod.id === pid)
-            findId ? findId : `Error: No existe ningún producto con ese ID`
+
+            if (!findId) {
+                throw new Error(`Error: No existe ningún producto con ese ID`)
+            }
+            return findId
         } catch (error) {
-            console.log({
+            throw new Error({
                 message: `Error: No existe ningún producto con ese ID`,
                 error: error
-            });
+            })
         }
     }
 
@@ -79,7 +84,7 @@ class ProductsManager {
             this.products = JSON.parse(content)
             let productAsked = this.products.find(prod => prod.id === pid)
 
-            if (!productAsked) return console.log(`Error: Producto no encontrada`);
+            if (!productAsked) return `Error: Producto no encontrada`;
             productAsked.title = updatedProduct.title || productAsked.title
             productAsked.description = updatedProduct.description || productAsked.description
             productAsked.code = updatedProduct.code || productAsked.code
@@ -104,7 +109,7 @@ class ProductsManager {
             let content = await fs.promises.readFile(this.path, `utf-8`)
             this.products = JSON.parse(content)
             const removeProduct = this.products.filter(prod => prod.id !== idDelete)
-            if (!removeProduct) return console.log(`Error: ID no encontrado`)
+            if (!removeProduct) return `Error: ID no encontrado`
             await fs.promises.writeFile(this.path, JSON.stringify(removeProduct, null, 2), `utf-8`)
             return console.log(`Producto eliminado exitosamente`)
         }
@@ -117,7 +122,7 @@ class ProductsManager {
 
 module.exports = ProductsManager
 
-const productManager = new ProductsManager
+// const productManager = new ProductsManager
 
 // productManager.addProduct(
 //     `Producto 5`,
@@ -130,7 +135,7 @@ const productManager = new ProductsManager
 
 // productManager.getProducts()
 
-productManager.getProductById(23)
+// productManager.getProductById()
 
 // prod = {
 //     title: undefined,
