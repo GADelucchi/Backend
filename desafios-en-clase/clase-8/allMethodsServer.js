@@ -3,7 +3,7 @@ const express = require(`express`)
 const app = express();
 
 app.use(express.json()) //Muy importante para la lectura de datos
-const server = app.listen(8070,()=>console.log("Listening on PORT 807ç0"));
+const server = app.listen(8070,()=>console.log("Listening on PORT 8070"));
 
 let frase = "Frase inicial";
 

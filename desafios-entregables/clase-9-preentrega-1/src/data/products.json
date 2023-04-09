@@ -1,0 +1,34 @@
+[
+  {
+    "title": "Producto 2",
+    "description": "Descripción modificada",
+    "code": "Prod2",
+    "price": 300,
+    "stock": 3,
+    "category": "Productos",
+    "id": 2,
+    "thumbnail": [
+      "String1",
+      "String 2"
+    ],
+    "status": true
+  },
+  {
+    "title": "Producto 4",
+    "description": "Descripción producto 4",
+    "code": "Prod4",
+    "price": 200,
+    "stock": 3,
+    "category": "Productos",
+    "id": 4
+  },
+  {
+    "title": "Producto 5",
+    "description": "Descripción producto 5",
+    "code": "Prod5",
+    "price": 200,
+    "stock": 3,
+    "category": "Productos",
+    "id": 5
+  }
+]

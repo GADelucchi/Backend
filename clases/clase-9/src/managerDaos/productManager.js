@@ -1,19 +1,13 @@
 const fs = require(`fs`)
 
-
-// Creamos la clase
 class ProductManagerFile {
-    // Definimos su constructor
     constructor() {
         this.products = []
         this.path = `./products.json`
     }
 
-    // Definimos los métodos
-    // Método para agregar productos y validar los campos
     addProduct = async (title, description, price, thumbnail, code, stock) => {
         try {
-            // Datos del producto
             const product = {
                 title,
                 description,
@@ -23,7 +17,6 @@ class ProductManagerFile {
                 stock
             }
 
-            // Validaciones
             if (!product.title ||
                 !product.description ||
                 !product.price ||
@@ -48,10 +41,8 @@ class ProductManagerFile {
         catch (error) {
             return console.log(error)
         }
-
     }
 
-    // Método para mostrar los productos
     getProducts = async () => {
         try {
             const content = await fs.promises.readFile(this.path, `utf-8`)
@@ -63,7 +54,6 @@ class ProductManagerFile {
         }
     }
 
-    // Método para buscar un producto por ID
     getProductById = async (pid) => {
         try {
             const content = await fs.promises.readFile(this.path, `utf-8`)
@@ -117,8 +107,5 @@ class ProductManagerFile {
     }
 }
 
-// const product = new ProductManager()
-
-// product.getProductById(1)
 
 module.exports = ProductManagerFile

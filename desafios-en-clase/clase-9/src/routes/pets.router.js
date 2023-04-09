@@ -7,7 +7,7 @@ const petsManager = new PetsManager
 let pets = []
 
 router.get(`/`, async (req, res) => {
-    const pet = await petsManager.getPets
+    const pet = await petsManager.getPets()
     pets.push(pet)
     res.status(200).send(pets)
 })
