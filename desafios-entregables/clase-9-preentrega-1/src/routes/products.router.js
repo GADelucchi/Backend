@@ -51,14 +51,8 @@ router.get(`/:pid`, async (req, res) => {
 
 router.post(`/`, async (req, res) => {
     try {
-        const addedProduct = await productsManager.addProduct(
-            `Producto 10`,
-            `Descripción producto 10`,
-            `Prod10`,
-            200,
-            3,
-            `Productos`
-        )
+        const product = req.body
+        const addedProduct = await productsManager.addProduct(product)
         !addedProduct ? res.status(400).send({
             status: `Failed`,
             message: `Error: No se pudo agregar el producto`,
@@ -66,10 +60,10 @@ router.post(`/`, async (req, res) => {
         }) :
             res.status(200).send({
                 status: `Success`,
-                payload: product
+                payload: addedProduct
             })
     } catch (error) {
-        return console.log(error);
+        return console.log(`Hola acá estoy`);
     }
 })
 

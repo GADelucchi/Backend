@@ -6,46 +6,38 @@ class ProductsManager {
         this.path = `./data/products.json`
     }
 
-    addProduct = async (title, description, code, price, stock, category, status, thumbnail) => {
+    validateProduct = async (newProduct) => {
+        if (!newProduct.title ||
+            !newProduct.description ||
+            !newProduct.code ||
+            !newProduct.price ||
+            !newProduct.stock ||
+            !newProduct.category) return console.log(`Error: Todos los campos son obligatorios`)
+    }
+
+    addProduct = async (newProduct) => {
         try {
-            const product = {
-                title,
-                description,
-                code,
-                price,
-                stock,
-                category,
-                status,
-                thumbnail,
-            }
-
+            this.validateProduct(newProduct)
             let parsedProducts
-
-            if (!product.title ||
-                !product.description ||
-                !product.code ||
-                !product.price ||
-                !product.stock ||
-                !product.category) return console.log(`Error: Todos los campos son obligatorios`)
 
             if (fs.existsSync(this.path)) {
                 let content = await fs.promises.readFile(this.path, `utf-8`)
                 parsedProducts = JSON.parse(content)
             }
 
-            let findCode = parsedProducts.find(prod => prod.code === product.code)
+            let findCode = parsedProducts.find(prod => prod.code === newProduct.code)
             if (findCode) return console.log(`Error: No se permiten códigos repetidos`)
 
             if (parsedProducts.length === 0) {
-                product.id = 1
+                newProduct.id = 1
             } else {
-                product.id = parsedProducts[parsedProducts.length - 1].id + 1
+                newProduct.id = parsedProducts[parsedProducts.length - 1].id + 1
             }
-            parsedProducts.push(product)
+            parsedProducts.push(newProduct)
             await fs.promises.writeFile(this.path, JSON.stringify(parsedProducts, null, 2), `utf-8`)
             return console.log(`Producto agregado correctamente`)
         } catch (error) {
-            throw new Error({
+            console.log({
                 message: `Error: Algo salió mal`,
                 error: error
             })
@@ -129,14 +121,16 @@ module.exports = ProductsManager
 
 // const productManager = new ProductsManager()
 
-// productManager.addProduct(
-//     `Producto 6`,
-//     `Descripción producto 6`,
-//     `Prod6`,
-//     200,
-//     3,
-//     `Productos`
-// )
+// productManager.addProduct({
+//     title: `Producto 9`,
+//     description: `Descripción producto 9`,
+//     code: `Prod9`,
+//     price: 200,
+//     stock: 3,
+//     category: `Productos`,
+//     status: true,
+//     thumbnail: `Sin imagen`
+// })
 
 // productManager.getProducts()
 

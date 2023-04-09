@@ -39,5 +39,48 @@
     "stock": 3,
     "category": "Productos",
     "id": 6
+  },
+  {
+    "title": "Producto 10",
+    "description": "Descripción producto 10",
+    "code": "Prod10",
+    "price": 200,
+    "stock": 3,
+    "category": "Productos",
+    "status": true,
+    "thumbnail": "Sin imagen",
+    "id": 7
+  },
+  {
+    "title": "Producto 11",
+    "description": "Descripción producto 11",
+    "code": "Prod11",
+    "price": 200,
+    "stock": 3,
+    "category": "Productos",
+    "status": true,
+    "thumbnail": "Sin imagen",
+    "id": 8
+  },
+  {
+    "description": "Descripción producto 8",
+    "code": "Prod8",
+    "price": 200,
+    "stock": 3,
+    "category": "Productos",
+    "status": true,
+    "thumbnail": "Sin imagen",
+    "id": 9
+  },
+  {
+    "title": "Producto 9",
+    "description": "Descripción producto 9",
+    "code": "Prod9",
+    "price": 200,
+    "stock": 3,
+    "category": "Productos",
+    "status": true,
+    "thumbnail": "Sin imagen",
+    "id": 10
   }
 ]
