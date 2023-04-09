@@ -41,7 +41,7 @@ router.get(`/:pid`, async (req, res) => {
             payload: findedProduct
         })
     } catch (error) {
-        return res.status(404).send({
+        return res.status(400).send({
             status: `Failed`,
             message: `Error: No existe ningún producto con ese ID`,
             error: error
@@ -52,7 +52,9 @@ router.get(`/:pid`, async (req, res) => {
 router.post(`/`, async (req, res) => {
     try {
         const product = req.body
+        console.log(product);
         const addedProduct = await productsManager.addProduct(product)
+        console.log(addedProduct);
         !addedProduct ? res.status(400).send({
             status: `Failed`,
             message: `Error: No se pudo agregar el producto`,
