@@ -6,8 +6,6 @@ const router = Router()
 const productsManager = new ProductsManager
 
 
-const products = []
-
 router.get(`/`, async (req, res) => {
     try {
         const { limit } = req.query
@@ -52,20 +50,65 @@ router.get(`/:pid`, async (req, res) => {
 router.post(`/`, async (req, res) => {
     try {
         const product = req.body
-        console.log(product);
         const addedProduct = await productsManager.addProduct(product)
-        console.log(addedProduct);
-        !addedProduct ? res.status(400).send({
-            status: `Failed`,
-            message: `Error: No se pudo agregar el producto`,
-            error: error
-        }) :
+
+        if (addedProduct === `Todos los campos son obligatorios` ||
+            addedProduct === `No se permiten códigos repetidos`) {
+            res.status(400).send({
+                status: `Failed`,
+                message: `Error: ${addedProduct}`
+            })
+        } else if (addedProduct != `Error: Todos los campos son obligatorios`) {
             res.status(200).send({
                 status: `Success`,
                 payload: addedProduct
             })
+        }
     } catch (error) {
-        return console.log(`Hola acá estoy`);
+        return error;
+    }
+})
+
+router.put(`/:pid`, async (req, res) => {
+    try {
+        const { pid } = req.params
+        const product = req.body
+        const modificatedProduct = await productsManager.updateProduct(parseInt(pid), product)
+
+        if (modificatedProduct === `Producto modificado exitosamente`) {
+            res.status(200).send({
+                status: `Success`,
+                message: modificatedProduct
+            })
+        } else {
+            res.status(404).send({
+                status: `Failed`,
+                message: modificatedProduct
+            })
+        }
+    } catch (error) {
+        return error
+    }
+})
+
+router.delete(`/:pid`, async (req, res) => {
+    try {
+        const { pid } = req.params
+        const deletedProduct = await productsManager.deleteProduct(parseInt(pid))
+        // console.log(deletedProduct);
+
+        deletedProduct === `Producto eliminado exitosamente` ?
+            res.status(200).send({
+                status: `Success`,
+                message: deletedProduct
+            })
+            :
+            res.status(404).send({
+                status: `Failed`,
+                message: `Error: ID no encontrado`
+            })
+    } catch (error) {
+        return error
     }
 })
 

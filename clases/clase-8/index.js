@@ -6,7 +6,7 @@
 // 404 es cuando no se encontró, ya sea el dato o el endpoint. 500 cuando sucede un problema en el servidor. Y el meme del 418 que es "soy
 // una tetera", significa que el servidor se reusa a hacer la tarea, porque es una tetera.
 
-// Es nuestra responsabilidad coomo desarrolladores back hacer los status.
+// Es nuestra responsabilidad como desarrolladores back hacer los status.
 
 // API es un conjunto de definiciones y reglas que premiten que do equipos trabajen juntos, se puede entender ocmo un "contrato entre el back
 // y el front". Te permite saber a qué endpoint apuntar, qué método usar y qué información enviar. La cadena es usuario  hace una petición

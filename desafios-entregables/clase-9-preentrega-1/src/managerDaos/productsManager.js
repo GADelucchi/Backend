@@ -1,30 +1,19 @@
 const fs = require(`fs`)
-const { error } = require(`console`);
 
 class ProductsManager {
     constructor() {
         this.path = `./data/products.json`
     }
 
-    addProduct = async (title, description, code, price, stock, category, status, thumbnail) => {
+    addProduct = async (product) => {
         try {
-            const product = {
-                title,
-                description,
-                code,
-                price,
-                stock,
-                category,
-                status,
-                thumbnail
-            }
-
             if (!product.title ||
                 !product.description ||
                 !product.code ||
                 !product.price ||
                 !product.stock ||
-                !product.category) return `Error: Todos los campos son obligatorios`
+                !product.category ||
+                !product.status) return `Todos los campos son obligatorios`
 
             let parsedProducts
 
@@ -34,7 +23,7 @@ class ProductsManager {
             }
 
             let findCode = parsedProducts.find(prod => prod.code === product.code)
-            if (findCode) return `Error: No se permiten códigos repetidos`
+            if (findCode) return `No se permiten códigos repetidos`
 
             if (parsedProducts.length === 0) {
                 product.id = 1
@@ -86,10 +75,10 @@ class ProductsManager {
     updateProduct = async (pid, updatedProduct) => {
         try {
             let content = await fs.promises.readFile(this.path, `utf-8`)
-            this.products = JSON.parse(content)
-            let productAsked = this.products.find(prod => prod.id === pid)
+            let parsedProducts = JSON.parse(content)
+            let productAsked = parsedProducts.find(prod => prod.id === pid)
 
-            if (!productAsked) return `Error: Producto no encontrada`;
+            if (!productAsked) return `Error: Producto no encontrado`;
             productAsked.title = updatedProduct.title || productAsked.title
             productAsked.description = updatedProduct.description || productAsked.description
             productAsked.code = updatedProduct.code || productAsked.code
@@ -100,10 +89,9 @@ class ProductsManager {
             productAsked.thumbnail = updatedProduct.thumbnail || productAsked.thumbnail
             productAsked.id = productAsked.id
 
-            this.products[this.products.indexOf(productAsked)] = productAsked
-            await fs.promises.writeFile(this.path, JSON.stringify(this.products, null, 2), `utf-8`)
-            return console.log(`Producto modificada exitosamente`);
-
+            parsedProducts[parsedProducts.indexOf(productAsked)] = productAsked
+            await fs.promises.writeFile(this.path, JSON.stringify(parsedProducts, null, 2), `utf-8`)
+            return `Producto modificado exitosamente`
         } catch (error) {
             return console.log(error);
         }
@@ -112,14 +100,16 @@ class ProductsManager {
     deleteProduct = async (idDelete) => {
         try {
             let content = await fs.promises.readFile(this.path, `utf-8`)
-            this.products = JSON.parse(content)
-            const removeProduct = this.products.filter(prod => prod.id !== idDelete)
+            let parsedProducts = JSON.parse(content)
+            const removeProduct = parsedProducts.filter(prod => prod.id !== idDelete)
+            console.log(removeProduct);
+
             if (!removeProduct) return `Error: ID no encontrado`
             await fs.promises.writeFile(this.path, JSON.stringify(removeProduct, null, 2), `utf-8`)
-            return console.log(`Producto eliminado exitosamente`)
+            return `Producto eliminado exitosamente`
         }
         catch (error) {
-            return console.log(error)
+            return error
         }
     }
 }
@@ -156,4 +146,4 @@ module.exports = ProductsManager
 // }
 // productManager.updateProduct(2, prod)
 
-// productManager.deleteProduct(3)
+// productManager.deleteProduct(5)

@@ -18,7 +18,7 @@
 // .params se usa para obetener elementos dinámicos desde la ruta que llama  el cliente. Para poner un parámetro se pone los dos puntos (:)
 // así Express reconoce que es dinámico.
 
-// .query significa a las muchas preguntas que se le puede hacer a un endpoint. Poniendo el signo de interrogaci´øn en la url Express 
+// .query significa a las muchas preguntas que se le puede hacer a un endpoint. Poniendo el signo de interrogacióon en la url Express 
 // reconocerá que hay que meterle información al objeto para utilizarlo. Es decir, en el .params se define el endpoint y los parametros a
 // utilizar; en este caso solo se denomina el endpoint y por url viaja el resto, no hay que definirlo de antes.
 
