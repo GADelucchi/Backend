@@ -61,11 +61,11 @@ class ProductsManager {
             let findId = parsedProducts.find(prod => prod.id === pid)
 
             if (!findId) {
-                throw new Error(`Error: No existe ningún producto con ese ID`)
+                throw new Error(`No existe ningún producto con ese ID`)
             }
             return findId
         } catch (error) {
-            return error
+            return undefined
         }
     }
 

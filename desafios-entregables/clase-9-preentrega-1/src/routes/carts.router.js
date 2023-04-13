@@ -51,20 +51,20 @@ router.post(`/:cid/product/:pid`, async (req, res) => {
         const { cid, pid } = req.params
         const findedProduct = await productsManager.getProductById(parseInt(pid))
 
-        if (findedProduct) {
+        if (!findedProduct) {
+            throw new Error(`No existe ningún producto con ese ID`)
+        } else {
             const productInCart = await cartsManager.getCartByIdProductsById(parseInt(cid), parseInt(pid))
 
             return res.status(200).send({
                 status: `Success`,
                 payload: `Producto ${pid} agregado al carrito ${cid}`
             })
-        } else {
-            throw new Error(`Error: No existe ningún producto con ese ID`)
         }
     } catch (error) {
         return res.status(404).send({
             status: `Failed`,
-            message: error,
+            message: `Algo salió mal`,
         })
     }
 })
