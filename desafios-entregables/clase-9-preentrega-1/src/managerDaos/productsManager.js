@@ -65,10 +65,7 @@ class ProductsManager {
             }
             return findId
         } catch (error) {
-            throw new Error({
-                message: `Error: No existe ningún producto con ese ID`,
-                error: error
-            })
+            return error
         }
     }
 

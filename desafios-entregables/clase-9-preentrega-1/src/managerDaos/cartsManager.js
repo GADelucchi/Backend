@@ -23,6 +23,7 @@ class CartsManager {
             } else {
                 cart.id = parsedCarts[parsedCarts.length - 1].id + 1
             }
+
             parsedCarts.push(cart)
             await fs.promises.writeFile(this.path, JSON.stringify(parsedCarts, null, 2), `utf-8`)
             return parsedCarts
@@ -36,25 +37,55 @@ class CartsManager {
             let content = await fs.promises.readFile(this.path, `utf-8`)
             let parsedCarts = JSON.parse(content)
 
-            let findId = parsedCarts.find(cart => cart.id === cid)
+            let findCartId = parsedCarts.find(cart => cart.id === cid)
 
-            if (!findId) {
+            if (!findCartId) {
                 throw new Error(`Error: No existe ningún carrito con ese ID`)
             }
-            return findId.products
+
+            return findCartId
         } catch (error) {
-            throw new Error({
+            return console.log({
                 message: `Error: No existe ningún carrito con ese ID`,
-                error: error
             })
+        }
+    }
+
+    getCartByIdProductsById = async (cid, pid) => {
+        try {
+            let content = await fs.promises.readFile(this.path, `utf-8`)
+            let parsedCarts = JSON.parse(content)
+
+            const cart = parsedCarts.find(cart => cart.id === cid)
+
+            if (cart) {
+                const product = cart.products.find(item => item.id === pid)
+
+                if (!product) {
+                    cart.products.push({ id: pid, quantity: 1 })
+                } else {
+                    product.quantity++
+                }
+
+                await fs.promises.writeFile(this.path, JSON.stringify(parsedCarts, null, 2), `utf-8`)
+
+                } else {
+                    throw new Error(`No se encontró ese carrito`)
+            }
+        } catch (error) {
+            return error
         }
     }
 }
 
 module.exports = CartsManager
 
-// const cartManager = new CartsManager
+const cartManager = new CartsManager
 
 // cartManager.addCart({
-//     products: [`Sprite`]
+//     products: []
 // })
+
+// cartManager.getCartById(1)
+
+// cartManager.getCartByIdProductsById(2, 1)
