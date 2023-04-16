@@ -1,15 +1,22 @@
-// Router en Express
-// Permite separar los endpoint comunes (porque se debería usar 4 métodos para el mismo endpoint (get, post, put y delete)). 
-// La estructura básica de un proyecto es como se ve en la carpeta de esta clase (sin tener en cuenta al archivo index.js)
+// Motores de plantillas
 
-// Hay recursos que son de uso público, es decir que los clientes pueden acceder a ellos poniendo la ruta correcta. Se usan más que 
-// nada para imágenes o un html
+// El problema del desarrollo web es el dinamismo. Si quisieras mostrar un dato específico a un usuario específico, deberías marcarlo para que
+// antes de que renderice, el motor de plantillas lo cambie por el dato necesario/solicitado. Acá vamos a usar handlebars, pero hay más motores
+// para usar. 
 
-// La carpeta Public tiene prioridad en la ruta raiz antes que cualquier .use que se coloque.
+// Para landing pages se puede usar JS puro para el tema del dinamismo, no es necesaria otra cosa ni otra tecnología. Cuando ya tenemos un 
+// sitio web, donde navegamos entre páginas y demás, mostramos algunos productos y/o queremos hacer un login sencillo para diferenciar los
+// usuarios, ahí podemos usar un motor de plantillas (pero aún no tiene el nivel de complejidad como para considerarse una aplicación web).
 
-// Middlewares, cada vez que usamos app.use() eso es un middlewaree, es un intermediario. Se ejecuta antes de llegar al endpoint. Los 
-// middleware se ejecutan en orden, se colocan en cascada.
-// Middleware a nivel app (por ejempplo el app.js en un app.use que usa next()); a nivel endpoint es una funcion utilizada como parámetro 
-// en un app.use(); a nivel router se usa en el archivo router; para manejar errores se pone en la app.js; de middleware incorporado es un
-// ejemplo el static que pusimos antes (express.static); el ultimo es el de carga de archivos que en nuestro caso vamos a usar el multer, 
-// 
+// Handlebars da un nivel medio de dinamismo y preprocesa el HTML reconociendo el patrón {{variable}}, buscando la información para sustituir.
+// No está pensado para elementos de cambio constantes. 
+
+// Hay que pensar la estructura previamente, va a ser un proyecto lleno de plantillas o solo con algunas? 
+
+// Tambien permite realizar ifs (que solo devuelvan booleanos) e iteraciones. Se debe poner dentro de los doble corchetes el hashtag y lo que
+// se use, como por ejemplo {{#if (condicion)}} o {{#each elemento iterable}}.
+
+// La lógica de las plantillas tiene que ir en un router, y tienen que responder con render (no con send como en los otros routers) y también
+// se pone en la ruta raíz `/`, sin tener que poner `/api`.
+
+// También se pueden agregar css y js haciendo las debidas carpetas y archivos en public y vincularlos en el index.handlebars

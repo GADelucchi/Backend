@@ -1,25 +1,28 @@
-// Protocolo HTTPS (Hyper Text Transfer Protocol): Son una serie de reglas que permiten la comunicación entre varios sistemas. Gracias a 
-// esto las computadoras saben comunicarse entre si y con los servidores. HTTPS significa que la conexión es segura. El cliente hace una 
-// solicitud y el servidor responde con lo que pide. En HTTPS viaja encriptada. Se puede solicitar com nombre, fecha, imagenes, jsons, 
-// páginas webs completas, etc. 
+// Código de estado: Cuando se le solicita algo a un servidor, además de responder la info da un código que nos dice cómo viene el proceso
+// o cómo finalizó (realizado o con algún error). Los rango de 100 son informativos, los 200 son OK, los 300 de redirección, los 400 errores
+// de clientes y 500 los de errores del servidor. 200 indica que la petición se realizó correctamente. 300 hace referencia a redirecciones,
+// cuando un recurso se movió a otro lado. 400 cuando el cliente hizo mal la petición. 401 cuando el cliente no se identificó con la
+// credencial adecuada. 403 es cuando el cliente se identificó pero sus credenciales no tienen el suficiente nivel para acceder a donde quiere.
+// 404 es cuando no se encontró, ya sea el dato o el endpoint. 500 cuando sucede un problema en el servidor. Y el meme del 418 que es "soy
+// una tetera", significa que el servidor se reusa a hacer la tarea, porque es una tetera.
 
-// Armamos servidores que escuchan múltiples peticiones de múltiples clientes al mismo tiempo por defecto. Si el servidor se apaga qué pasa?
-// Importante: el cliente es quien SIEMPRE hace las peticiones y el servidor SIEMPRE responde. El frontend se centra en que todo se vea 
-// bonito y el Backend en que todo funcione y brinde información. 
+// Es nuestra responsabilidad como desarrolladores back hacer los status.
 
-// Nodemon: Como el servidor escucha continuamente y está prendido, los cambios que hagamos no se van a ver automáticamente. Por eso se 
-// debe apagar y volver a iniciar. Nodemon permite reiniciar el servidor cuando detecta un cambio por más mínimo que sea. 
+// API es un conjunto de definiciones y reglas que premiten que do equipos trabajen juntos, se puede entender ocmo un "contrato entre el back
+// y el front". Te permite saber a qué endpoint apuntar, qué método usar y qué información enviar. La cadena es usuario  hace una petición
+// a la API, esta hace un procesamiento al procesador, envía un resultado a la API y esta última una respuesta al usuario.
 
-// Express: es un framework minimalista que permite desarrollar servidores más complejos. Facilita diferentes rutas para peticiones, 
-// mejorar la estructura del proyecto, manejar funcionalidades más complejas y utilizacion de middlewares. 
+// REST: Reglas listas, ahora la estructura del mensaje, el formato; de eso se trata REST que permite definir esta estructura. HTTP es el
+// protocolo, API son las reglas y REST es el formato del mensaje. Los dos formatos que se utilizan son XML y JSON. Entonces API REST es un
+// sistema de comunicación completo entre computadoras. 
 
-// El request tiene 3 propiedades .query, .params y .body
+// Métodos de petición: forma parte del protocolo HTTP, también se conoce como verbo y se usa para identificar el tipo de petición que se hace.
+// GET: obtener recurso. POST crear recurso. PUT: modificar recurso. DELETE: eliminar recurso. 
 
-// .params se usa para obetener elementos dinámicos desde la ruta que llama  el cliente. Para poner un parámetro se pone los dos puntos (:)
-// así Express reconoce que es dinámico.
+// POST: se usa para crear/añadir recursos; se apolla de req.body (vimos req.params y req.query); para que el servidor entienda JSON hay que
+// agregar la linea app.use(express.json()). {extendede:true} hace que el servidor sepa interpretar los objetos recibidor
 
-// .query significa a las muchas preguntas que se le puede hacer a un endpoint. Poniendo el signo de interrogacióon en la url Express 
-// reconocerá que hay que meterle información al objeto para utilizarlo. Es decir, en el .params se define el endpoint y los parametros a
-// utilizar; en este caso solo se denomina el endpoint y por url viaja el resto, no hay que definirlo de antes.
+// PUT: se usa para modificar recursos. en el reques, mandamos el body y lo que querramos modificar por parametro (id, nombre, etc). Para
+// actualizar se puede o actualizar los campos requeridos o todo el objeto. 
 
-// La diferencia entre estos dos es que en el query puedo meter la cantidad que se me antoje de consultas, gracias a que no vienen en la ruta.
+// DELETE: se usa para borrar. No hay que mandar nada en el body, pero en req.params hay que mandar el identificador
