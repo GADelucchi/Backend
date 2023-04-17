@@ -2,7 +2,6 @@ const express = require(`express`)
 const cookieParser = require(`cookie-parser`)
 
 const handlebars = require(`express-handlebars`)
-const { log } = require("handlebars/runtime")
 
 const app = express()
 
