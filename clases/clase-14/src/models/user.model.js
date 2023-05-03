@@ -1,3 +1,4 @@
+// Imports externos –––––––––––––––––––––––––––––––––––––––––
 const { Schema, model } = require(`mongoose`)
 
 const collection = `user`
