@@ -69,6 +69,8 @@ router.post(`/:cid/product/:pid`, async (req, res) => {
         const { cid, pid } = req.params
         const findedProduct = await productManagerMongo.getProductsById(pid)
 
+        const cart = await cartManagerMongo.getCartById(cid)
+
         if (!findedProduct) {
             throw new Error(`No existe ningún producto con ese ID`)
         } else {
@@ -76,7 +78,8 @@ router.post(`/:cid/product/:pid`, async (req, res) => {
 
             return res.status(200).send({
                 status: `Success`,
-                payload: `Producto ${pid} agregado al carrito ${cid}`
+                message: `Producto ${pid} agregado al carrito ${cid}`,
+                payload: cart
             })
         }
     } catch (error) {
