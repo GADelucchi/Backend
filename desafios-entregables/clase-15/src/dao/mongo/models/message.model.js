@@ -6,7 +6,10 @@ const collection = `messages`
 
 // Schema –––––––––––––––––––––––––––––––––––––––––––––––––––
 const messageSchema = new Schema({
-    user: String,
+    user: {
+        type: String,
+        requided: true
+    },
     message: String,
 })
 

@@ -31,7 +31,6 @@ chatbox.addEventListener('keyup', event => {
 })
 
 socket.on(`messageLogs`, data => {
-    // console.log(data);
     let log = document.getElementById(`messageLogs`)
     let mensajes = ``
     data.forEach(({user, message}) => {
@@ -41,10 +40,7 @@ socket.on(`messageLogs`, data => {
 })
 
 socket.on(`newUserConnected`, user => {
-    if (!user) {
-        return
-    }
-    Swal.fire({
+        Swal.fire({
         title: `${user} se ha conectado`,
         toast:true,
         position: `top-right`,

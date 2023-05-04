@@ -1,4 +1,4 @@
-let div = document.getElementById(`products`)
+let div = document.getElementById(`product`)
 products.forEach((product) => {
     products += `<div>
         <h2>Producto: ${product.title}</h2>

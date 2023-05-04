@@ -9,9 +9,11 @@ const logger = require(`morgan`)
 // Imports rutas ––––––––––––––––––––––––––––––––––––––––––
 const routerServer = require(`./routes/index.router`)
 const { connectDB } = require(`./config/serverConfig`)
+const MessageManagerMongo = require (`./dao/mongo/message.mongo`)
 
 // Instancia ––––––––––––––––––––––––––––––––––––––––––––––
 const app = express()
+const messageManagerMongo = new MessageManagerMongo
 
 // Ejecución ––––––––––––––––––––––––––––––––––––––––––––––
 connectDB()
@@ -40,7 +42,7 @@ io.on(`connection`, socket => {
     console.log(`Nuevo cliente conectado`);
 
     socket.on(`message`, data => {
-        messages.push(data)
+        messageManagerMongo.addMessage(data)
         io.emit(`messageLogs`, messages)
     })
 

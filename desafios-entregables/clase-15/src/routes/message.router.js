@@ -12,6 +12,8 @@ const router = Router()
 
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
 router.get(`/`, (req, res) => {
+        const messages = messageManagerMongo.getMessages()
+        
         res.render(`message`, {})
 })
 
