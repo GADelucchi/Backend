@@ -1,8 +1,6 @@
 const socket = io()
 
 socket.on(`productos`, data => {
-    console.log(data)
-
     let div = document.getElementById(`productsCards`)
     let productos = ``
     data.forEach((product) => {

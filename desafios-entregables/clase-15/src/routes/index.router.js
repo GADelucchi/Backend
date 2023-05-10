@@ -21,7 +21,7 @@ router.use(`/api/users`, userRouter)
 
 router.use(`/api/carts`, cartRouter)
 
-router.use(`/message`, messageRouter)
+router.use(`/chat`, messageRouter)
 
 router.post(`/upload`, uploader.single(`myFile`), (req, res) => {
     res.status(200).send({

@@ -11,4 +11,4 @@ products.forEach((product) => {
         <p>Imágenes: ${product.thumbnail}</p>
         </div>`
 })
-div.innerHTML = productos
+div.innerHTML = products

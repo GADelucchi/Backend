@@ -41,9 +41,14 @@ socketProduct(io)
 io.on(`connection`, socket => {
     console.log(`Nuevo cliente conectado`);
 
-    socket.on(`message`, data => {
-        messageManagerMongo.addMessage(data)
-        io.emit(`messageLogs`, messages)
+    socket.on(`message`, async (data) => {
+        try {
+        await messageManagerMongo.addMessage(data)
+        let allMessages = await messageManagerMongo.getMessages()
+        io.emit(`messageLogs`, allMessages)
+        } catch (error) {
+            console.log(error);
+        }
     })
 
     socket.on(`authenticated`, data => {

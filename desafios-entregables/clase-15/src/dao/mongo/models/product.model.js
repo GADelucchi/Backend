@@ -31,6 +31,9 @@ const productSchema = new Schema({
         type: String,
         unique: true,
         required: true
+    },
+    thumbnail: {
+        type: String
     }
 })
 

@@ -24,9 +24,11 @@ router.get(`/realtimeproducts`, (req, res) => {
     res.render(`realTimeProducts`)
 })
 
-router.get(`/chat`, (req, res) => {
-    res.render(`chat`, {})
-})
+// router.get(`/chat`, (req, res) => {
+//     const messages = messageManagerMongo.getMessages()
+
+//     res.render(`message`, {})
+// })
 
 // Export –––––––––––––––––––––––––––––––––––––––––––––––––––
 module.exports = router
