@@ -8,7 +8,8 @@ const collection = `products`
 const productSchema = new Schema({
     title: {
         type: String,
-        required: true
+        required: true,
+        allowedProtoProperties: true
     },
     description: {
         type: String,
