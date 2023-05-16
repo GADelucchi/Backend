@@ -2,48 +2,25 @@
 const { Schema, model } = require(`mongoose`)
 
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
-const collection = `products`
+const collection = `orders`
 
 // Schema –––––––––––––––––––––––––––––––––––––––––––––––––––
-const productSchema = new Schema({
-    title: {
+const orderSchema = new Schema({
+    name: String,
+    size: {
         type: String,
-        required: true,
-        allowedProtoProperties: true
+        enum: [`small`, `medium`, `large`],
+        default: `medium`
     },
-    description: {
-        type: String,
-        required: true
-    },
-    price: {
-        type: Number,
-        required: true
-    },
-    thumbnail: {
-        type: Array
-    },
-    stock: {
-        type: Number,
-        required: true
-    },
-    category: {
-        type: String,
-        required: true
-    },
-    code: {
-        type: String,
-        unique: true,
-        required: true
-    },
-    thumbnail: {
-        type: String
-    }
+    price: Number,
+    quantity: Number,
+    date: Date
 })
 
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
-const productModel = model(collection, productSchema)
+const orderModel = model(collection, orderSchema)
 
 // Export –––––––––––––––––––––––––––––––––––––––––––––––––––
 module.exports = {
-    productModel
+    orderModel
 }

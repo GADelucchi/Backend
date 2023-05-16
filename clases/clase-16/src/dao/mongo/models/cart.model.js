@@ -2,48 +2,27 @@
 const { Schema, model } = require(`mongoose`)
 
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
-const collection = `products`
+const collection = `carts`
 
 // Schema –––––––––––––––––––––––––––––––––––––––––––––––––––
-const productSchema = new Schema({
-    title: {
-        type: String,
-        required: true,
-        allowedProtoProperties: true
-    },
-    description: {
-        type: String,
-        required: true
-    },
-    price: {
-        type: Number,
-        required: true
-    },
-    thumbnail: {
-        type: Array
-    },
-    stock: {
-        type: Number,
-        required: true
-    },
-    category: {
-        type: String,
-        required: true
-    },
-    code: {
-        type: String,
-        unique: true,
-        required: true
-    },
-    thumbnail: {
-        type: String
-    }
+const cartSchema = new Schema({
+    products: [{
+        product: {
+            type: Schema.Types.ObjectId,
+            ref: `products`
+        },
+        quantity: Number 
+    }]
+})
+
+cartSchema.pre(`findOne`, function(){
+    this.populate(`products.product`)
 })
 
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
-const productModel = model(collection, productSchema)
+const cartModel = model(collection, cartSchema)
 
 // Export –––––––––––––––––––––––––––––––––––––––––––––––––––
 module.exports = {
-    productModel
+    cartModel
 }
