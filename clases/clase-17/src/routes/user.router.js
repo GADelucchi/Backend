@@ -14,10 +14,17 @@ const router = Router()
 router.get(`/`, async (req, res) => {
     try {
         const users = await userManagerMongo.getUsers()
-        console.log(users);
-        res.status(200).send({
+        const { page = 1 } = req.query
+        const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = users
+        res.status(200).render(`users`, {
             status: `Succes`,
-            payload: users
+            users: docs,
+            hasPrevPage,
+            hasNextPage,
+            page,
+            totalPages,
+            prevPage,
+            nextPage
         })
     } catch {
         console.log(error)

@@ -22,7 +22,7 @@ class CartManagerMongo {
 
     async getCartByIdProductsById(cid, pid) {
         try {
-            const cart = await cartModel.findOne({ _id: cid })
+            const cart = await cartModel.findOne({ _id: cid }).lean()
 
                 const productIndex = cart.products.find(prod => prod.product === pid)
 
