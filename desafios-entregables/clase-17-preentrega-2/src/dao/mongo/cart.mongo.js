@@ -35,7 +35,7 @@ class CartManagerMongo {
             } else {
                 await cartModel.updateOne(
                     { _id: cid, "products.product._id": pid },
-                    { $inc: { "products.$.quantity": 1 } }
+                    { $inc: { "products.quantity": 1 } }
                 );
             }
 
