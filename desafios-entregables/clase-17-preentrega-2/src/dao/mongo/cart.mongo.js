@@ -6,7 +6,7 @@ const { productModel } = require(`./models/product.model`)
 class CartManagerMongo {
     async getCarts() {
         try {
-            return await cartModel.find({})
+            return await cartModel.find({}).lean()
         } catch (error) {
             return new Error(error)
         }
@@ -22,19 +22,26 @@ class CartManagerMongo {
 
     async getCartByIdProductsById(cid, pid) {
         try {
-            const cart = await cartModel.findOne({ _id: cid })
+            const cart = await cartModel.findOne({ _id: cid }).lean();
+            const productIndex = cart.products.findIndex((product) => product.product._id.toString() === pid);
 
-                const productIndex = cart.products.find(product => product.idProduct === pid)
+            console.log(productIndex);
 
-                console.log(productIndex);
-                
-                if (!productIndex) {
-                    return await cartModel.updateOne({_id: cid}, {$push: {products: {idProduct: pid, quantity: 1}}})
-                } else {
-                    return await cartModel.updateOne({_id: cid, "products.idProduct": pid}, {$inc: {"products.$.quantity": 1}})
-                }
+            if (productIndex === -1) {
+                await cartModel.updateOne(
+                    { _id: cid },
+                    { $push: { products: { product: pid, quantity: 1 } } }
+                );
+            } else {
+                await cartModel.updateOne(
+                    { _id: cid, "products.product._id": pid },
+                    { $inc: { "products.$.quantity": 1 } }
+                );
+            }
+
+            return "Éxito";
         } catch (error) {
-            return new Error(error)
+            throw new Error(error);
         }
     }
 

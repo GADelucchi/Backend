@@ -1,43 +1,43 @@
 // Imports rutas ––––––––––––––––––––––––––––––––––––––––––––
-const { userModel } = require(`./models/user.model`)
+const { orderModel } = require("./models/order.model")
 
 // Clase ––––––––––––––––––––––––––––––––––––––––––––––––––––
-class UserManagerMongo {
-    async getUsers(page) {
+class OrderManagerMongo {
+    async getOrders() {
         try {
-            return await userModel.paginate({}, { limit: 10, page: page, lean: true })
+            return await orderModel.find({}).lean()
         } catch (error) {
             return new Error(error)
         }
     }
 
-    async getUserById(uid) {
+    async getOrderById(pid) {
         try {
-            return await userModel.findOne({ _id: uid })
+            return await orderModel.findOne({_id: pid})
         } catch (error) {
             return new Error(error)
         }
     }
 
-    async addUser(newUser) {
+    async addOrder() {
         try {
-            return await userModel.create(newUser)
+            return await orderModel.insertMany()
         } catch (error) {
             return new Error(error)
         }
     }
 
-    async updateUser(uid, updatedUser) {
+    async updateProduct(pid, ordeProduct) {
         try {
-            return await userModel.updateOne({ _id: uid }, updatedUser)
+            return await productModel.updateOne({_id: pid}, updatedProduct)
         } catch (error) {
             return new Error(error)
         }
     }
 
-    async deleteUser(uid) {
+    async deleteProduct(pid) {
         try {
-            return await userModel.deleteOne({ _id: uid })
+            return await productModel.deleteOne({_id: pid})
         } catch (error) {
             return new Error(error)
         }
@@ -45,4 +45,4 @@ class UserManagerMongo {
 }
 
 // Export –––––––––––––––––––––––––––––––––––––––––––––––––––
-module.exports = UserManagerMongo
+module.exports = ProductManagerMongo

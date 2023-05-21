@@ -3,9 +3,9 @@ const { userModel } = require(`./models/user.model`)
 
 // Clase ––––––––––––––––––––––––––––––––––––––––––––––––––––
 class UserManagerMongo {
-    async getUsers() {
+    async getUsers(page) {
         try {
-            return await userModel.find({})
+            return await userModel.paginate({}, { limit: 10, page: page, lean: true })
         } catch (error) {
             return new Error(error)
         }
@@ -13,7 +13,7 @@ class UserManagerMongo {
 
     async getUserById(uid) {
         try {
-            return await userModel.findOne({_id: uid})
+            return await userModel.findOne({ _id: uid })
         } catch (error) {
             return new Error(error)
         }
@@ -29,7 +29,7 @@ class UserManagerMongo {
 
     async updateUser(uid, updatedUser) {
         try {
-            return await userModel.updateOne({_id: uid}, updatedUser)
+            return await userModel.updateOne({ _id: uid }, updatedUser)
         } catch (error) {
             return new Error(error)
         }
@@ -37,7 +37,7 @@ class UserManagerMongo {
 
     async deleteUser(uid) {
         try {
-            return await userModel.deleteOne({_id: uid})
+            return await userModel.deleteOne({ _id: uid })
         } catch (error) {
             return new Error(error)
         }

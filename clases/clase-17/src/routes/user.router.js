@@ -13,8 +13,8 @@ const router = Router()
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
 router.get(`/`, async (req, res) => {
     try {
-        const users = await userManagerMongo.getUsers()
         const { page = 1 } = req.query
+        const users = await userManagerMongo.getUsers(page)
         const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = users
         res.status(200).render(`users`, {
             status: `Succes`,
@@ -68,6 +68,7 @@ router.put(`/:uid`, async (req, res) => {
             first_name: user.first_name,
             last_name: user.last_name,
             email: user.email,
+            gender: user.gender
         }
 
         let result = await userManagerMongo.updateUser(uid, userToReplace)

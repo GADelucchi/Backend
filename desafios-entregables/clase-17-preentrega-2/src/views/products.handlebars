@@ -1,0 +1,29 @@
+<div>
+    {{#each products}}
+    <li style="list-style: none;">
+        <img src="{{this.thumbnail}}" alt="Imagen del producto">
+        <h2>{{this.title}}</h2>
+        <p>Descripción: {{this.description}}</p>
+        <p>Precio: ${{this.price}}</p>
+        <p>Stock: {{this.stock}}</p>
+        <p>Categoría: {{this.category}}</p>
+        <p>Código único: {{this.code}}</p>
+        <br>
+        <br>
+    </li>
+    {{/each}}
+
+    <center>
+        {{#if hasPrevPage}}
+        <a href="/api/products?page={{prevPage}}">
+            <button>Anterior</button>
+        </a>
+        {{/if}}
+        <strong>Página {{this.page}} de {{this.totalPages}}</strong>
+        {{#if hasNextPage}}
+        <a href="/api/products?page={{nextPage}}">
+            <button>Siguiente</button>
+        </a>
+        {{/if}}
+    </center>
+</div>

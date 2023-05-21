@@ -13,10 +13,18 @@ const router = Router()
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
 router.get(`/`, async (req, res) => {
     try {
-        const products = await productManagerMongo.getProducts()
-        res.status(200).send({
+        const { limit = 10, page = 1 } = req.query
+        const products = await productManagerMongo.getProducts(limit, page)
+        const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = products
+        res.status(200).render(`products`, {
             status: `Succes`,
-            payload: products
+            products: docs,
+            hasPrevPage,
+            hasNextPage,
+            page,
+            totalPages,
+            prevPage,
+            nextPage
         })
     } catch {
         console.log(error)
@@ -66,6 +74,8 @@ router.put(`/:pid`, async (req, res) => {
         }
 
         let result = await productManagerMongo.updateProduct(pid, productToReplace)
+
+        // console.log(result);
 
         res.status(200).send({
             status: `Success`,

@@ -60,11 +60,14 @@ router.post(`/`, async (req, res) => {
             })
         }
     } catch (error) {
-        return error
+        return res.status(400).send({
+            status: `Failed`,
+            message: `Algo salió mal`,
+        })
     }
 })
 
-router.post(`/:cid/product/:pid`, async (req, res) => {
+router.put(`/:cid/product/:pid`, async (req, res) => {
     try {
         const { cid, pid } = req.params
         const findedProduct = await productManagerMongo.getProductsById(pid)
@@ -83,7 +86,40 @@ router.post(`/:cid/product/:pid`, async (req, res) => {
             })
         }
     } catch (error) {
-        return res.status(404).send({
+        return res.status(400).send({
+            status: `Failed`,
+            message: `Algo salió mal`,
+        })
+    }
+})
+
+router.put(`/:cid`, async (req, res) => {
+    try {
+        const { cid } = req.query
+    } catch (error) {
+        return res.status(400).send({
+            status: `Failed`,
+            message: `Algo salió mal`,
+        })
+    }
+})
+
+router.delete(`/:cid/products/:pid`, async (req, res) => {
+    try {
+        const { cid, pid } = req.query
+    } catch (error) {
+        return res.status(400).send({
+            status: `Failed`,
+            message: `Algo salió mal`,
+        })
+    }
+})
+
+router.delete(`/:cid`, async (req, res) => {
+    try {
+        const { cid } = req.query
+    } catch (error) {
+        return res.status(400).send({
             status: `Failed`,
             message: `Algo salió mal`,
         })

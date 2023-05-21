@@ -6,11 +6,17 @@ const collection = `carts`
 
 // Schema –––––––––––––––––––––––––––––––––––––––––––––––––––
 const cartSchema = new Schema({
-    products: {
-        type: Array,
-        required: true
-    },
-    quantity: Number
+    products: [{
+        product: {
+            type: Schema.Types.ObjectId,
+            ref: `products`
+        },
+        quantity: Number 
+    }]
+})
+
+cartSchema.pre(`findOne`, function(){
+    this.populate(`products.product`)
 })
 
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
