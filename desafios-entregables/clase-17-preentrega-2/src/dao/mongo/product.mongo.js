@@ -3,9 +3,28 @@ const { productModel } = require("./models/product.model")
 
 // Clase ––––––––––––––––––––––––––––––––––––––––––––––––––––
 class ProductManagerMongo {
-    async getProducts(limit, page,) {
+    async getProducts(limit, page, category, sort) {
         try {
-            return await productModel.paginate({}, { limit: limit, page: page, lean: true })
+            let categoryString = {}
+            if (category) {
+                categoryString.category = { $regex: new RegExp(category, `i`) }
+            }
+
+            let sortType = {}
+            if (sort === `asc`) {
+                sortType = { price: 1 }
+            } else if (sort === `desc`) {
+                sortType = { price: -1 }
+            }
+
+            return await productModel.paginate(categoryString,
+                {
+                    limit: limit,
+                    page: page,
+                    sort: sortType,
+                    lean: true
+                }
+            )
         } catch (error) {
             return new Error(error)
         }

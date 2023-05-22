@@ -25,8 +25,6 @@ class CartManagerMongo {
             const cart = await cartModel.findOne({ _id: cid }).lean();
             const productIndex = cart.products.findIndex((product) => product.product._id.toString() === pid);
 
-            console.log(productIndex);
-
             if (productIndex === -1) {
                 await cartModel.updateOne(
                     { _id: cid },
@@ -34,14 +32,12 @@ class CartManagerMongo {
                 );
             } else {
                 await cartModel.updateOne(
-                    { _id: cid, "products.product._id": pid },
-                    { $inc: { "products.quantity": 1 } }
+                    { _id: cid, "products.product": pid },
+                    { $inc: { "products.$.quantity": 1 } }
                 );
             }
-
-            return "Éxito";
         } catch (error) {
-            throw new Error(error);
+            return new Error(error);
         }
     }
 

@@ -13,8 +13,8 @@ const router = Router()
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
 router.get(`/`, async (req, res) => {
     try {
-        const { limit = 10, page = 1 } = req.query
-        const products = await productManagerMongo.getProducts(limit, page)
+        const { limit = 20, page = 1, category = {}, sort = {} } = req.query
+        const products = await productManagerMongo.getProducts(limit, page, category, sort)
         const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = products
         res.status(200).render(`products`, {
             status: `Succes`,
@@ -26,7 +26,7 @@ router.get(`/`, async (req, res) => {
             prevPage,
             nextPage
         })
-    } catch {
+    } catch (error) {
         console.log(error)
     }
 })
