@@ -19,15 +19,18 @@ router.get(`/`, async (req, res) => {
         res.status(200).render(`products`, {
             status: `Succes`,
             products: docs,
-            hasPrevPage,
-            hasNextPage,
-            page,
             totalPages,
             prevPage,
-            nextPage
+            nextPage,   
+            page,
+            hasPrevPage,
+            hasNextPage,
         })
     } catch (error) {
-        console.log(error)
+        res.status(400).send({
+            status:`Error`,
+            payload: error
+        })
     }
 })
 

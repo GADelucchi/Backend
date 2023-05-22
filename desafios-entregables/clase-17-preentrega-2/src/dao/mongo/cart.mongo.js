@@ -30,11 +30,13 @@ class CartManagerMongo {
                     { _id: cid },
                     { $push: { products: { product: pid, quantity: 1 } } }
                 );
+                return `Producto agregado`
             } else {
                 await cartModel.updateOne(
                     { _id: cid, "products.product": pid },
                     { $inc: { "products.$.quantity": 1 } }
                 );
+                return `Cantidad sumada`
             }
         } catch (error) {
             return new Error(error);
@@ -57,14 +59,22 @@ class CartManagerMongo {
         }
     }
 
-    async deleteCart(cid) {
+    async deleteProductByIdInCart(cid, pid) {
         try {
-            return await cartModel.deleteOne({ _id: cid })
+            const cart = await cartModel.findOne({ _id: cid }).lean();
+            console.log(cart);
+            const productIndex = cart.products.findIndex((product) => product.product._id.toString() === pid);
+
+            return await cartModel.updateOne(
+                { _id: cid },
+                { $pull: { products: { product: pid } } }
+            )
         } catch (error) {
             return new Error(error)
         }
     }
 }
+
 
 // Export –––––––––––––––––––––––––––––––––––––––––––––––––––
 module.exports = CartManagerMongo
