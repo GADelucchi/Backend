@@ -16,8 +16,9 @@ router.get(`/`, async (req, res) => {
         const { limit = 20, page = 1, category = {}, sort = {} } = req.query
         const products = await productManagerMongo.getProducts(limit, page, category, sort)
         const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = products
+        console.log(docs)
         res.status(200).render(`products`, {
-            status: `Succes`,
+            status: `Success`,
             products: docs,
             totalPages,
             prevPage,

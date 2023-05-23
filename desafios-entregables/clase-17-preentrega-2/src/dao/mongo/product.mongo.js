@@ -5,7 +5,7 @@ const { productModel } = require("./models/product.model")
 class ProductManagerMongo {
     async getProducts(limit, page, category, sort) {
         try {
-                let categoryString = {}
+            let categoryString = {}
             if (category) {
                 categoryString.category = { $regex: new RegExp(category, `i`) }
             }

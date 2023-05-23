@@ -1,12 +1,11 @@
 // Imports rutas ––––––––––––––––––––––––––––––––––––––––––––
 const { cartModel } = require("./models/cart.model")
-const { productModel } = require(`./models/product.model`)
 
 // Clase ––––––––––––––––––––––––––––––––––––––––––––––––––––
 class CartManagerMongo {
     async getCarts() {
         try {
-            return await cartModel.find({}).lean()
+            return await cartModel.findOne({}).lean()
         } catch (error) {
             return new Error(error)
         }
@@ -14,27 +13,33 @@ class CartManagerMongo {
 
     async getCartById(cid) {
         try {
-            return await cartModel.findOne({ _id: cid })
+            return await cartModel.findOne({ _id: cid }).lean()
         } catch (error) {
             return new Error(error)
         }
     }
 
-    async getCartByIdProductsById(cid, pid) {
+    async getCartByIdProductsById(cid, pid, quantity) {
         try {
             const cart = await cartModel.findOne({ _id: cid }).lean();
             const productIndex = cart.products.findIndex((product) => product.product._id.toString() === pid);
 
+            if (quantity) {
+                quantity
+            } else {
+                quantity = 1
+            }
+
             if (productIndex === -1) {
                 await cartModel.updateOne(
                     { _id: cid },
-                    { $push: { products: { product: pid, quantity: 1 } } }
+                    { $push: { products: { product: pid, quantity: quantity } } }
                 );
                 return `Producto agregado`
             } else {
                 await cartModel.updateOne(
                     { _id: cid, "products.product": pid },
-                    { $inc: { "products.$.quantity": 1 } }
+                    { $inc: { "products.$.quantity": quantity } }
                 );
                 return `Cantidad sumada`
             }
@@ -62,12 +67,21 @@ class CartManagerMongo {
     async deleteProductByIdInCart(cid, pid) {
         try {
             const cart = await cartModel.findOne({ _id: cid }).lean();
-            console.log(cart);
-            const productIndex = cart.products.findIndex((product) => product.product._id.toString() === pid);
 
             return await cartModel.updateOne(
                 { _id: cid },
                 { $pull: { products: { product: pid } } }
+            )
+        } catch (error) {
+            return new Error(error)
+        }
+    }
+
+    async deleteProducts(cid) {
+        try {
+            return await cartModel.updateOne(
+                { _id: cid },
+                { $set: { products: [] } }
             )
         } catch (error) {
             return new Error(error)
