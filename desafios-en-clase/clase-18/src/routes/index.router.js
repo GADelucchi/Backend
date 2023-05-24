@@ -2,34 +2,36 @@
 const { Router } = require(`express`)
 
 // Imports rutas ––––––––––––––––––––––––––––––––––––––––––––
-
-
-// Instancia ––––––––––––––––––––––––––––––––––––––––––––––––
-
+const productRouter = require(`./product.router`)
+const userRouter = require(`./user.router`)
+const viewRouter = require(`./view.router`)
+const cartRouter = require(`./cart.router`)
+const messageRouter = require(`./message.router`)
+const pruebasRouter = require(`./pruebas.router`)
+const { uploader } = require("../utils/multer")
 
 // Declaración ––––––––––––––––––––––––––––––––––––––––––––––
 const router = Router()
 
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
-router.get(`/setCookie`, (req, res) => {
-    res.cookie(`CoderCookie`, `Esta cookie es de chocolate`, {maxAge: 20000}).send(`Cookie set`)
-})
+router.use(`/`, viewRouter)
 
-router.get(`/setSignedCookie`, (req, res) => {
-    res.cookie(`SignedCookie`, `Esta cookie es de chocolate firmado`, {maxAge: 200000, signed: true}).send(`Cookie set¡`)
-})
+router.use(`/api/products`, productRouter)
 
-router.get(`/getCookie`, (req, res) => {
-    res.send(req.Cookies)
-})
+router.use(`/api/users`, userRouter)
 
-router.get(`/getSignedCookie`, (req, res) => {
-    res.send(req.signedCookies)
-})
+router.use(`/api/carts`, cartRouter)
 
-router.get(`/deleteCookie`, (req, res) => {
-    res.clearCookie(`CoderCookie`).send(`Cookie removed`)
+router.use(`/chat`, messageRouter)
+
+router.use(`/pruebas`, pruebasRouter)
+
+router.post(`/upload`, uploader.single(`myFile`), (req, res) => {
+    res.status(200).send({
+        status: `Success`,
+        message: `Archivo subido con éxito`
+    })
 })
 
 // Export –––––––––––––––––––––––––––––––––––––––––––––––––––
-module.exports = router 
+module.exports = router

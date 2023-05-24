@@ -2,16 +2,24 @@
     <h1>Productos</h1>
     <hr>
     <div id="product">
-        {{#each products}}
-            <p>Producto: {{this.title}}</p>
-            <p>Descripción: {{this.description}}<pd>
-            <p>Código: {{this.code}}</p>
-            <p>Precio: {{this.price}}</p>
-            <p>Cantidad en stock: {{this.stock}}</p>
-            <p>Categoría: {{this.category}}</p>
-            <p>Imágenes: {{this.thumbnail}}</p>
-            <br>
-        {{/each}}
+
+        {{#each payload}}
+    <li style="list-style: none;">
+        <img src="{{this.thumbnail}}" alt="Imagen del producto">
+        <h2>{{this.title}}</h2>
+        <p>Descripción: {{this.description}}</p>
+        <p>Precio: ${{this.price}}</p>
+        <p>Stock: {{this.stock}}</p>
+        <p>Categoría: {{this.category}}</p>
+        <p>Código único: {{this.code}}</p>
+        <button>Ver más</button>
+        <button>Agregar al carrito</button>
+        <br>
+        <br>
+        <br>
+        <hr>
+    </li>
+    {{/each}}
     </div>
 </div>
 

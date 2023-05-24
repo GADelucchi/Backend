@@ -1,41 +1,25 @@
-// Imports externos –––––––––––––––––––––––––––––––––––––––
+// Imports externos –––––––––––––––––––––––––––––––––––––––––
 const { Router } = require(`express`)
 
 // Imports rutas ––––––––––––––––––––––––––––––––––––––––––––
-const ProductManagerMongo = require(`../dao/mongo/product.mongo`)
+
 
 // Instancia ––––––––––––––––––––––––––––––––––––––––––––––––
-const productManagerMongo = new ProductManagerMongo()
+
 
 // Declaración ––––––––––––––––––––––––––––––––––––––––––––––
 const router = Router()
 
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
-router.get(`/`, async (req, res) => {
-    const products = await productManagerMongo.getProducts()
-    const objeto = {
-        title: `Productos`,
-        payload: products
-    }
-    res.render(`home`, {
-        status: `Succes`,
-        objeto
-    })
+router.get(`/`, (req, res) => {
+    res.render(`login`, {})
 })
 
-router.get(`/realtimeproducts`, (req, res) => {
-    res.render(`realTimeProducts`)
+router.post(`/getcookieuser`, (req, res) => {
+    const { username, email } = req.body
+
+    res.cookie(username, email, {maxAge: 1000000, signed: true}).send({message: `set`})
 })
-
-// router.get(`/chat`, (req, res) => {
-//     const messages = messageManagerMongo.getMessages()
-
-//     res.render(`message`, {})
-// })
 
 // Export –––––––––––––––––––––––––––––––––––––––––––––––––––
-module.exports = router
-
-
-
-
+module.exports = router 

@@ -15,12 +15,9 @@ router.get(`/`, async (req, res) => {
     const products = await productManagerMongo.getProducts()
     const objeto = {
         title: `Productos`,
-        payload: products
+        products
     }
-    res.render(`home`, {
-        status: `Succes`,
-        objeto
-    })
+    res.render(`home`, objeto)
 })
 
 router.get(`/realtimeproducts`, (req, res) => {

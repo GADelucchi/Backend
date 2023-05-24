@@ -2,10 +2,10 @@
 const { Router } = require(`express`)
 
 // Imports rutas ––––––––––––––––––––––––––––––––––––––––––––
-const ProductManagerMongo = require("../dao/mongo/product.mongo")
+const UserManagerMongo = require(`../dao/mongo/user.mongo`)
 
 // Instancia ––––––––––––––––––––––––––––––––––––––––––––––––
-const productManagerMongo = new ProductManagerMongo()
+const userManagerMongo = new UserManagerMongo()
 
 // Declaración ––––––––––––––––––––––––––––––––––––––––––––––
 const router = Router()
@@ -13,36 +13,32 @@ const router = Router()
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
 router.get(`/`, async (req, res) => {
     try {
-        const { limit = 20, page = 1, category = {}, sort = {} } = req.query
-        const products = await productManagerMongo.getProductsPaginated(limit, page, category, sort)
-        const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = products
-        const docsStringified =  JSON.stringify(docs)
-        res.status(200).render(`products`, {
-            status: `Success`,
-            payload: docsStringified,
-            totalPages,
-            prevPage,
-            nextPage,   
-            page,
+        const { page = 1 } = req.query
+        const users = await userManagerMongo.getUsers(page)
+        const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = users
+        res.status(200).render(`users`, {
+            status: `Succes`,
+            users: docs,
             hasPrevPage,
             hasNextPage,
+            page,
+            totalPages,
+            prevPage,
+            nextPage
         })
-    } catch (error) {
-        res.status(400).send({
-            status:`Error`,
-            payload: error
-        })
+    } catch {
+        console.log(error)
     }
 })
 
-router.get(`/:pid`, async (req, res) => {
+router.get(`/:uid`, async (req, res) => {
     try {
-        const { pid } = req.params
+        const { uid } = req.params
 
-        let product = await productManagerMongo.getProductsById(pid)
+        let user = await userManagerMongo.getUserById(uid)
         res.status(200).send({
             status: `Success`,
-            payload: product
+            payload: user
         })
     } catch {
         console.log(error)
@@ -51,9 +47,9 @@ router.get(`/:pid`, async (req, res) => {
 
 router.post(`/`, async (req, res) => {
     try {
-        const newProduct = req.body
+        const newUser = req.body
 
-        let result = await productManagerMongo.addProduct(newProduct)
+        let result = await userManagerMongo.addUser(newUser)
         res.status(200).send({
             status: `Success`,
             payload: result
@@ -63,23 +59,19 @@ router.post(`/`, async (req, res) => {
     }
 })
 
-router.put(`/:pid`, async (req, res) => {
+router.put(`/:uid`, async (req, res) => {
     try {
-        const { pid } = req.params
-        const product = req.body
+        const { uid } = req.params
+        const user = req.body
 
-        const productToReplace = {
-            title: product.title,
-            description: product.description,
-            price: product.price,
-            thumbnail: product.thumbnail,
-            stock: product.stock,
-            code: product.code
+        const userToReplace = {
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email,
+            gender: user.gender
         }
 
-        let result = await productManagerMongo.updateProduct(pid, productToReplace)
-
-        // console.log(result);
+        let result = await userManagerMongo.updateUser(uid, userToReplace)
 
         res.status(200).send({
             status: `Success`,
@@ -90,11 +82,11 @@ router.put(`/:pid`, async (req, res) => {
     }
 })
 
-router.delete(`/:pid`, async (req, res) => {
+router.delete(`/:uid`, async (req, res) => {
     try {
-        const { pid } = req.params
+        const { uid } = req.params
 
-        let result = await productManagerMongo.deleteProduct(pid)
+        let result = await userManagerMongo.deleteUser(uid)
 
         res.status(200).send({
             status: `Success`,
