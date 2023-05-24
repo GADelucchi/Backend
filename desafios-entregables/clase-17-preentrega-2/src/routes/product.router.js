@@ -17,6 +17,7 @@ router.get(`/`, async (req, res) => {
         const products = await productManagerMongo.getProductsPaginated(limit, page, category, sort)
         const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = products
         const docsStringified =  JSON.stringify(docs)
+        console.log(docsStringified);
         res.status(200).render(`products`, {
             status: `Success`,
             payload: docsStringified,

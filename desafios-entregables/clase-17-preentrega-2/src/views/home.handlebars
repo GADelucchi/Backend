@@ -4,22 +4,22 @@
     <div id="product">
 
         {{#each payload}}
-    <li style="list-style: none;">
-        <img src="{{this.thumbnail}}" alt="Imagen del producto">
-        <h2>{{this.title}}</h2>
-        <p>Descripción: {{this.description}}</p>
-        <p>Precio: ${{this.price}}</p>
-        <p>Stock: {{this.stock}}</p>
-        <p>Categoría: {{this.category}}</p>
-        <p>Código único: {{this.code}}</p>
-        <button>Ver más</button>
-        <button>Agregar al carrito</button>
-        <br>
-        <br>
-        <br>
-        <hr>
-    </li>
-    {{/each}}
+        <li style="list-style: none;">
+            <img src="{{this.thumbnail}}" alt="Imagen del producto">
+            <h2>{{this.title}}</h2>
+            <p>Descripción: {{this.description}}</p>
+            <p>Precio: ${{this.price}}</p>
+            <p>Stock: {{this.stock}}</p>
+            <p>Categoría: {{this.category}}</p>
+            <p>Código único: {{this.code}}</p>
+            <button>Ver más</button>
+            <button>Agregar al carrito</button>
+            <br>
+            <br>
+            <br>
+            <hr>
+        </li>
+        {{/each}}
     </div>
 </div>
 

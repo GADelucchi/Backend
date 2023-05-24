@@ -3,7 +3,15 @@ const { productModel } = require("./models/product.model")
 
 // Clase ––––––––––––––––––––––––––––––––––––––––––––––––––––
 class ProductManagerMongo {
-    async getProducts(limit, page, category, sort) {
+    async getProducts() {
+        try {
+            return await productModel.find({}).lean()
+        } catch (error) {
+            return new Error(error)
+        }
+    }
+
+    async getProductsPaginated(limit, page, category, sort) {
         try {
             let categoryString = {}
             if (category) {

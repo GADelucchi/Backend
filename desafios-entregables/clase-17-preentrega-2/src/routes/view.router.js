@@ -13,13 +13,10 @@ const router = Router()
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
 router.get(`/`, async (req, res) => {
     const products = await productManagerMongo.getProducts()
-    const objeto = {
-        title: `Productos`,
-        payload: products
-    }
+    console.log(products);
     res.render(`home`, {
         status: `Succes`,
-        objeto
+        payload: products
     })
 })
 

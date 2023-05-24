@@ -1,7 +1,7 @@
 <div>
-    {{#each products}}
-    <li style="list-style: none;">
-        <img src="{{this.thumbnail}}" alt="Imagen del producto">
+    {{!-- {{#each products}} --}}
+    {{!-- <li style="list-style: none;"> --}}
+        {{!-- <img src="{{this.thumbnail}}" alt="Imagen del producto">
         <h2>{{this.title}}</h2>
         <p>Descripción: {{this.description}}</p>
         <p>Precio: ${{this.price}}</p>
@@ -13,9 +13,10 @@
         <br>
         <br>
         <br>
-        <hr>
-    </li>
-    {{/each}}
+        <hr> --}}
+        {{payload}}
+    {{!-- </li> --}}
+    {{!-- {{/each}} --}}
 
     <center>
         {{#if hasPrevPage}}
