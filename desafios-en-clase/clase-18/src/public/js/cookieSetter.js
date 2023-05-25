@@ -8,7 +8,7 @@ form.addEventListener(`submit`, (e) => {
     const obj = {}
     data.forEach((value, key) => obj[key] = value)
 
-    fetch(`/pruebas/getcookieuser`, {
+    fetch(`/pruebas/setcookieuser`, {
         method: `POST`,
         headers: {
             'Content-Type': 'application/json'

@@ -15,7 +15,7 @@ router.get(`/`, (req, res) => {
     res.render(`login`, {})
 })
 
-router.post(`/getcookieuser`, (req, res) => {
+router.post(`/setcookieuser`, (req, res) => {
     const { username, email } = req.body
 
     res.cookie(username, email, {maxAge: 1000000, signed: true}).send({message: `set`})

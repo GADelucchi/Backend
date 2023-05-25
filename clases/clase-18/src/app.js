@@ -5,12 +5,13 @@ const { Server } = require(`socket.io`)
 const { socketProduct } = require(`./utils/socketProduct`)
 const logger = require(`morgan`)
 const cookieParser = require(`cookie-parser`)
+const session = require(`express-session`)
 
 
 // Imports rutas ––––––––––––––––––––––––––––––––––––––––––
 const routerServer = require(`./routes/index.router`)
 const { connectDB } = require(`./config/serverConfig`)
-const MessageManagerMongo = require (`./dao/mongo/message.mongo`)
+const MessageManagerMongo = require(`./dao/mongo/message.mongo`)
 
 // Instancia ––––––––––––––––––––––––––––––––––––––––––––––
 const app = express()
@@ -29,6 +30,11 @@ app.use(express.urlencoded({ extended: true }))
 app.use(logger(`dev`))
 
 // Middleware de terceros ––––––––––––––––––––––––––––––––-
+app.use(session({
+    secret: `secretCoder`,
+    resave: true,
+    saveUninitialized: true
+}))
 app.use(cookieParser(`P@l@braS3cre3t0`))
 
 // Configuración puerto –––––––––––––––––––––––––––––––––––
@@ -47,9 +53,9 @@ io.on(`connection`, socket => {
 
     socket.on(`message`, async (data) => {
         try {
-        await messageManagerMongo.addMessage(data)
-        let allMessages = await messageManagerMongo.getMessages()
-        io.emit(`messageLogs`, allMessages)
+            await messageManagerMongo.addMessage(data)
+            let allMessages = await messageManagerMongo.getMessages()
+            io.emit(`messageLogs`, allMessages)
         } catch (error) {
             console.log(error);
         }
