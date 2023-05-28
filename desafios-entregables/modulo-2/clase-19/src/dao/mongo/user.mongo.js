@@ -19,6 +19,22 @@ class UserManagerMongo {
         }
     }
 
+    async getUserByEmail(email) {
+        try {
+            return await userModel.findOne({ email })
+        } catch (error) {
+            return new Error(error)
+        }
+    }
+
+    async getUserByUsername(username, password) {
+        try {
+            return await userModel.findOne({ username, password })
+        } catch (error) {
+            return new Error(error)
+        }
+    }
+
     async addUser(newUser) {
         try {
             return await userModel.create(newUser)

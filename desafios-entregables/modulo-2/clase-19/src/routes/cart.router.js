@@ -34,7 +34,6 @@ router.get(`/:cid`, async (req, res) => {
     try {
         const { cid } = req.params
         const findedCart = await cartManagerMongo.getCartById(cid)
-        console.log(findedCart);
 
         return res.status(202).render(`cart`, {
             status: `Success`,

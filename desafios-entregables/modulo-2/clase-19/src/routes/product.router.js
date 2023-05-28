@@ -13,19 +13,20 @@ const router = Router()
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
 router.get(`/`, async (req, res) => {
     try {
-        const { limit = 20, page = 1, category = {}, sort = {} } = req.query
+        const { limit = 10, page = 1, category = {}, sort = {} } = req.query
         const products = await productManagerMongo.getProductsPaginated(limit, page, category, sort)
         const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = products
-        const docsStringified =  JSON.stringify(docs)
+        // const docsStringified =  JSON.stringify(docs)
+        // console.log(docsStringified);
         res.status(200).render(`products`, {
             status: `Success`,
-            payload: docsStringified,
+            docs,
             totalPages,
             prevPage,
             nextPage,   
             page,
             hasPrevPage,
-            hasNextPage,
+            hasNextPage
         })
     } catch (error) {
         res.status(400).send({

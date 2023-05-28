@@ -1,0 +1,22 @@
+<div>
+    <h1>Formulario Login</h1>
+    {{!-- <form id="cookieForm" onsubmit="return false"> --}}
+        <form id="cookieForm" action="/api/session/login" method="POST">
+            <label>Usuario</label>
+            <input type="text" name="username">
+            <br>
+            <label>Contraseña</label>
+            {{!-- <input type="text" name="email"> --}}
+            <input type="password" name="password">
+            <br>
+            <a href="/api/products">
+                <button>Ingresar</button>
+            </a>
+        </form>
+        <a href="/register">
+            <button>Registrarme</button>
+        </a>
+        {{!-- <button onclick="getCookie()">Ver Cookie</button> --}}
+</div>
+{{!--
+<script src="/static/js/cookieSetter.js"></script> --}}

@@ -5,7 +5,7 @@ const { cartModel } = require("./models/cart.model")
 class CartManagerMongo {
     async getCarts() {
         try {
-            return await cartModel.findOne({}).lean()
+            return await cartModel.find({}).lean()
         } catch (error) {
             return new Error(error)
         }
@@ -66,9 +66,7 @@ class CartManagerMongo {
 
     async deleteProductByIdInCart(cid, pid) {
         try {
-            const cart = await cartModel.findOne({ _id: cid }).lean();
-
-            return await cartModel.updateOne(
+            return await cartModel.findOneAndUpdate(
                 { _id: cid },
                 { $pull: { products: { product: pid } } }
             )

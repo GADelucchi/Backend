@@ -8,7 +8,7 @@ const viewRouter = require(`./view.router`)
 const cartRouter = require(`./cart.router`)
 const messageRouter = require(`./message.router`)
 const { uploader } = require("../utils/multer")
-
+const sessionRouter = require(`./session.router`)
 // Declaración ––––––––––––––––––––––––––––––––––––––––––––––
 const router = Router()
 
@@ -20,6 +20,8 @@ router.use(`/api/products`, productRouter)
 router.use(`/api/users`, userRouter)
 
 router.use(`/api/carts`, cartRouter)
+
+router.use(`/api/session`, sessionRouter)
 
 router.use(`/chat`, messageRouter)
 

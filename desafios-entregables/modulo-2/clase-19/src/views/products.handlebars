@@ -1,22 +1,38 @@
 <div>
-    {{!-- {{#each products}} --}}
-    {{!-- <li style="list-style: none;"> --}}
-        {{!-- <img src="{{this.thumbnail}}" alt="Imagen del producto">
-        <h2>{{this.title}}</h2>
-        <p>Descripción: {{this.description}}</p>
-        <p>Precio: ${{this.price}}</p>
-        <p>Stock: {{this.stock}}</p>
-        <p>Categoría: {{this.category}}</p>
-        <p>Código único: {{this.code}}</p>
-        <button>Ver más</button>
-        <button>Agregar al carrito</button>
-        <br>
-        <br>
-        <br>
-        <hr> --}}
-        {{payload}}
-    {{!-- </li> --}}
-    {{!-- {{/each}} --}}
+    <p>Hola <strong>{{username}}</strong>, estos son tus datos:</p>
+    <br>
+    <p>Nombre: <strong>{{first_name}}</strong></p>
+    <p>Apellido: <strong>{{last_name}}</strong></p>
+    <p>Fecha de nacimiento: <strong>{{date_of_birth}}</strong></p>
+    <p>Email: <strong>{{email}}</strong></p>
+    <p>Rol: <strong>{{role}}</strong></p>
+    <br>
+    <a href="/api/session/logout">
+        <button>Cerrar sesión</button>
+    </a>
+    <hr>
+    <br>
+    <h1>Productos</h1>
+    <hr>
+    <div>
+        {{#each docs}}
+        <li style="list-style: none;">
+            <img src="{{this.thumbnail}}" alt="Imagen del producto">
+            <h2>{{this.title}}</h2>
+            <p>Descripción: {{this.description}}</p>
+            <p>Precio: ${{this.price}}</p>
+            <p>Stock: {{this.stock}}</p>
+            <p>Categoría: {{this.category}}</p>
+            <p>Código único: {{this.code}}</p>
+            <button>Ver más</button>
+            <button>Agregar al carrito</button>
+            <br>
+            <br>
+            <br>
+            <hr>
+        </li>
+        {{/each}}
+    </div>
 
     <center>
         {{#if hasPrevPage}}

@@ -7,6 +7,12 @@ const collection = `users`
 
 // Schema –––––––––––––––––––––––––––––––––––––––––––––––––––
 const userSchema = new Schema({
+    username: {
+        type: String,
+        unique: true,
+        required: true,
+        index: true
+    },
     first_name: {
         type: String,
         required: true
@@ -21,10 +27,12 @@ const userSchema = new Schema({
         unique: true,
         index: true
     },
-    gender: {
+    date_of_birth: String,
+    password: {
         type: String,
         required: true
-    }
+    },
+    role: String
 })
 
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
