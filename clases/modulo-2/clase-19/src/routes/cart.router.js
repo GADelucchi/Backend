@@ -22,7 +22,11 @@ router.get(`/`, async (req, res) => {
             payload: carts
         })
     } catch (error) {
-        return new Error(error)
+        return res.status(400).send({
+            status: `Failed`,
+            message: `Error`,
+            payload: error
+        })
     }
 })
 
@@ -31,14 +35,15 @@ router.get(`/:cid`, async (req, res) => {
         const { cid } = req.params
         const findedCart = await cartManagerMongo.getCartById(cid)
 
-        return res.status(202).send({
+        return res.status(202).render(`cart`, {
             status: `Success`,
             payload: findedCart
         })
     } catch (error) {
         return res.status(400).send({
             status: `Failed`,
-            message: `Error: No existe ningún carrito con ese ID`,
+            message: `Error`,
+            payload: error
         })
     }
 })
@@ -60,32 +65,91 @@ router.post(`/`, async (req, res) => {
             })
         }
     } catch (error) {
-        return error
+        return res.status(400).send({
+            status: `Failed`,
+            message: `Error`,
+            payload: error
+        })
     }
 })
 
-router.post(`/:cid/product/:pid`, async (req, res) => {
+router.put(`/:cid/product/:pid`, async (req, res) => {
     try {
         const { cid, pid } = req.params
+        const { quantity } = req.body
         const findedProduct = await productManagerMongo.getProductsById(pid)
-
-        const cart = await cartManagerMongo.getCartById(cid)
 
         if (!findedProduct) {
             throw new Error(`No existe ningún producto con ese ID`)
         } else {
-            const productInCart = await cartManagerMongo.getCartByIdProductsById(cid, pid)
+            const productInCart = await cartManagerMongo.getCartByIdProductsById(cid, pid, quantity)
 
             return res.status(200).send({
                 status: `Success`,
-                message: `Producto ${pid} agregado al carrito ${cid}`,
-                payload: cart
+                payload: productInCart
             })
         }
     } catch (error) {
-        return res.status(404).send({
+        return res.status(400).send({
             status: `Failed`,
-            message: `Algo salió mal`,
+            message: `Error`,
+            payload: error
+        })
+    }
+})
+
+router.put(`/:cid`, async (req, res) => {
+    try {
+        const { cid } = req.params
+    } catch (error) {
+        return res.status(400).send({
+            status: `Failed`,
+            message: `Error`,
+            payload: error
+        })
+    }
+})
+
+router.delete(`/:cid/product/:pid`, async (req, res) => {
+    try {
+        const { cid, pid } = req.params
+        const findedProduct = await productManagerMongo.getProductsById(pid)
+
+        if (!findedProduct) {
+            throw new Error(`No existe ningún producto con ese ID`)
+        } else {
+            const productInCart = await cartManagerMongo.deleteProductByIdInCart(cid, pid)
+
+            return res.status(200).send({
+                status: `Success`,
+                message: `Producto eliminado`,
+                payload: productInCart
+            })
+        }
+    } catch (error) {
+        return res.status(400).send({
+            status: `Failed`,
+            message: `Error`,
+            payload: error
+        })
+    }
+})
+
+router.delete(`/:cid`, async (req, res) => {
+    try {
+        const { cid } = req.params
+        const cart = await cartManagerMongo.deleteProducts(cid)
+
+        return res.status(200).send({
+            status: `Success`,
+            message: `Carrito vaciado`,
+            payload: cart,
+        })
+    } catch (error) {
+        return res.status(400).send({
+            status: `Failed`,
+            message: `Error`,
+            payload: error
         })
     }
 })
