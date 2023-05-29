@@ -24,20 +24,21 @@ router.post(`/login`, async (req, res) => {
             message: `Username or password incorrect`
         })
     }
-    
-    if (userDB.role === `on`) {
-        req.session.user.admin = true
-        userDB.role = `Admin`
-    } else {
-        userDB.role = `Usuario`
-    }
 
     req.session.user = {
         username: userDB.username,
         email: userDB.email,
-        role: userDB.role
+        role: userDB.role,
+        admin: false
     }
-
+    
+    if (userDB.role === `on`) {
+        userDB.role = `Admin`
+        req.session.user.admin = true
+    } else {
+        userDB.role = `Usuario`
+    }
+    
     const { limit = 10, page = 1, category = {}, sort = {} } = req.query
     const products = await productManagerMongo.getProductsPaginated(limit, page, category, sort)
     const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = products
