@@ -5,6 +5,7 @@ const { Router } = require(`express`)
 const { auth } = require('../middlewares/authentication.js')
 const UserManagerMongo = require(`../dao/mongo/user.mongo`)
 const ProductManagerMongo = require("../dao/mongo/product.mongo")
+const { createHash, isValidPassword } = require('../utils/bcryptHash.js')
 
 // Instancia ––––––––––––––––––––––––––––––––––––––––––––––––
 const userManagerMongo = new UserManagerMongo()
@@ -16,10 +17,17 @@ const router = Router()
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
 router.post(`/login`, async (req, res) => {
     const { username, password } = req.body
-    const userDB = await userManagerMongo.getUserByUsername(username, password)
+    const userDB = await userManagerMongo.getUserByUsername(username)
 
     if (!userDB) {
         return res.send({
+                status: `Error`,
+                message: `Username doesn't exist`
+            })
+        }
+
+        if (!isValidPassword(password, userDB)) {
+            return res.status(401).send({
                 status: `Error`,
                 message: `Username or password incorrect`
             })
@@ -85,7 +93,7 @@ router.post(`/register`, async (req, res) => {
         last_name,
         email,
         date_of_birth,
-        password, // Más adelante se va a encriptar ya que no se debe guardar así nomás en la base de datos
+        password: createHash(password), // Más adelante se va a encriptar ya que no se debe guardar así nomás en la base de datos
         role
     }
 
@@ -96,6 +104,26 @@ router.post(`/register`, async (req, res) => {
         payload: `User succesfully created`,
         resultUser
     })
+})
+
+router.post(`/restorepass`, async (req, res) => {
+    const { username, password } = req.body
+    const userDB = await userManagerMongo.getUserByUsername(username)
+
+    if (!userDB) {
+        return res.send({
+                status: `Error`,
+                message: `Username doesn't exist`
+            })
+        }
+
+        userDB.password = createHash(password)
+        await userDB.save()
+
+        res.status(200).json({
+            status: `Success`,
+            message: `Password successfully updated`
+        })
 })
 
 router.get(`/logout`, (req, res) => {
