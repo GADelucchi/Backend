@@ -8,12 +8,14 @@ const cookieParser = require(`cookie-parser`)
 const session = require(`express-session`)
 const FileStore = require(`session-file-store`)
 const { create } = require(`connect-mongo`)
+const passport = require("passport")
 
 
 // Imports rutas ––––––––––––––––––––––––––––––––––––––––––
 const routerServer = require(`./routes/index.router`)
 const { connectDB } = require(`./config/serverConfig`)
 const MessageManagerMongo = require(`./dao/mongo/message.mongo`)
+const { initPassport } = require("./config/passport.config")
 
 // Instancia ––––––––––––––––––––––––––––––––––––––––––––––
 const app = express()
@@ -65,6 +67,10 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }))
+
+initPassport()
+passport.use(passport.initialize())
+passport.use(passport.session())
 
 // Configuración puerto –––––––––––––––––––––––––––––––––––
 const PORT = 8080

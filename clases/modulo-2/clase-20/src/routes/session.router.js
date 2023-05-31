@@ -1,5 +1,6 @@
 // Imports externos –––––––––––––––––––––––––––––––––––––––––
 const { Router } = require(`express`)
+const passport = require('passport')
 
 // Imports rutas ––––––––––––––––––––––––––––––––––––––––––––
 const { auth } = require('../middlewares/authentication.js')
@@ -15,57 +16,85 @@ const productManagerMongo = new ProductManagerMongo()
 const router = Router()
 
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
-router.post(`/login`, async (req, res) => {
-    const { username, password } = req.body
-    const userDB = await userManagerMongo.getUserByUsername(username)
+// router.post(`/login`, async (req, res) => {
+//     const { username, password } = req.body
+//     const userDB = await userManagerMongo.getUserByUsername(username)
 
-    if (!userDB) {
-        return res.send({
-                status: `Error`,
-                message: `Username doesn't exist`
-            })
-        }
+//     if (!userDB) {
+//         return res.send({
+//             status: `Error`,
+//             message: `Username doesn't exist`
+//         })
+//     }
 
-        if (!isValidPassword(password, userDB)) {
-            return res.status(401).send({
-                status: `Error`,
-                message: `Username or password incorrect`
-            })
-        }
+//     if (!isValidPassword(password, userDB)) {
+//         return res.status(401).send({
+//             status: `Error`,
+//             message: `Username or password incorrect`
+//         })
+//     }
 
+//     req.session.user = {
+//         username: userDB.username,
+//         email: userDB.email,
+//         role: userDB.role,
+//         admin: false
+//     }
+
+//     if (userDB.role === `on`) {
+//         userDB.role = `Admin`
+//         req.session.user.admin = true
+//     } else {
+//         userDB.role = `Usuario`
+//     }
+
+//     const { limit = 10, page = 1, category = {}, sort = {} } = req.query
+//     const products = await productManagerMongo.getProductsPaginated(limit, page, category, sort)
+//     const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = products
+//     const { first_name, last_name, date_of_birth, email, role } = userDB
+
+//     res.status(200).render(`products`, {
+//         first_name,
+//         last_name,
+//         email,
+//         date_of_birth,
+//         username,
+//         role,
+//         docs,
+//         totalPages,
+//         prevPage,
+//         nextPage,
+//         page,
+//         hasPrevPage,
+//         hasNextPage
+//     })
+// })
+
+.post(`/login`, passport.authenticate(`login`, { failureRedirect: `/api/session/faillogin` }), async (req, res) => {
+    if (!req.user) {
+        res.status(401).send({
+            status: `Error`,
+            message: `Invalid credential`
+        })
+    }
     req.session.user = {
-        username: userDB.username,
-        email: userDB.email,
-        role: userDB.role,
-        admin: false
+        username: req.user.username,
+        first_name: req.user.first_name,
+        last_name: req.user.last_name,
+        email: req.user.email,
     }
-    
-    if (userDB.role === `on`) {
-        userDB.role = `Admin`
-        req.session.user.admin = true
-    } else {
-        userDB.role = `Usuario`
-    }
-    
-    const { limit = 10, page = 1, category = {}, sort = {} } = req.query
-    const products = await productManagerMongo.getProductsPaginated(limit, page, category, sort)
-    const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = products
-    const {first_name, last_name, date_of_birth, email, role } = userDB
 
-    res.status(200).render(`products`, {
-        first_name,
-        last_name,
-        email,
-        date_of_birth,
-        username,
-        role,
-        docs,
-        totalPages,
-        prevPage,
-        nextPage,
-        page,
-        hasPrevPage,
-        hasNextPage
+    res.send({
+        status: `Success`,
+        message: `Access granted`
+    })
+})
+
+router.get(`/faillogin`, async (req, res) => {
+    console.log(`Falló la estrategia`)
+    res.send({
+        status: `Error`,
+        error: `Authentication error`
     })
 })
 
@@ -75,34 +104,49 @@ router.get(`/private`, auth, async (req, res) => {
     res.status(200).render(`private`, user)
 })
 
-router.post(`/register`, async (req, res) => {
-    const { username, first_name, last_name, email, date_of_birth, password, role } = req.body
+// router.post(`/register`, async (req, res) => {
+//     const { username, first_name, last_name, email, date_of_birth, password, role } = req.body
 
-    const existUser = await userManagerMongo.getUserByEmail(email)
+//     const existUser = await userManagerMongo.getUserByEmail(email)
 
-    if (existUser) {
-        return res.send({
-            status: `Error`,
-            message: `Email already exist`
-        })
-    }
+//     if (existUser) {
+//         return res.send({
+//             status: `Error`,
+//             message: `Email already exist`
+//         })
+//     }
 
-    const newUser = {
-        username,
-        first_name,
-        last_name,
-        email,
-        date_of_birth,
-        password: createHash(password), // Más adelante se va a encriptar ya que no se debe guardar así nomás en la base de datos
-        role
-    }
+//     const newUser = {
+//         username,
+//         first_name,
+//         last_name,
+//         email,
+//         date_of_birth,
+//         password: createHash(password), // Más adelante se va a encriptar ya que no se debe guardar así nomás en la base de datos
+//         role
+//     }
 
-    let resultUser = await userManagerMongo.addUser(newUser)
+//     let resultUser = await userManagerMongo.addUser(newUser)
 
-    res.status(200).send({
+//     res.status(200).send({
+//         status: `Success`,
+//         payload: `User succesfully created`,
+//         resultUser
+//     })
+// })
+
+router.post(`/register`, passport.authenticate(`register`, { failureRedirect: `/api/session/failregister` }), async (req, res) => {
+    res.send({
         status: `Success`,
-        payload: `User succesfully created`,
-        resultUser
+        message: `User registered`
+    })
+})
+
+router.get(`/failregister`, async (req, res) => {
+    console.log(`Falló la estrategia`)
+    res.send({
+        status: `Error`,
+        error: `Authentication error`
     })
 })
 
@@ -112,18 +156,18 @@ router.post(`/restorepass`, async (req, res) => {
 
     if (!userDB) {
         return res.send({
-                status: `Error`,
-                message: `Username doesn't exist`
-            })
-        }
-
-        userDB.password = createHash(password)
-        await userDB.save()
-
-        res.status(200).json({
-            status: `Success`,
-            message: `Password successfully updated`
+            status: `Error`,
+            message: `Username doesn't exist`
         })
+    }
+
+    userDB.password = createHash(password)
+    await userDB.save()
+
+    res.status(200).json({
+        status: `Success`,
+        message: `Password successfully updated`
+    })
 })
 
 router.get(`/logout`, (req, res) => {
@@ -136,7 +180,7 @@ router.get(`/logout`, (req, res) => {
         }
         res.status(200).render(`login`, {})
     })
-})  
+})
 
 router.get(`/counter`, (req, res) => {
     if (req.session.counter) {
