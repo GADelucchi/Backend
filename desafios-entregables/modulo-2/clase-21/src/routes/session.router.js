@@ -227,7 +227,7 @@ router.get(`/githubcallback`, passport.authenticate(`github`, { failureRedirect:
         admin: false
     }
 
-    if (req.user.role === `on`) {
+    if (req.user.role === 'true') {
         req.user.role = `Admin`
         req.session.user.admin = true
     } else {
