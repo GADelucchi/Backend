@@ -8,6 +8,8 @@ const UserManagerMongo = require(`../dao/mongo/user.mongo`)
 const ProductManagerMongo = require("../dao/mongo/product.mongo")
 const { createHash, isValidPassword } = require('../utils/bcryptHash.js')
 const { generateToken } = require('../utils/jwt.js')
+const { passportCall } = require('../passport-jwt/passportCall.js')
+const { authorization } = require('../passport-jwt/authorizationJwtRole.js')
 
 // Instancia ––––––––––––––––––––––––––––––––––––––––––––––––
 const userManagerMongo = new UserManagerMongo()
@@ -17,10 +19,15 @@ const productManagerMongo = new ProductManagerMongo()
 const router = Router()
 
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
+router.get('/current', passportCall('jwt'), authorization('Admin'), async (req, res) => {
+    res.status(200).send(req.user)
+})
+
 router.post(`/login`, async (req, res) => {
     const { username, password } = req.body
     const userDB = await userManagerMongo.getUserByUsername(username)
-
+    // console.log(req.body);
+    // console.log(userDB);
     if (!userDB) {
         return res.send({
             status: `Error`,
@@ -35,19 +42,22 @@ router.post(`/login`, async (req, res) => {
         })
     }
 
-    req.session.user = {
-        username: userDB.username,
-        email: userDB.email,
-        role: userDB.role,
-        admin: false
-    }
+    // console.log(req.session);
+    // req.session.user = {
+    //     username: userDB.username,
+    //     email: userDB.email,
+    //     role: userDB.role,
+    //     admin: false
+    // }
+    // console.log(req.session);
 
     if (userDB.role === `on`) {
         userDB.role = `Admin`
-        req.session.user.admin = true
+        // req.session.user.admin = true    
     } else {
         userDB.role = `Usuario`
     }
+    // console.log(req.session);
 
     const tokenUser = {
         username: userDB.username,
@@ -59,27 +69,33 @@ router.post(`/login`, async (req, res) => {
     }
     const access_token = generateToken(tokenUser)
 
-    const { limit = 10, page = 1, category = {}, sort = {} } = req.query
-    const products = await productManagerMongo.getProductsPaginated(limit, page, category, sort)
-    const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = products
-    const { first_name, last_name, date_of_birth, email, role } = userDB
-
-    res.status(200).render(`products`, {
-        first_name,
-        last_name,
-        email,
-        date_of_birth,
-        username,
-        role,
-        docs,
-        totalPages,
-        prevPage,
-        nextPage,
-        page,
-        hasPrevPage,
-        hasNextPage,
-        access_token
+    res.status(200).cookie('accessToken', access_token, {maxAge: 100*100, httpOnly: true}).send({
+        status: 'Success',
+        message: 'Login success',
+        userDB
     })
+
+    // const { limit = 10, page = 1, category = {}, sort = {} } = req.query
+    // const products = await productManagerMongo.getProductsPaginated(limit, page, category, sort)
+    // const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = products
+    // const { first_name, last_name, date_of_birth, email, role } = userDB
+
+    // res.status(200).render(`products`, {
+    //     first_name,
+    //     last_name,
+    //     email,
+    //     date_of_birth,
+    //     username,
+    //     role,
+    //     docs,
+    //     totalPages,
+    //     prevPage,
+    //     nextPage,
+    //     page,
+    //     hasPrevPage,
+    //     hasNextPage,
+    //     access_token
+    // })
 })
 
 router.get(`/private`, auth, async (req, res) => {

@@ -3,7 +3,6 @@ const passport = require(`passport`)
 const local = require(`passport-local`)
 const GithubStrategy = require(`passport-github2`)
 require(`dotenv`).config()
-const { userModel } = require("../dao/mongo/models/user.model")
 const { createHash, isValidPassword } = require("../utils/bcryptHash")
 const UserManagerMongo = require("../dao/mongo/user.mongo")
 
@@ -84,7 +83,7 @@ const initPassportGithub = () => {
                     email: profile._json.email,
                     date_of_birth: profile._json.date || " ",
                     password: " ",
-                    role: true
+                    role: profile._json.site_admin
                 }
                 let result = await userManagerMongo.addUser(newUSer)
                 return done(null, result)

@@ -33,7 +33,7 @@ router.get(`/setSignedCookie`, (req, res) => {
 })
 
 router.get(`/getCookie`, (req, res) => {
-    res.send(req.Cookies)
+    res.send(req.cookies)
 })
 
 router.get(`/getSignedCookie`, (req, res) => {

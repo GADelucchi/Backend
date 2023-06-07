@@ -32,6 +32,7 @@ const authToken = (req, res, next) => {
 }
 
 module.exports = {
+    jwt_secret_key: 'palabraJwtSecreta',
     generateToken,
     authToken
 }
