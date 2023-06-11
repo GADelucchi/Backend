@@ -59,7 +59,7 @@ class RouterClass {
 
     delete(path, policies, ...callbacks) {
         this.router.get(path, this.handlePolicies(policies), this.generateCustomResponse, this.applyCallbacks(callbacks))
-    }   
+    }
 }
 
 module.exports = { RouterClass }
