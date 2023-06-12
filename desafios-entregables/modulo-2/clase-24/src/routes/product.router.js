@@ -1,5 +1,6 @@
 // Imports externos –––––––––––––––––––––––––––––––––––––––––
 const { Router } = require(`express`)
+const passport = require('passport')
 
 // Imports rutas ––––––––––––––––––––––––––––––––––––––––––––
 const ProductManagerMongo = require("../dao/mongo/product.mongo")

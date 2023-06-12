@@ -3,43 +3,28 @@ const { Schema, model } = require(`mongoose`)
 const mongoosePaginate = require(`mongoose-paginate-v2`)
 
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
-const collection = `users`
+const collection = `carts`
 
 // Schema –––––––––––––––––––––––––––––––––––––––––––––––––––
-const userSchema = new Schema({
-    username: {
-        type: String,
-        unique: true,
-        required: true,
-        index: true
-    },
-    first_name: {
-        type: String,
-        required: true
-    },
-    last_name: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-        index: true
-    },
-    age: Number,
-    password: {
-        type: String,
-        required: true
-    },
-    role: String
+const cartSchema = new Schema({
+    products: [{
+        product: {
+            type: Schema.Types.ObjectId,
+            ref: `products`
+        },
+        quantity: Number 
+    }]
+})
+
+cartSchema.pre(`findOne`, function(){
+    this.populate(`products.product`)
 })
 
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
-userSchema.plugin(mongoosePaginate)
-const userModel = model(collection, userSchema)
+cartSchema.plugin(mongoosePaginate)
+const cartModel = model(collection, cartSchema)
 
 // Export –––––––––––––––––––––––––––––––––––––––––––––––––––
 module.exports = {
-    userModel
+    cartModel
 }

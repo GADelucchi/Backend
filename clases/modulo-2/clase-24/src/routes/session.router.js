@@ -42,22 +42,11 @@ router.post(`/login`, async (req, res) => {
         })
     }
 
-    // console.log(req.session);
-    // req.session.user = {
-    //     username: userDB.username,
-    //     email: userDB.email,
-    //     role: userDB.role,
-    //     admin: false
-    // }
-    // console.log(req.session);
-
     if (userDB.role === `on`) {
         userDB.role = `Admin`
-        // req.session.user.admin = true    
     } else {
         userDB.role = `Usuario`
     }
-    // console.log(req.session);
 
     const tokenUser = {
         username: userDB.username,
@@ -72,30 +61,9 @@ router.post(`/login`, async (req, res) => {
     res.status(200).cookie('accessToken', access_token, {maxAge: 100*100, httpOnly: true}).send({
         status: 'Success',
         message: 'Login success',
-        userDB
+        userDB,
+        access_token
     })
-
-    // const { limit = 10, page = 1, category = {}, sort = {} } = req.query
-    // const products = await productManagerMongo.getProductsPaginated(limit, page, category, sort)
-    // const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = products
-    // const { first_name, last_name, date_of_birth, email, role } = userDB
-
-    // res.status(200).render(`products`, {
-    //     first_name,
-    //     last_name,
-    //     email,
-    //     date_of_birth,
-    //     username,
-    //     role,
-    //     docs,
-    //     totalPages,
-    //     prevPage,
-    //     nextPage,
-    //     page,
-    //     hasPrevPage,
-    //     hasNextPage,
-    //     access_token
-    // })
 })
 
 router.get(`/private`, auth, async (req, res) => {
@@ -143,74 +111,6 @@ router.post(`/register`, async (req, res) => {
         regiter_token
     })
 })
-
-// router.post(`/login`, passport.authenticate(`login`, { failureRedirect: `/api/session/faillogin` }), async (req, res) => {
-//     if (!req.user) {
-//         res.status(401).send({
-//             status: `Error`,
-//             message: `Invalid credential`
-//         })
-//     }
-
-//     req.session.user = {
-//         username: req.user.username,
-//         first_name: req.user.first_name,
-//         last_name: req.user.last_name,
-//         email: req.user.email,
-//         admin: false
-//     }
-
-//     if (req.user.role === `on`) {
-//         req.user.role = `Admin`
-//         req.session.user.admin = true
-//     } else {
-//         req.user.role = `Usuario`
-//     }
-
-//     const { limit = 10, page = 1, category = {}, sort = {} } = req.query
-//     const products = await productManagerMongo.getProductsPaginated(limit, page, category, sort)
-//     const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = products
-//     const { username, first_name, last_name, date_of_birth, email, role } = req.user
-
-//     res.status(200).render(`products`, {
-//         first_name,
-//         last_name,
-//         email,
-//         date_of_birth,
-//         username,
-//         role,
-//         docs,
-//         totalPages,
-//         prevPage,
-//         nextPage,
-//         page,
-//         hasPrevPage,
-//         hasNextPage
-//     })
-// })
-
-// router.get(`/faillogin`, async (req, res) => {
-//     console.log(`Falló la estrategia`)
-//     res.send({
-//         status: `Error`,
-//         error: `Authentication error`
-//     })
-// })
-
-// router.post(`/register`, passport.authenticate(`register`, { failureRedirect: `/api/session/failregister` }), async (req, res) => {
-//     res.send({
-//         status: `Success`,
-//         message: `User registered`
-//     })
-// })
-
-// router.get(`/failregister`, async (req, res) => {
-//     console.log(`Falló la estrategia`)
-//     res.send({
-//         status: `Error`,
-//         error: `Authentication error`
-//     })
-// })
 
 router.post(`/restorepass`, async (req, res) => {
     const { username, password } = req.body

@@ -7,6 +7,9 @@ const { auth } = require('../middlewares/authentication.js')
 const UserManagerMongo = require(`../dao/mongo/user.mongo`)
 const ProductManagerMongo = require("../dao/mongo/product.mongo")
 const { createHash, isValidPassword } = require('../utils/bcryptHash.js')
+const { generateToken } = require('../utils/jwt.js')
+const { passportCall } = require('../passport-jwt/passportCall.js')
+const { authorization } = require('../passport-jwt/authorizationJwtRole.js')
 
 // Instancia ––––––––––––––––––––––––––––––––––––––––––––––––
 const userManagerMongo = new UserManagerMongo()
@@ -16,160 +19,96 @@ const productManagerMongo = new ProductManagerMongo()
 const router = Router()
 
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
-// router.post(`/login`, async (req, res) => {
-//     const { username, password } = req.body
-//     const userDB = await userManagerMongo.getUserByUsername(username)
+router.get('/current', passportCall('jwt'), authorization('Admin'), async (req, res) => {
+    res.status(200).send(req.user)
+})
 
-//     if (!userDB) {
-//         return res.send({
-//             status: `Error`,
-//             message: `Username doesn't exist`
-//         })
-//     }
+router.post(`/login`, async (req, res) => {
+    const { username, password } = req.body
+    const userDB = await userManagerMongo.getUserByUsername(username)
+    // console.log(req.body);
+    // console.log(userDB);
+    if (!userDB) {
+        return res.send({
+            status: `Error`,
+            message: `Username doesn't exist`
+        })
+    }
 
-//     if (!isValidPassword(password, userDB)) {
-//         return res.status(401).send({
-//             status: `Error`,
-//             message: `Username or password incorrect`
-//         })
-//     }
+    if (!isValidPassword(password, userDB)) {
+        return res.status(401).send({
+            status: `Error`,
+            message: `Username or password incorrect`
+        })
+    }
 
-//     req.session.user = {
-//         username: userDB.username,
-//         email: userDB.email,
-//         role: userDB.role,
-//         admin: false
-//     }
+    if (userDB.role === `on`) {
+        userDB.role = `Admin`
+    } else {
+        userDB.role = `Usuario`
+    }
 
-//     if (userDB.role === `on`) {
-//         userDB.role = `Admin`
-//         req.session.user.admin = true
-//     } else {
-//         userDB.role = `Usuario`
-//     }
+    const tokenUser = {
+        username: userDB.username,
+        first_name: userDB.first_name,
+        last_name: userDB.last_name,
+        email: userDB.email,
+        date_of_birth: userDB.date_of_birth,
+        role: userDB.role
+    }
+    const access_token = generateToken(tokenUser)
 
-//     const { limit = 10, page = 1, category = {}, sort = {} } = req.query
-//     const products = await productManagerMongo.getProductsPaginated(limit, page, category, sort)
-//     const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = products
-//     const { first_name, last_name, date_of_birth, email, role } = userDB
-
-//     res.status(200).render(`products`, {
-//         first_name,
-//         last_name,
-//         email,
-//         date_of_birth,
-//         username,
-//         role,
-//         docs,
-//         totalPages,
-//         prevPage,
-//         nextPage,
-//         page,
-//         hasPrevPage,
-//         hasNextPage
-//     })
-// })
+    res.status(200).cookie('accessToken', access_token, {maxAge: 100*100, httpOnly: true}).send({
+        status: 'Success',
+        message: 'Login success',
+        userDB,
+        access_token
+    })
+})
 
 router.get(`/private`, auth, async (req, res) => {
     const user = await userManagerMongo.getUserByEmail(req.session.user.email)
     res.status(200).render(`private`, user)
 })
 
-// router.post(`/register`, async (req, res) => {
-//     const { username, first_name, last_name, email, date_of_birth, password, admin } = req.body
-//     const existUser = await userManagerMongo.getUserByEmail(email)
+router.post(`/register`, async (req, res) => {
+    const { username, first_name, last_name, email, date_of_birth, password, admin } = req.body
+    const existUser = await userManagerMongo.getUserByEmail(email)
 
-//     if (existUser) {
-//         return res.send({
-//             status: `Error`,
-//             message: `Email already exist`
-//         })
-//     }
-
-//     const newUser = {
-//         username,
-//         first_name,
-//         last_name,
-//         email,
-//         date_of_birth,
-//         password: createHash(password),
-//         role: admin
-//     }
-
-//     let resultUser = await userManagerMongo.addUser(newUser)
-
-//     res.status(200).send({
-//         status: `Success`,
-//         payload: `User succesfully created`,
-//         resultUser
-//     })
-// })
-
-router.post(`/login`, passport.authenticate(`login`, { failureRedirect: `/api/session/faillogin` }), async (req, res) => {
-    if (!req.user) {
-        res.status(401).send({
+    if (existUser) {
+        return res.send({
             status: `Error`,
-            message: `Invalid credential`
+            message: `Email already exist`
         })
     }
 
-    req.session.user = {
-        username: req.user.username,
-        first_name: req.user.first_name,
-        last_name: req.user.last_name,
-        email: req.user.email,
-        admin: false
-    }
-
-    if (req.user.role === `on`) {
-        req.user.role = `Admin`
-        req.session.user.admin = true
-    } else {
-        req.user.role = `Usuario`
-    }
-
-    const { limit = 10, page = 1, category = {}, sort = {} } = req.query
-    const products = await productManagerMongo.getProductsPaginated(limit, page, category, sort)
-    const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = products
-    const { username, first_name, last_name, date_of_birth, email, role } = req.user
-
-    res.status(200).render(`products`, {
+    const newUser = {
+        username,
         first_name,
         last_name,
         email,
         date_of_birth,
-        username,
-        role,
-        docs,
-        totalPages,
-        prevPage,
-        nextPage,
-        page,
-        hasPrevPage,
-        hasNextPage
-    })
-})
+        password: createHash(password),
+        role: admin
+    }
 
-router.get(`/faillogin`, async (req, res) => {
-    console.log(`Falló la estrategia`)
-    res.send({
-        status: `Error`,
-        error: `Authentication error`
-    })
-})
+    let resultUser = await userManagerMongo.addUser(newUser)
 
-router.post(`/register`, passport.authenticate(`register`, { failureRedirect: `/api/session/failregister` }), async (req, res) => {
-    res.send({
+    const tokenUser = {
+        username: newUser.username,
+        first_name: newUser.first_name,
+        last_name: newUser.last_name,
+        email: newUser.email,
+        date_of_birth: newUser.date_of_birth,
+        role: newUser.role
+    }
+    const regiter_token = generateToken(tokenUser)
+
+    res.status(200).send({
         status: `Success`,
-        message: `User registered`
-    })
-})
-
-router.get(`/failregister`, async (req, res) => {
-    console.log(`Falló la estrategia`)
-    res.send({
-        status: `Error`,
-        error: `Authentication error`
+        payload: `User succesfully created`,
+        resultUser,
+        regiter_token
     })
 })
 

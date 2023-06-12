@@ -27,7 +27,7 @@ const userSchema = new Schema({
         unique: true,
         index: true
     },
-    date_of_birth: String,
+    age: Number,
     password: {
         type: String,
         required: true

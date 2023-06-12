@@ -1,14 +1,26 @@
-let div = document.getElementById(`product`)
-products.forEach((product) => {
-    products += `<div>
-        <h2>Producto: ${product.title}</h2>
-        <br>
-        <p>Descripción: ${product.description}</p>
-        <p>Código: ${product.code}</p>
-        <p>Precio: ${product.price}</p>
-        <p>Cantidad en stock: ${product.stock}</p>
-        <p>Categoría: ${product.category}</p>
-        <p>Imágenes: ${product.thumbnail}</p>
-        </div>`
+console.log('Este es el index')
+
+const form = document.querySelector('#cookieForm')
+
+form.addEventListener('submit', (event) => {
+    event.preventDefault()
+
+    const data = new FormData(form)
+
+    const obj = {}
+    data.forEach((value, key) => obj[key] = value)
+
+    fetch('/api/session/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('respuesta.access_token')}`
+        },
+        body: JSON.stringify(obj)
+    })
+    .then(respuesta => respuesta.json())
+    .then(respuesta => {
+        console.log(respuesta),
+        localStorage.setItem('token', respuesta.access_token)
+    })
 })
-div.innerHTML = products
