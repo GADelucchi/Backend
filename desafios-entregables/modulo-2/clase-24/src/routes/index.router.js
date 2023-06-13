@@ -7,7 +7,6 @@ const userRouter = require(`./user.router`)
 const viewRouter = require(`./view.router`)
 const cartRouter = require(`./cart.router`)
 const pruebasRouter = require(`./pruebas.router`)
-const messageRouter = require(`./message.router`)
 const { uploader } = require("../utils/multer")
 const sessionRouter = require(`./session.router`)
 const UsersRouter = require('./newUser.routerGeneric')
@@ -25,8 +24,6 @@ router.use(`/api/users`, usersRouter.getRouter())
 router.use(`/api/carts`, cartRouter)
 
 router.use(`/api/session`, sessionRouter)
-
-router.use(`/chat`, messageRouter)
 
 router.use(`/pruebas`, pruebasRouter)
 
