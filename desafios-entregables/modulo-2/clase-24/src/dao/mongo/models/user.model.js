@@ -32,7 +32,10 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    role: String
+    role: {
+        type: String,
+        default: 'user'
+    }
 })
 
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––

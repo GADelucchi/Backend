@@ -19,7 +19,7 @@ const productManagerMongo = new ProductManagerMongo()
 const router = Router()
 
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
-router.get('/current', passportCall('jwt'), authorization('Admin'), async (req, res) => {
+router.get('/current', passportCall('jwt'), authorization('admin'), async (req, res) => {
     res.status(200).send(req.user)
 })
 
@@ -42,12 +42,6 @@ router.post(`/login`, async (req, res) => {
         })
     }
 
-    if (userDB.role === `on`) {
-        userDB.role = `Admin`
-    } else {
-        userDB.role = `Usuario`
-    }
-
     const tokenUser = {
         username: userDB.username,
         first_name: userDB.first_name,
@@ -58,10 +52,25 @@ router.post(`/login`, async (req, res) => {
     }
     const access_token = generateToken(tokenUser)
 
-    res.status(200).cookie('accessToken', access_token, {maxAge: 100*100, httpOnly: true}).send({
-        status: 'Success',
-        message: 'Login success',
-        userDB,
+    const { limit = 10, page = 1, category = {}, sort = {} } = req.query
+    const products = await productManagerMongo.getProductsPaginated(limit, page, category, sort)
+    const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = products
+    const { first_name, last_name, age, email, role } = userDB
+
+    res.status(200).cookie('accessToken', access_token, {maxAge: 100*100, httpOnly: true}).render(`products`, {
+        first_name,
+        last_name,
+        email,
+        age,
+        username,
+        role,
+        docs,
+        totalPages,
+        prevPage,
+        nextPage,
+        page,
+        hasPrevPage,
+        hasNextPage,
         access_token
     })
 })
@@ -72,7 +81,7 @@ router.get(`/private`, auth, async (req, res) => {
 })
 
 router.post(`/register`, async (req, res) => {
-    const { username, first_name, last_name, email, date_of_birth, password, admin } = req.body
+    const { username, first_name, last_name, email, age, password, admin } = req.body
     const existUser = await userManagerMongo.getUserByEmail(email)
 
     if (existUser) {
@@ -87,9 +96,15 @@ router.post(`/register`, async (req, res) => {
         first_name,
         last_name,
         email,
-        date_of_birth,
+        age,
         password: createHash(password),
         role: admin
+    }
+
+    if (newUser.role === 'on') {
+        newUser.role = 'admin'
+    } else {
+        newUser.role = 'user'
     }
 
     let resultUser = await userManagerMongo.addUser(newUser)
