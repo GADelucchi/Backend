@@ -9,17 +9,15 @@ const cartRouter = require(`./cart.router`)
 const pruebasRouter = require(`./pruebas.router`)
 const { uploader } = require("../utils/multer")
 const sessionRouter = require(`./session.router`)
-const UsersRouter = require('./newUser.routerGeneric')
 // Declaración ––––––––––––––––––––––––––––––––––––––––––––––
 const router = Router()
-const usersRouter = new UsersRouter()
 
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
 router.use(`/`, viewRouter)
 
 router.use(`/api/products`, productRouter)
 
-router.use(`/api/users`, usersRouter.getRouter())
+router.use(`/api/users`, userRouter)
 
 router.use(`/api/carts`, cartRouter)
 

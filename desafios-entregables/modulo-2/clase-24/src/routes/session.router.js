@@ -57,7 +57,7 @@ router.post(`/login`, async (req, res) => {
     const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = products
     const { first_name, last_name, age, email, role } = userDB
 
-    res.status(200).cookie('accessToken', access_token, {maxAge: 100*100, httpOnly: true}).render(`products`, {
+    res.status(200).cookie('accessToken', access_token, { maxAge: 100 * 100, httpOnly: true }).render(`products`, {
         first_name,
         last_name,
         email,
@@ -148,15 +148,9 @@ router.post(`/restorepass`, async (req, res) => {
 })
 
 router.get(`/logout`, (req, res) => {
-    req.session.destroy(error => {
-        if (error) {
-            return res.send({
-                status: `Error`,
-                error: error
-            })
-        }
-        res.status(200).render(`login`, {})
-    })
+    res.clearCookie('accessToken')
+
+    res.status(200).render(`login`, {})
 })
 
 router.get(`/counter`, (req, res) => {

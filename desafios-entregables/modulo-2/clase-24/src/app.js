@@ -12,14 +12,12 @@ const passport = require("passport")
 // Imports rutas ––––––––––––––––––––––––––––––––––––––––––
 const routerServer = require(`./routes/index.router`)
 const { connectDB } = require(`./config/serverConfig`)
-const MessageManagerMongo = require(`./dao/mongo/message.mongo`)
 const { initPassport } = require("./passport-jwt/passport.config")
 // const { initPassport, initPassportGithub } = require("./config/passport.config")
 
 
 // Instancia ––––––––––––––––––––––––––––––––––––––––––––––
 const app = express()
-const messageManagerMongo = new MessageManagerMongo
 
 // Ejecución ––––––––––––––––––––––––––––––––––––––––––––––
 connectDB()
