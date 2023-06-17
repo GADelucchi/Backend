@@ -1,10 +1,10 @@
 // Imports externos –––––––––––––––––––––––––––––––––––––––––
-const { connect } = require(`mongoose`)
-require('dotenv').config()
+const { connect } = require(`mongoose`);
+const { mongoUrl } = require("../../process/config");
 
 
 // Declaración ––––––––––––––––––––––––––––––––––––––––––––––
-let url = process.env.MONGO_URL_LOCAL
+let url = mongoUrl
 
 // Export –––––––––––––––––––––––––––––––––––––––––––––––––––
 module.exports = {

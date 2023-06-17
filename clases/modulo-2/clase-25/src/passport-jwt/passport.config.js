@@ -2,8 +2,6 @@ const passport = require('passport')
 const { Strategy, ExtractJwt } = require('passport-jwt')
 const { jwtPrivateKey } = require('../../process/config')
 
-
-
 const JWTStrategy = Strategy
 const ExtractorJWT = ExtractJwt
 
@@ -21,7 +19,6 @@ const initPassport = () => {
         secretOrKey: jwtPrivateKey
     }, async (jwt_payload, done) => {
         try {
-            // console.log(jwt_payload);
             return done(null, jwt_payload)
         } catch (error) {
             return done(error)

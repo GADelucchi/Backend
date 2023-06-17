@@ -1,12 +1,10 @@
 const dotenv = require('dotenv')
 
-// if (process.env.NODE_ENV === 'production') {
-//     dotenv.config({ path: '../.env.prod' })
-// } else {
-    // dotenv.config({ path: '../.env' })
-// }
-
-dotenv.config()
+if (process.env.NODE_ENV === 'production') {
+    dotenv.config({ path: 'prod.env' });
+} else {
+    dotenv.config()
+}
 
 const port = process.env.PORT
 const mongoUrl = process.env.MONGO_URL_LOCAL

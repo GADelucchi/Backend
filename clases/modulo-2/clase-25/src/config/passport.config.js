@@ -2,7 +2,6 @@
 const passport = require(`passport`)
 const local = require(`passport-local`)
 const GithubStrategy = require(`passport-github2`)
-require('dotenv').config()
 const { createHash, isValidPassword } = require("../utils/bcryptHash")
 const UserManagerMongo = require("../dao/mongo/user.mongo")
 
