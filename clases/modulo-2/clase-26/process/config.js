@@ -1,7 +1,7 @@
 const dotenv = require('dotenv')
 
 if (process.env.NODE_ENV === 'production') {
-    dotenv.config({ path: 'prod.env' });
+    dotenv.config({ path: '.env.prod' });
 } else {
     dotenv.config()
 }
