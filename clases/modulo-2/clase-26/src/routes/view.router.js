@@ -2,40 +2,21 @@
 const { Router } = require(`express`)
 
 // Imports rutas ––––––––––––––––––––––––––––––––––––––––––––
-const ProductManagerMongo = require(`../dao/mongo/product.mongo`)
-
-// Instancia ––––––––––––––––––––––––––––––––––––––––––––––––
-const productManagerMongo = new ProductManagerMongo()
+const viewsController = require("../controllers/views.controller")
 
 // Declaración ––––––––––––––––––––––––––––––––––––––––––––––
 const router = Router()
 
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
-router.get(`/`, async (req, res) => {
-    res.render(`login`, {})
-})
+router.get(`/`, viewsController.get)
 
-router.get(`/realtimeproducts`, (req, res) => {
-    res.render(`realTimeProducts`)
-})
+router.get(`/realtimeproducts`, viewsController.getRealTime)
 
-router.get(`/login`, (req, res) => {
-    res.render(`login`, {
-        style: `index.css`
-    })
-})
+router.get(`/login`, viewsController.getLogin)
 
-router.get(`/register`, (req, res) => {
-    res.render(`registerForm`, {
-        style: `index.css`
-    })
-})  
+router.get(`/register`, viewsController.getRegister)  
 
-// router.get(`/chat`, (req, res) => {
-//     const messages = messageManagerMongo.getMessages()
-
-//     res.render(`message`, {})
-// })
+router.get(`/chat`, viewsController.getChat)
 
 // Export –––––––––––––––––––––––––––––––––––––––––––––––––––
 module.exports = router

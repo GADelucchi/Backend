@@ -45,4 +45,4 @@ class OrderManagerMongo {
 }
 
 // Export –––––––––––––––––––––––––––––––––––––––––––––––––––
-module.exports = ProductManagerMongo
+module.exports = OrderManagerMongo
