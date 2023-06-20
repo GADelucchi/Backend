@@ -8,15 +8,19 @@ class ProductController {
             const { limit = 10, page = 1, category = {}, sort = {} } = req.query
             const products = await productService.getProductsPaginated(limit, page, category, sort)
             const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = products
-            res.status(200).render(`products`, {
+            // res.status(200).render(`products`, {
+            //     status: `Success`,
+            //     docs,
+            //     totalPages,
+            //     prevPage,
+            //     nextPage,   
+            //     page,
+            //     hasPrevPage,
+            //     hasNextPage
+            // })
+            res.status(200).send({
                 status: `Success`,
-                docs,
-                totalPages,
-                prevPage,
-                nextPage,   
-                page,
-                hasPrevPage,
-                hasNextPage
+                payload: docs
             })
         } catch (error) {
             res.status(400).send({

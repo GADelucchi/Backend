@@ -7,6 +7,7 @@ const logger = require(`morgan`)
 const cookieParser = require(`cookie-parser`)
 const { create } = require(`connect-mongo`)
 const passport = require("passport")
+const cors = require('cors')
 
 
 // Imports rutas ––––––––––––––––––––––––––––––––––––––––––
@@ -23,6 +24,7 @@ const messageManagerMongo = new MessageManagerMongo
 // Ejecución ––––––––––––––––––––––––––––––––––––––––––––––
 console.log(config);
 connectDB()
+connectDB()
 
 // Configuración ––––––––––––––––––––––––––––––––––––––––––
 app.engine(`handlebars`, handlebars.engine())
@@ -30,6 +32,7 @@ app.set(`views`, __dirname + `/views`)
 app.set(`view engine`, `handlebars`)
 
 app.use(express.json())
+app.use(cors())
 app.use(express.urlencoded({ extended: true }))
 app.use(logger(`dev`))
 

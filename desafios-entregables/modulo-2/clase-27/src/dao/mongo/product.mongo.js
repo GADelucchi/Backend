@@ -3,16 +3,14 @@ const { productModel } = require("./models/product.model")
 
 // Clase ––––––––––––––––––––––––––––––––––––––––––––––––––––
 class ProductManagerMongo {
+    constructor() {
+        this.product = productModel
+    }
     async getProducts() {
-        try {
-            return await productModel.find({}).lean()
-        } catch (error) {
-            return new Error(error)
-        }
+            return await this.product.find({}).lean()
     }
 
     async getProductsPaginated(limit, page, category, sort) {
-        try {
             let categoryString = {}
             if (category) {
                 categoryString.category = { $regex: new RegExp(category, `i`) }
@@ -25,7 +23,7 @@ class ProductManagerMongo {
                 sortType = { price: -1 }
             }
 
-            return await productModel.paginate(categoryString,
+            return await this.product.paginate(categoryString,
                 {
                     limit: limit,
                     page: page,
@@ -33,41 +31,22 @@ class ProductManagerMongo {
                     lean: true
                 }
             )
-        } catch (error) {
-            return new Error(error)
-        }
     }
 
     async getProductsById(pid) {
-        try {
-            return await productModel.findOne({ _id: pid })
-        } catch (error) {
-            return new Error(error)
-        }
+            return await this.product.findOne({ _id: pid })
     }
 
     async addProduct(newProduct) {
-        try {
-            return await productModel.create(newProduct)
-        } catch (error) {
-            return new Error(error)
-        }
+            return await this.product.create(newProduct)
     }
 
     async updateProduct(pid, updatedProduct) {
-        try {
-            return await productModel.updateOne({ _id: pid }, updatedProduct)
-        } catch (error) {
-            return new Error(error)
-        }
+            return await this.product.updateOne({ _id: pid }, updatedProduct)
     }
 
     async deleteProduct(pid) {
-        try {
-            return await productModel.deleteOne({ _id: pid })
-        } catch (error) {
-            return new Error(error)
-        }
+            return await this.product.deleteOne({ _id: pid })
     }
 }
 
