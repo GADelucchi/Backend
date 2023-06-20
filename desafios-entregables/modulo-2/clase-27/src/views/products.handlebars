@@ -1,0 +1,50 @@
+<div>
+    <p>Hola <strong>{{username}}</strong>, estos son tus datos:</p>
+    <br>
+    <p>Nombre: <strong>{{first_name}}</strong></p>
+    <p>Apellido: <strong>{{last_name}}</strong></p>
+    <p>Edad: <strong>{{age}}</strong></p>
+    <p>Email: <strong>{{email}}</strong></p>
+    <p>Rol: <strong>{{role}}</strong></p>
+    <br>
+    <a href="/api/session/logout">
+        <button>Cerrar sesión</button>
+    </a>
+    <hr>
+    <br>
+    <h1>Productos</h1>
+    <hr>
+    <div>
+        {{#each docs}}
+        <li style="list-style: none;">
+            <img src="{{this.thumbnail}}" alt="Imagen del producto">
+            <h2>{{this.title}}</h2>
+            <p>Descripción: {{this.description}}</p>
+            <p>Precio: ${{this.price}}</p>
+            <p>Stock: {{this.stock}}</p>
+            <p>Categoría: {{this.category}}</p>
+            <p>Código único: {{this.code}}</p>
+            <button>Ver más</button>
+            <button>Agregar al carrito</button>
+            <br>
+            <br>
+            <br>
+            <hr>
+        </li>
+        {{/each}}
+    </div>
+
+    <center>
+        {{#if hasPrevPage}}
+        <a href="/api/products?page={{prevPage}}">
+            <button>Anterior</button>
+        </a>
+        {{/if}}
+        <strong>Página {{this.page}} de {{this.totalPages}}</strong>
+        {{#if hasNextPage}}
+        <a href="/api/products?page={{nextPage}}">
+            <button>Siguiente</button>
+        </a>
+        {{/if}}
+    </center>
+</div>
