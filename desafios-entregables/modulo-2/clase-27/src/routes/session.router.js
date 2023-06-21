@@ -7,16 +7,17 @@ const { auth } = require('../middlewares/authentication.js')
 const { passportCall } = require('../passport-jwt/passportCall.js')
 const { authorization } = require('../passport-jwt/authorizationJwtRole.js')
 const sessionController = require('../controllers/sessions.controller.js')
+const { authToken } = require('../utils/jwt.js')
 
 // Declaración ––––––––––––––––––––––––––––––––––––––––––––––
 const router = Router()
 
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
-router.get('/current', passportCall('jwt'), authorization('Admin'), sessionController.getCurrent)
+router.get('/current', passportCall('jwt'), authorization('admin'), sessionController.getCurrent)
 
 router.post(`/login`, sessionController.postLogin)
 
-router.get(`/private`, auth, sessionController.getPrivate)
+router.get(`/private`, authToken, sessionController.getPrivate)
 
 router.post(`/register`, sessionController.postRegister)
 

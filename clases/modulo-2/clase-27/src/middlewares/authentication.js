@@ -1,5 +1,5 @@
 function auth(req, res, next) {
-    if (req.session?.user?.admin !== true) {
+    if (req.user.role !== 'admin') {
         return res.status(401).send(`Authentication error`)
     }
     next()

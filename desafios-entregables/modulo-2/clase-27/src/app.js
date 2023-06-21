@@ -24,7 +24,6 @@ const messageManagerMongo = new MessageManagerMongo
 // Ejecución ––––––––––––––––––––––––––––––––––––––––––––––
 console.log(config);
 connectDB()
-connectDB()
 
 // Configuración ––––––––––––––––––––––––––––––––––––––––––
 app.engine(`handlebars`, handlebars.engine())

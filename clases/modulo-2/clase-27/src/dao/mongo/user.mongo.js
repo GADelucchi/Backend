@@ -39,7 +39,7 @@ class UserManagerMongo {
         try {
             return await userModel.create(newUser)
         } catch (error) {
-            return new Error(error)
+            console.log(error)
         }
     }
 
