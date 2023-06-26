@@ -4,8 +4,8 @@ const passport = require('passport')
 
 // Imports rutas ––––––––––––––––––––––––––––––––––––––––––––
 const { auth } = require('../middlewares/authentication.js')
-const UserManagerMongo = require(`../dao/mongo/user.mongo`)
-const ProductManagerMongo = require("../dao/mongo/product.mongo")
+const UserManagerMongo = require(`../dao/mongo/user.mongo.js`)
+const ProductManagerMongo = require("../dao/mongo/product.mongo.js")
 const { createHash, isValidPassword } = require('../utils/bcryptHash.js')
 const { generateToken } = require('../utils/jwt.js')
 const { passportCall } = require('../passport-jwt/passportCall.js')
