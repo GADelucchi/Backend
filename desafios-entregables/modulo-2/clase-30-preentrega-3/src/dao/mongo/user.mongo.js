@@ -4,22 +4,24 @@ const { userModel } = require(`./models/user.model`)
 // Clase ––––––––––––––––––––––––––––––––––––––––––––––––––––
 class UserDaoMongo {
     constructor() {
-        this.users = userModel
+        this.model = userModel
     }
 
-    getUsers = async (page) => await this.users.paginate({}, { limit: 10, page: page, lean: true })
+    get = async () => await this.model.find({})
 
-    getUserById = async (uid) => await this.users.findOne({ _id: uid })
+    getPaginated = async (page) => await this.model.paginate({}, { limit: 10, page: page, lean: true })
 
-    getUserByEmail = async (email) => await this.users.findOne({ email })
+    getById = async (uid) => await this.model.findOne({ _id: uid })
 
-    getUserByUsername = async (username) => await this.users.findOne({ username })
+    getByEmail = async (email) => await this.model.findOne({ email })
 
-    addUser = async (newUser) => await this.users.create(newUser)
+    getByUsername = async (username) => await this.model.findOne({ username })
 
-    updateUser = async (uid, updatedUser) => await this.users.updateOne({ _id: uid }, updatedUser)
+    create = async (newUser) => await this.model.create(newUser)
 
-    deleteUser = async (uid) => await this.users.deleteOne({ _id: uid })
+    update = async (uid, updatedUser) => await this.model.updateOne({ _id: uid }, updatedUser)
+
+    delete = async (uid) => await this.model.deleteOne({ _id: uid })
 }
 
 // Export –––––––––––––––––––––––––––––––––––––––––––––––––––

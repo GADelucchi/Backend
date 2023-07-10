@@ -25,8 +25,8 @@ class RouterClass {
     }
 
     generateCustomResponse = (req, res, next) => {
-        res.sendSuccess = payload => res.send({ status: 'Success', payload })
-        res.sendServerError = error => res.send({ status: 'Error', error })
+        res.sendSuccess = payload => res.status(200).send({ status: 'Success', payload })
+        res.sendServerError = error => res.status(500).send({ status: 'Error', error })
         res.sendUserError = error => res.send({ status: 'Error', error })
         next()
     }
@@ -50,15 +50,15 @@ class RouterClass {
     }
 
     post(path, policies, ...callbacks) {
-        this.router.get(path, this.handlePolicies(policies), this.generateCustomResponse, this.applyCallbacks(callbacks))
+        this.router.post(path, this.handlePolicies(policies), this.generateCustomResponse, this.applyCallbacks(callbacks))
     }
 
     put(path, policies, ...callbacks) {
-        this.router.get(path, this.handlePolicies(policies), this.generateCustomResponse, this.applyCallbacks(callbacks))
+        this.router.put(path, this.handlePolicies(policies), this.generateCustomResponse, this.applyCallbacks(callbacks))
     }
 
     delete(path, policies, ...callbacks) {
-        this.router.get(path, this.handlePolicies(policies), this.generateCustomResponse, this.applyCallbacks(callbacks))
+        this.router.delete(path, this.handlePolicies(policies), this.generateCustomResponse, this.applyCallbacks(callbacks))
     }
 }
 

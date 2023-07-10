@@ -1,5 +1,5 @@
 // Import
-const { userService, productService } = require("../service")
+const { userService, productService } = require("../service/index.service")
 
 // Imports rutas
 const { createHash, isValidPassword } = require('../utils/bcryptHash.js')
@@ -8,12 +8,13 @@ const { generateToken } = require('../utils/jwt.js')
 // Code
 class SessionController {
     getCurrent = async (req, res) => {
+        console.log(req.user);
         res.status(200).send(req.user)
     }
 
     postLogin = async (req, res) => {
         const { email, password } = req.body
-        const userDB = await userService.getUserByEmail(email)
+        const userDB = await userService.getByEmail(email)
         if (!userDB) {
             return res.send({
                 status: `Error`,
@@ -47,13 +48,13 @@ class SessionController {
     }
 
     getPrivate = async (req, res) => {
-        const user = await userService.getUserByEmail(req.user.email)
+        const user = await userService.getByEmail(req.user.email)
         res.status(200).render(`private`, user)
     }
 
     postRegister = async (req, res) => {
         let { username, first_name, last_name, email, age, password, role } = req.body
-        const existUser = await userService.getUserByEmail(email)
+        const existUser = await userService.getByEmail(email)
 
         if (existUser) {
             return res.send({
@@ -78,7 +79,7 @@ class SessionController {
             role: role
         }
 
-        let resultUser = await userService.addUser(newUser)
+        let resultUser = await userService.create(newUser)
 
         const tokenUser = {
             username: newUser.username,
@@ -100,7 +101,7 @@ class SessionController {
 
     postRestorePass = async (req, res) => {
         const { username, password } = req.body
-        const userDB = await userService.getUserByUsername(username)
+        const userDB = await userService.getByUsername(username)
 
         if (!userDB) {
             return res.send({
@@ -149,7 +150,7 @@ class SessionController {
         }
 
         const { limit = 10, page = 1, category = {}, sort = {} } = req.query
-        const products = await productService.getProductsPaginated(limit, page, category, sort)
+        const products = await productService.getPaginated(limit, page, category, sort)
         const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = products
         const { username, first_name, last_name, date_of_birth, email, role } = req.user
 

@@ -1,5 +1,5 @@
 // Import
-const { messageService } = require("../service")
+const { messageService } = require("../service/index.service")
 
 // Code
 class ViewController {

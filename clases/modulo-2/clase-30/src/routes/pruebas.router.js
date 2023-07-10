@@ -4,6 +4,7 @@ const { Router } = require(`express`)
 // Imports rutas ––––––––––––––––––––––––––––––––––––––––––––
 const { auth } = require('../middlewares/authentication.js')
 const { sendMail } = require('../utils/sendMail.js')
+const { sendSms } = require('../utils/sendSms.js')
 
 // Declaración ––––––––––––––––––––––––––––––––––––––––––––––
 const router = Router()
@@ -24,8 +25,9 @@ router.get(`/mail`, async (req, res) => {
     res.send('Email enviado')
 })
 
-router.get(`/sms`, (req, res) => {
-    res.send('Email enviado')
+router.get(`/sms`, async (req, res) => {
+    await sendSms()
+    res.send('SMS enviado')
 })
 
 router.post(`/setcookieuser`, (req, res) => {

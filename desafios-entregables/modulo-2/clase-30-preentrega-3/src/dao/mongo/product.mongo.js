@@ -1,7 +1,7 @@
-// Imports rutas ––––––––––––––––––––––––––––––––––––––––––––
+// Imports
 const { productModel } = require("./models/product.model")
 
-// Clase ––––––––––––––––––––––––––––––––––––––––––––––––––––
+// Clase
 class ProductDaoMongo {
     constructor() {
         this.model = productModel
@@ -41,5 +41,5 @@ class ProductDaoMongo {
     delete = async (pid) => await this.model.deleteOne({ _id: pid })
 }
 
-// Export –––––––––––––––––––––––––––––––––––––––––––––––––––
+// Export
 module.exports = ProductDaoMongo

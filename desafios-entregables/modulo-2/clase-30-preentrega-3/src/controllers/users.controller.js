@@ -1,15 +1,17 @@
 // Import
-const { userService } = require("../service")
+const { userService } = require("../service/index.service")
 
 // Code
 class UserController {
-    getUsers = async (req, res) => {
+    getUsers = async () => await userService.get()
+
+    getUsersPaginated = async (req, res) => {
         try {
             const { page = 1 } = req.query
-            const users = await userService.getUsers(page)
+            const users = await userService.getPaginated(page)
             const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = users
             res.status(200).render(`users`, {
-                status: `Succes`,
+                status: `Success`,
                 users: docs,
                 hasPrevPage,
                 hasNextPage,
@@ -23,71 +25,13 @@ class UserController {
         }
     }
 
-    getUserById = async (req, res) => {
-        try {
-            const { uid } = req.params
+    getUserById = async (uid) => await userService.getById(uid)
 
-            let user = await userService.getUserById(uid)
-            res.status(200).send({
-                status: `Success`,
-                payload: user
-            })
-        } catch {
-            console.log(error)
-        }
-    }
+    createUser = async (newUser) => await userService.create(newUser)
 
-    createUser = async (req, res) => {
-        try {
-            const newUser = req.body
+    updateUser = async (uid, userToReplace) => await userService.update(uid, userToReplace)
 
-            let result = await userService.addUser(newUser)
-            res.status(200).send({
-                status: `Success`,
-                payload: result
-            })
-        } catch {
-            console.log(error)
-        }
-    }
-
-    updateUser = async (req, res) => {
-        try {
-            const { uid } = req.params
-            const user = req.body
-
-            const userToReplace = {
-                first_name: user.first_name,
-                last_name: user.last_name,
-                email: user.email,
-                gender: user.gender
-            }
-
-            let result = await userService.updateUser(uid, userToReplace)
-
-            res.status(200).send({
-                status: `Success`,
-                payload: result
-            })
-        } catch {
-            console.log(error)
-        }
-    }
-
-    deleteUser = async (req, res) => {
-        try {
-            const { uid } = req.params
-
-            let result = await userService.deleteUser(uid)
-
-            res.status(200).send({
-                status: `Success`,
-                payload: result
-            })
-        } catch {
-            console.log(error)
-        }
-    }
+    deleteUser = async (uid) => await userService.delete(uid)
 }
 
 // Export

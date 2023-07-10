@@ -17,6 +17,10 @@ const adminPassword = process.env.ADMIN_PASSWORD
 const persistence = process.env.PERSISTENCE
 const gmailUser = process.env.GMAIL_USER
 const gmailPassApp = process.env.GMAIL_PASS_APP
+const twilioAuthToken = process.env.TWILIO_AUTH_TOKEN
+const twilioAccountSid = process.env.TWILIO_ACCOUNT_SID
+const myPhoneNumber = process.env.MY_PHONE_NUMBER
+const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER
 
 module.exports = {
     port,
@@ -29,5 +33,9 @@ module.exports = {
     adminPassword,
     persistence,
     gmailUser,
-    gmailPassApp
+    gmailPassApp,
+    twilioAuthToken,
+    twilioAccountSid,
+    twilioPhoneNumber,
+    myPhoneNumber
 }

@@ -1,18 +1,20 @@
-// Imports rutas ––––––––––––––––––––––––––––––––––––––––––––
+// Imports
 const { cartModel } = require("./models/cart.model")
 
-// Clase ––––––––––––––––––––––––––––––––––––––––––––––––––––
+// Class
 class CartDaoMongo {
     constructor() {
-        this.carts = cartModel
+        this.model = cartModel
     }
 
-    get = async () => await this.carts.find({}).lean()
+    get = async () => await this.model.find({})
 
-    getById = async (cid) => await this.carts.findOne({ _id: cid }).lean()
+    getById = async (cid) => await this.model.findOne({ _id: cid })
 
-    getCartByIdProductsById = async (cid, pid, quantity) => {
-        const cart = await this.carts.findOne({ _id: cid }).lean();
+    create = async (newCart) => await this.model.create(newCart)
+
+    update = async (cid, pid, quantity) => {
+        const cart = await this.model.findOne({ _id: cid }).lean();
         const productIndex = cart.products.findIndex((product) => product.product._id.toString() === pid);
 
         if (quantity) {
@@ -21,15 +23,14 @@ class CartDaoMongo {
             quantity = 1
         }
 
-
         if (productIndex === -1) {
-            await this.carts.updateOne(
+            await this.model.updateOne(
                 { _id: cid },
                 { $push: { products: { product: pid, quantity: quantity } } }
             );
             return `Producto agregado`
         } else {
-            await this.carts.updateOne(
+            await this.model.updateOne(
                 { _id: cid, "products.product": pid },
                 { $inc: { "products.$.quantity": quantity } }
             );
@@ -37,21 +38,17 @@ class CartDaoMongo {
         }
     }
 
-    createCart = async (newCart) => await this.carts.create(newCart)
-
-    updateCart = async (cid, updatedCart) => await this.carts.updateOne({ _id: cid }, updatedCart)
-
-    deleteProductByIdInCart = async (cid, pid) => await this.carts.findOneAndUpdate(
+    deleteProductInCart = async (cid, pid) => await this.model.findOneAndUpdate(
         { _id: cid },
         { $pull: { products: { product: pid } } }
     )
 
-    deleteProducts = async (cid) => await this.carts.updateOne(
+    deleteProducts = async (cid) => await this.model.updateOne(
         { _id: cid },
         { $set: { products: [] } }
     )
 }
 
 
-// Export –––––––––––––––––––––––––––––––––––––––––––––––––––
+// Export
 module.exports = CartDaoMongo

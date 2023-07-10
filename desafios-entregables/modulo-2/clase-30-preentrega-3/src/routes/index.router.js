@@ -1,38 +1,35 @@
-// Imports externos –––––––––––––––––––––––––––––––––––––––––
+// Imports
 const { Router } = require(`express`)
-
-// Imports rutas ––––––––––––––––––––––––––––––––––––––––––––
-const productRouter = require(`./product.router`)
-const userRouter = require(`./user.router`)
 const viewRouter = require(`./view.router`)
-const cartRouter = require(`./cart.router`)
-const pruebasRouter = require(`./pruebas.router`)
 const messageRouter = require(`./message.router`)
 const { uploader } = require("../utils/multer")
 const sessionRouter = require(`./session.router`)
-const UsersRouter = require('./newUser.routerGeneric')
-const contactRouter = require('./contact.router')
+const UsersRouter = require('./user.routerGeneric')
+const TicketsRouter = require('./ticket.routerGeneric')
+const CartsRouter = require('./cart.routerGeneric')
+const ProductRouter = require("./product.routerGeneric")
 
-// Declaración ––––––––––––––––––––––––––––––––––––––––––––––
+// Declaration
 const router = Router()
 const usersRouter = new UsersRouter()
+const ticketsRouter = new TicketsRouter()
+const cartsRouter = new CartsRouter()
+const productsRouter = new ProductRouter()
 
-// Configuración ––––––––––––––––––––––––––––––––––––––––––––
+// Code
 router.use(`/`, viewRouter)
 
-router.use(`/api/products`, productRouter)
+router.use(`/api/products`, productsRouter.getRouter())
 
 router.use(`/api/users`, usersRouter.getRouter())
 
-router.use(`/api/carts`, cartRouter)
+router.use(`/api/carts`, cartsRouter.getRouter())
+
+router.use('/api/tickets', ticketsRouter.getRouter())
 
 router.use(`/api/session`, sessionRouter)
 
 router.use(`/chat`, messageRouter)
-
-router.use(`/pruebas`, pruebasRouter)
-
-router.use(`/api/contact`, contactRouter)
 
 router.post(`/upload`, uploader.single(`myFile`), (req, res) => {
     res.status(200).send({
@@ -41,5 +38,5 @@ router.post(`/upload`, uploader.single(`myFile`), (req, res) => {
     })
 })
 
-// Export –––––––––––––––––––––––––––––––––––––––––––––––––––
+// Export
 module.exports = router

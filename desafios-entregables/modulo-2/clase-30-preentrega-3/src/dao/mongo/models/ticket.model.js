@@ -2,26 +2,23 @@
 const { Schema, model } = require(`mongoose`)
 
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
-const collection = `contact`
+const collection = `tickets`
 
 // Schema –––––––––––––––––––––––––––––––––––––––––––––––––––
-const contactSchema = new Schema({
-    first_name: {
+const ticketSchema = new Schema({
+    code: {
         type: String,
-        required: true
+        unique: true
     },
-    last_name: {
-        type: String,
-        required: true
-    },
-    active: Boolean,
-    phone: String
+    purchase_datatime: Date,
+    amount: Number,
+    purchaser: String
 })
 
 // Configuración ––––––––––––––––––––––––––––––––––––––––––––
-const contactModel = model(collection, contactSchema)
+const ticketModel = model(collection, ticketSchema)
 
 // Export –––––––––––––––––––––––––––––––––––––––––––––––––––
 module.exports = {
-    contactModel
-}   
+    ticketModel
+}

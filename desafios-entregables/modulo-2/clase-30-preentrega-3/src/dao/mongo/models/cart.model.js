@@ -1,11 +1,11 @@
-// Imports externos –––––––––––––––––––––––––––––––––––––––––
+// Imports
 const { Schema, model } = require(`mongoose`)
 const mongoosePaginate = require(`mongoose-paginate-v2`)
 
-// Configuración ––––––––––––––––––––––––––––––––––––––––––––
+// Config
 const collection = `carts`
 
-// Schema –––––––––––––––––––––––––––––––––––––––––––––––––––
+// Schema
 const cartSchema = new Schema({
     products: [{
         product: {
@@ -20,11 +20,11 @@ cartSchema.pre(`findOne`, function(){
     this.populate(`products.product`)
 })
 
-// Configuración ––––––––––––––––––––––––––––––––––––––––––––
+// Config
 cartSchema.plugin(mongoosePaginate)
 const cartModel = model(collection, cartSchema)
 
-// Export –––––––––––––––––––––––––––––––––––––––––––––––––––
+// Export
 module.exports = {
     cartModel
 }

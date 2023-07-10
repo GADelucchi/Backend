@@ -3,38 +3,37 @@ const { connectDB } = require("../config/serverConfig");
 
 let UserDao
 let ProductDao
-let ContactDao
+let TicketDao
+let CartDao
 
 switch (persistence) {
     case 'MONGO':
         connectDB()
         const UserDaoMongo = require('./mongo/user.mongo')
         const ProductDaoMongo = require('./mongo/product.mongo')
-        const ContactDaoMongo = require('./mongo/contact.mongo')
+        const TicketDaoMongo = require('./mongo/ticket.mongo')
+        const CartDaoMongo = require('./mongo/cart.mongo')
 
         UserDao = UserDaoMongo
         ProductDao = ProductDaoMongo
-        ContactDao = ContactDaoMongo
+        TicketDao = TicketDaoMongo
+        CartDao = CartDaoMongo
         break;
 
     case 'FILE':
         const UserDaoFile= require('./file/user.file')
         const ProductDaoFile = require('./file/product.file')
-        const ContactDaoFile = require('./file/contact.file')
 
         UserDao = UserDaoFile
         ProductDao = ProductDaoFile
-        ContactDao = ContactDaoFile
         break;
         
         case 'MEMORY':
         const UserDaoMemory = require('./memory/product.memory')
         const ProductDaoMemory = require('./memory/user.memory')
-        const ContactDaoMemory = require('./memory/contact.memory')
 
         UserDao = UserDaoMemory
         ProductDao = ProductDaoMemory
-        ContactDao = ContactDaoMemory
         break;
 
     default:
@@ -44,5 +43,6 @@ switch (persistence) {
 module.exports = {
     UserDao,
     ProductDao,
-    ContactDao
+    TicketDao,
+    CartDao
 }

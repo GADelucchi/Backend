@@ -9,7 +9,6 @@ const { create } = require(`connect-mongo`)
 const passport = require("passport")
 const cors = require('cors')
 
-
 // Imports rutas ––––––––––––––––––––––––––––––––––––––––––
 const routerServer = require(`./routes/index.router`)
 const { connectDB } = require(`./config/serverConfig`)
@@ -19,11 +18,6 @@ const config = require('../process/config')
 
 // Instancia ––––––––––––––––––––––––––––––––––––––––––––––
 const app = express()
-const messageManagerMongo = new MessageManagerMongo
-
-// Ejecución ––––––––––––––––––––––––––––––––––––––––––––––
-console.log(config);
-connectDB()
 
 // Configuración ––––––––––––––––––––––––––––––––––––––––––
 app.engine(`handlebars`, handlebars.engine())
@@ -56,6 +50,7 @@ io.on(`connection`, socket => {
 
     socket.on(`message`, async (data) => {
         try {
+            const messageManagerMongo = new MessageManagerMongo
             await messageManagerMongo.addMessage(data)
             let allMessages = await messageManagerMongo.getMessages()
             io.emit(`messageLogs`, allMessages)
