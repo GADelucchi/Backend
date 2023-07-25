@@ -1,11 +1,11 @@
 {
-  "name": "clase-34",
+  "name": "clase-35",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start:dev": "nodemon src/app.js --mode development",
-    "start": "node src/app.js --mode production"
+    "dev": "nodemon src/server.js --mode development",
+    "start": "node src/server.js --mode production"
   },
   "keywords": [],
   "author": "",
