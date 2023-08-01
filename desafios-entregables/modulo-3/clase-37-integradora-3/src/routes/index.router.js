@@ -1,13 +1,12 @@
 // Imports
-const { Router } = require(`express`)
-const viewRouter = require(`./view.router`)
-const { uploader } = require("../utils/multer")
-const sessionRouter = require(`./session.router`)
+const { Router } = require('express')
+const viewRouter = require('./view.router')
+const { uploader } = require('../utils/multer')
+const sessionRouter = require('./session.router')
 const UsersRouter = require('./user.routerGeneric')
 const TicketsRouter = require('./ticket.routerGeneric')
 const CartsRouter = require('./cart.routerGeneric')
-const ProductRouter = require("./product.routerGeneric")
-const loggerRouter = require('./logger.router.js')
+const ProductRouter = require('./product.routerGeneric')
 
 // Declaration
 const router = Router()
@@ -28,8 +27,6 @@ router.use(`/api/carts`, cartsRouter.getRouter())
 router.use('/api/tickets', ticketsRouter.getRouter())
 
 router.use(`/api/session`, sessionRouter)
-
-router.use('/logger-test', loggerRouter)
 
 router.post(`/upload`, uploader.single(`myFile`), (req, res) => {
     res.status(200).send({

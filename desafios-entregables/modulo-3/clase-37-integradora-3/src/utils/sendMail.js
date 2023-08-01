@@ -12,16 +12,11 @@ const transport = nodemailer.createTransport({
     }
 })
 
-exports.sendMail = async (to, subject, html) => {
+exports.sendMail = async (email, subject, html) => {
     return await transport.sendMail({
-        from: 'Gastón ,gdelucchi97@gmail.com>',
-        to: to,
+        from: 'Server <gdelucchi97@gmail.com>',
+        to: email,
         subject: subject,
-        html: html,
-        attachments: [{
-            filename: 'nodejs.png',
-            path: __dirname + '/nodejs.png',
-            cid: 'nodejs'
-        }]
+        html: html
     })
 }

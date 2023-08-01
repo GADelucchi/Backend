@@ -1,7 +1,8 @@
+const { logger } = require("../config/logger");
 const { EError } = require("../utils/CustomError/EErrors");
 
 exports.errorHandler = (err, req, res, next) => {
-    console.log(err.cause)
+    logger.info(err.cause)
     switch (err.code) {
         case EError.INVALID_ERROR:
             return res.send({

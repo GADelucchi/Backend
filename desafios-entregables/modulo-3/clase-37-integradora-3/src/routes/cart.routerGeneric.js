@@ -102,7 +102,7 @@ class CartsRouter extends RouterClass {
                     purchaser: req.user.email
                 })
 
-                sendMail(req.user.email, 'Compra finalizada', `<div><h1>Gracias por tu compra</h1></div>`)
+                sendMail(req.user.email, 'Compra finalizada', `<h1>Gracias por tu compra</h1>`)
 
                 res.sendSuccess(ticket)
             } catch (error) {

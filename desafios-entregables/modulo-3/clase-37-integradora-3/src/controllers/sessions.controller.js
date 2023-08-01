@@ -1,12 +1,12 @@
 // Import
 const { userService, productService } = require("../service/index.service");
-const { EError } = require("../utils/CustomError/EErrors");
-const { CustomError } = require("../utils/CustomError/customError");
-const { generateUserErrorInfo } = require("../utils/CustomError/info");
+const { sendMail } = require('../utils/sendMail')
+const { port } = require('../../process/config')
 
 // Imports rutas
 const { createHash, isValidPassword } = require('../utils/bcryptHash.js')
-const { generateToken } = require('../utils/jwt.js')
+const { generateToken, generateTokenRestorePass, authTokenRestorePass } = require('../utils/jwt.js');
+const { logger } = require("../config/logger");
 
 // Code
 class SessionController {
@@ -69,15 +69,6 @@ class SessionController {
 
             const existUser = await userService.getByEmail(email)
 
-            // if (!username || !first_name || !last_name || !email) {
-            //     CustomError.createError({
-            //         name: 'User creation error',
-            //         cause: generateUserErrorInfo({ username, first_name, last_name, email }),
-            //         message: 'Error trying to create user',
-            //         code: EError.INVALID_ERROR
-            //     })
-            // }
-
             if (existUser) {
                 return res.send({
                     status: `Error`,
@@ -103,14 +94,6 @@ class SessionController {
 
             let resultUser = await userService.create(newUser)
 
-            // const tokenUserPrueba = {
-            //     username: username,
-            //     first_name: first_name,
-            //     last_name: last_name,
-            //     email: email,
-            // }
-            // const regiter_token_prueba = generateToken(tokenUserPrueba)
-
             const tokenUser = {
                 username: newUser.username,
                 first_name: newUser.first_name,
@@ -132,6 +115,26 @@ class SessionController {
         }
     }
 
+    initRestorePass = (req, res) => res.status(200).render(`sendMailTo`)
+
+    sendMail = (req, res) => {
+        const { email } = req.body
+        const restore_token = generateTokenRestorePass(email)
+
+        sendMail(email, 'Restablecimiento de clave solicitado',
+            `<form action="http://localhost:${port}/api/session/getrestorepass/${restore_token}" method="GET">
+                <button type="submit">Restablecer</button>
+            </form>`
+        )
+
+
+        res.status(200).render('mailSended')
+    }
+
+    getRestorePass = async (req, res) => {
+        res.status(200).render('restorePass')
+    }
+
     postRestorePass = async (req, res) => {
         const { username, password } = req.body
         const userDB = await userService.getByUsername(username)
@@ -143,27 +146,28 @@ class SessionController {
             })
         }
 
-        userDB.password = createHash(password)
-        await userDB.save()
+        
+        
+        if (isValidPassword(password, userDB)) {
+            return res.status(400).send({
+                status: 'Error',
+                message: 'Cannot use same password'
+            })
+        } else {
+            const passwordHashed = createHash(password)
+            userDB.password = passwordHashed
+            await userDB.save()
 
-        res.status(200).json({
-            status: `Success`,
-            message: `Password successfully updated`
-        })
+            res.status(200).send({
+                status: `Success`,
+                message: `Password successfully updated`
+            })
+        }
     }
+
 
     getLogout = (req, res) => {
         res.status(200).cookie('accesToken', null, { expires: new Date(0) }).render('login', {})
-    }
-
-    getCounter = (req, res) => {
-        if (req.session.counter) {
-            req.session.counter++
-            res.send(`Se ha visitado el sitio ${req.session.counter} veces.`)
-        } else {
-            req.session.counter = 1
-            res.send(`Bienvenido`)
-        }
     }
 
     getGithubCallback = async (req, res) => {

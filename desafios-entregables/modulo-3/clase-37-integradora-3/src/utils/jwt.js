@@ -1,9 +1,25 @@
 const jwt = require('jsonwebtoken')
 const { jwtPrivateKey } = require('../../process/config')
+const { logger } = require('../config/logger')
 
 const generateToken = (user) => {
     const token = jwt.sign({ user }, jwtPrivateKey, { expiresIn: '1d' })
     return token
+}
+
+const generateTokenRestorePass = (email) => {
+    const tokenRestorePass = jwt.sign({ email }, jwtPrivateKey, { expiresIn: '1s' })
+    return tokenRestorePass
+}
+
+const authTokenRestorePass = (req, res, next) => {
+    const { token } = req.params
+    jwt.verify(token, jwtPrivateKey, (error, credential) => {
+        if (error) {
+            return res.status(403).render('sendMailAgain')
+        }
+        next()
+    })
 }
 
 const authToken = (req, res, next) => {
@@ -33,5 +49,7 @@ const authToken = (req, res, next) => {
 
 module.exports = {
     generateToken,
-    authToken
+    generateTokenRestorePass,
+    authToken,
+    authTokenRestorePass
 }
