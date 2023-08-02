@@ -32,7 +32,7 @@ class ProductDaoMongo {
         )
     }
 
-    getById = async (pid) => await this.model.find({ _id: pid })
+    getById = async (pid) => await this.model.findOne({ _id: pid })
 
     create = async (newProduct) => await this.model.create(newProduct)
 

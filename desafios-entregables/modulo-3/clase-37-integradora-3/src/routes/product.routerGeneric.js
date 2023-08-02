@@ -1,8 +1,11 @@
+const { jwtPrivateKey } = require("../../process/config");
+const { logger } = require("../config/logger");
 const productsController = require("../controllers/products.controller");
 const { EError } = require("../utils/CustomError/EErrors");
 const { CustomError } = require("../utils/CustomError/customError");
 const { generateProductErrorInfo } = require("../utils/CustomError/info");
 const { RouterClass } = require("./routerClass");
+const jwt = require('jsonwebtoken')
 
 class ProductRouter extends RouterClass {
     init() {
@@ -58,7 +61,7 @@ class ProductRouter extends RouterClass {
             }
         })
 
-        this.post('/', ['PUBLIC'], async (req, res, next) => {
+        this.post('/', ['ADMIN', 'PREMIUM'], async (req, res, next) => {
             try {
                 const newProduct = req.body
                 if (!newProduct.title ||
@@ -75,18 +78,25 @@ class ProductRouter extends RouterClass {
                     })
                 }
 
+                const authCookie = req.cookies.accessToken
+                const user = jwt.verify(authCookie, jwtPrivateKey)
+
+                if (user.user.role === 'premium') {
+                    newProduct.owner = user.user.email
+                }
+
                 const result = await productsController.createProduct(newProduct)
 
                 if (!result) {
-                    throw new Error(error)
+                    throw new Error(err)
                 }
                 res.sendSuccess(result)
             } catch (err) {
-                next(err)
+                logger.error(err)
             }
         })
 
-        this.put('/:pid', ['ADMIN'], async (req, res) => {
+        this.put('/:pid', ['ADMIN', 'PREMIUM'], async (req, res) => {
             try {
                 const { pid } = req.params
                 const product = req.body
@@ -110,15 +120,32 @@ class ProductRouter extends RouterClass {
             }
         })
 
-        this.delete('/:pid', ['ADMIN'], async (req, res) => {
+        this.delete('/:pid', ['ADMIN', 'PREMIUM'], async (req, res) => {
             try {
                 const { pid } = req.params
-                const result = await productsController.deleteProduct(pid)
+                const product = await productsController.getProductById(pid)
 
-                if (!result) {
+                if (!product) {
                     throw new Error(error)
                 }
-                res.sendSuccess(result)
+
+                const authCookie = req.cookies.accessToken
+                const user = jwt.verify(authCookie, jwtPrivateKey)
+
+                if (user.user.role === 'premium') {
+                    if (product.owner === user.user.email) {
+                        const result = await productsController.deleteProduct(pid)
+                        return res.sendSuccess(result)
+                    } else {
+                        return res.send({
+                            status: 'Error',
+                            message: 'You are not the owner of this product. You can delete it'
+                        })
+                    }
+                } else {
+                    const result = await productsController.deleteProduct(pid)
+                    return res.sendSuccess(result)
+                }
             } catch (error) {
                 logger.error(error)
             }

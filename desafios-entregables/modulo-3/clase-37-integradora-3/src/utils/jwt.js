@@ -8,7 +8,7 @@ const generateToken = (user) => {
 }
 
 const generateTokenRestorePass = (email) => {
-    const tokenRestorePass = jwt.sign({ email }, jwtPrivateKey, { expiresIn: '1s' })
+    const tokenRestorePass = jwt.sign({ email }, jwtPrivateKey, { expiresIn: '1h' })
     return tokenRestorePass
 }
 
@@ -28,7 +28,7 @@ const authToken = (req, res, next) => {
     if (!authCookie) {
         return res.status(401).send({
             status: `Error`,
-            error: `No autenticado`
+            error: `No authtentication cookie detected`
         })
     }
 

@@ -32,11 +32,26 @@ class UserRouter extends RouterClass {
             }
         })
 
+        this.put('/premium/:uid', ['ADMIN'], async (req, res) => {
+            const { uid } = req.params
+            const userSearched = await usersController.getUserById(uid)
+
+            if (userSearched.role === 'premium') {
+                userSearched.role = 'user'
+                const result = await usersController.updateUser(uid, userSearched)
+                return res.sendSuccess(result)
+            } else if (userSearched.role === 'user') {
+                userSearched.role = 'premium'
+                const result = await usersController.updateUser(uid, userSearched)
+                return res.sendSuccess(result)
+            }
+        })
+
         this.post('/', ['ADMIN'], async (req, res) => {
             try {
                 const newUser = req.body
                 const user = await usersController.createUser(newUser)
-                
+
                 if (user === null) {
                     throw new Error(error)
                 }

@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const jwt = require('jsonwebtoken');
 const { logger } = require("../config/logger");
+const { jwtPrivateKey } = require("../../process/config");
 
 class RouterClass {
     constructor() {
@@ -36,10 +37,9 @@ class RouterClass {
         if (policies[0] === 'PUBLIC') return next()
 
         const authCookie = req.cookies.accessToken
-        if (!authCookie) return res.send({status: 'Error', error: 'No authorization'})
+        if (!authCookie) return res.send({status: 'Error', error: 'No authorization cookie detected'})
 
-        const token = authCookie
-        const user = jwt.verify(token, 'palabraJwtSecreta')
+        const user = jwt.verify(authCookie, jwtPrivateKey)
         if (!policies.includes(user.user.role.toUpperCase())) return res.status(403).send({status: 'Error', error: 'Not permission'})
         req.user = user
         next()
