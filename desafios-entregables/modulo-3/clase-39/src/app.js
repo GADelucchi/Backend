@@ -1,4 +1,4 @@
-// Imports externos
+// Imports
 const express = require(`express`)
 const handlebars = require(`express-handlebars`)
 const { Server } = require(`socket.io`)
@@ -7,8 +7,8 @@ const morgan = require(`morgan`)
 const cookieParser = require(`cookie-parser`)
 const passport = require("passport")
 const cors = require('cors')
-
-// Imports rutas
+const swaggerJsDoc = require('swagger-jsdoc')
+const swaggerUiExpress = require('swagger-ui-express')
 const routerServer = require(`./routes/index.router`)
 const { initPassport } = require("./passport-jwt/passport.config")
 const { errorHandler } = require("./middlewares/error.middleware")
@@ -17,9 +17,6 @@ const { port } = require("../process/config")
 
 // Instancia
 const app = express()
-
-// Ejecución
-// console.log(config)
 
 // Configuración
 app.engine(`handlebars`, handlebars.engine())
@@ -37,13 +34,13 @@ app.use(cookieParser(`P@l@braS3cre3t0`))
 initPassport()
 passport.use(passport.initialize())
 
-// Configuración puerto
+// Puerto
 const httpServer = app.listen(port, (error) => {
     if (error) logger.error(`Error en el servidor`, error)
     logger.info(`Escuchando en el puerto: ${port}`);
 })
 
-// Instancia de Websocket
+// Websocket
 const io = new Server(httpServer)
 socketProduct(io)
 
@@ -66,10 +63,23 @@ io.on(`connection`, socket => {
     })
 })
 
-//Rutas
+// Swagger
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.1',
+        info: {
+            title: 'Documentación de adoptame',
+            description: 'Esta es la documentación de adoptame'
+        }
+    },
+    apis: [`${__dirname}/docs/**/*.yaml`]
+}
 
+const specs = swaggerJsDoc(swaggerOptions)
+
+// Rutas
+
+app.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 app.use(`/static`, express.static(__dirname + `/public`))
-
 app.use(routerServer)
-
 app.use(errorHandler)

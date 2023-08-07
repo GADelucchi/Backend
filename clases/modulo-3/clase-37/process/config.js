@@ -7,7 +7,7 @@ dotenv.config({
 })
 
 const port = process.env.PORT
-const mongoUrl = process.env.MONGO_URL_LOCAL
+const mongoUrl = process.env.MONGO_URL
 const jwtPrivateKey = process.env.JWT_PRIVATE_KEY
 const githubClientID = process.env.GITHUB_CLIENT_ID
 const githubClientSecret = process.env.GITHUB_CLIENT_SECRET

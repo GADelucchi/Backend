@@ -37,7 +37,7 @@ class RouterClass {
         if (policies[0] === 'PUBLIC') return next()
 
         const authCookie = req.cookies.accessToken
-        if (!authCookie) return res.send({status: 'Error', error: 'No authorization cookie detected'})
+        if (!authCookie) return res.status(401).send({status: 'Error', error: 'No authorization cookie detected'})
 
         const user = jwt.verify(authCookie, jwtPrivateKey)
         if (!policies.includes(user.user.role.toUpperCase())) return res.status(403).send({status: 'Error', error: 'Not permission'})

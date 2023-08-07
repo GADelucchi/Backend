@@ -23,13 +23,16 @@ class CartsRouter extends RouterClass {
         }
         )
 
-        this.get('/:cid', ['USER'], async (req, res) => {
+        this.get('/:cid', ['USER', 'PREMIUM'], async (req, res) => {
             try {
                 const { cid } = req.params
                 const result = await cartsController.getCartById(cid)
 
                 if (result === null) {
-                    throw new Error(error)
+                    return res.status(400).send({
+                        status: `Error`,
+                        message: 'No found',
+                    })
                 }
                 res.sendSuccess(result)
             } catch (error) {
@@ -37,7 +40,7 @@ class CartsRouter extends RouterClass {
             }
         })
 
-        this.get('/:cid/purchase', ['USER'], async (req, res) => {
+        this.get('/:cid/purchase', ['USER', 'PREMIUM'], async (req, res) => {
             try {
                 const { cid } = req.params
                 const cart = await cartsController.getCartById(cid)
@@ -48,7 +51,14 @@ class CartsRouter extends RouterClass {
 
                 const productIds = cart.products.map((product) => product.product._id.toString());
 
-                const products = await productsController.getProductById(productIds);
+                const products = []
+
+                for (const productId of productIds) {
+                    const product = await productsController.getProductById(productId);
+                    if (product) {
+                        products.push(product);
+                    }
+                }
 
                 const insufficientStock = products.filter((product) => {
                     const cartProduct = cart.products.find(
@@ -59,7 +69,7 @@ class CartsRouter extends RouterClass {
 
                 if (insufficientStock.length > 0) {
                     const insufficientProducts = insufficientStock.map((product) => product.name);
-                    throw new Error(`Stock insuficiente`);
+                    throw new Error('Stock insuficiente');
                 }
 
                 for (const cartProduct of cart.products) {
@@ -110,10 +120,16 @@ class CartsRouter extends RouterClass {
             }
         })
 
-        this.post('/', ['USER'], async (req, res) => {
+        this.post('/', ['USER', 'PREMIUM'], async (req, res) => {
             try {
+                const authCookie = req.cookies.accessToken
+                const user = jwt.verify(authCookie, jwtPrivateKey)
+
                 const cart = req.body
+                cart.owner = user.user.email
+
                 const result = await cartsController.createCart(cart)
+
 
                 if (result === `Todos los campos son obligatorios`) {
                     res.status(400).send({
@@ -149,7 +165,7 @@ class CartsRouter extends RouterClass {
             }
         })
 
-        this.delete('/:cid/product/:pid', ['USER'], async (req, res) => {
+        this.delete('/:cid/product/:pid', ['USER', 'ADMIN'], async (req, res) => {
             try {
                 const { cid, pid } = req.params
                 const findedProduct = await productsController.getProductById(pid)
@@ -158,22 +174,22 @@ class CartsRouter extends RouterClass {
                     throw new Error(`No existe ningún producto con ese ID`)
                 } else {
                     const result = await cartsController.eraseProduct(cid, pid)
-                    res.sendSuccess(result)
+                    res.sendSuccess('Eliminado')
                 }
             } catch (error) {
                 logger.error(error)
             }
         })
 
-        this.delete('/:cid', ['USER'], async (req, res) => {
+        this.delete('/:cid', ['USER', 'PREMIUM'], async (req, res) => {
             try {
                 const { cid } = req.params
-                const result = await cartService.emptyCart(cid)
+                const result = await cartsController.emptyCart(cid)
 
                 if (result === null) {
                     throw new Error(error)
                 }
-                res.sendSuccess(result)
+                res.sendSuccess('Eliminado')
             } catch (error) {
                 logger.error(error)
             }

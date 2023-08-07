@@ -7,16 +7,19 @@ const collection = `carts`
 
 // Schema
 const cartSchema = new Schema({
-    products: [{
-        product: {
-            type: Schema.Types.ObjectId,
-            ref: `products`
-        },
-        quantity: Number 
-    }]
+    products:[{
+            product: {
+                type: Schema.Types.ObjectId,
+                ref: `products`
+            },
+            quantity: Number
+        }],
+    owner: {
+        type: String
+    }
 })
 
-cartSchema.pre(`findOne`, function(){
+cartSchema.pre(`findOne`, function () {
     this.populate(`products.product`)
 })
 
