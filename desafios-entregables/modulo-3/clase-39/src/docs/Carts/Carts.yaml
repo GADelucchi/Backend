@@ -4,6 +4,8 @@ paths:
       summary: Obtiene todos los carritos. ADMIN token requerido.
       tags:
         - Carts
+      security:
+        - accessToken: []
       responses:
         "200":
           description: Carritos obtenidos exitosamente.
@@ -32,6 +34,8 @@ paths:
       summary: Crea un carrito nuevo. USER o PREMIUM token requerido.
       tags:
         - Carts
+      security:
+        - accessToken: []
       requestBody:
         required: true
         content:
@@ -65,6 +69,8 @@ paths:
       summary: Obtiene un carrito a partir del cid. USER o PREMIUM token requerido.
       tags:
         - Carts
+      security:
+        - accessToken: []
       parameters:
       - name: cid
         in: path
@@ -104,6 +110,8 @@ paths:
       summary: Borra todos los productos el carrito con el mismo cid. USER o PREMIUM token requerido.
       tags:
         - Carts
+      security:
+        - accessToken: []
       parameters:
       - name: cid
         in: path
@@ -140,10 +148,12 @@ paths:
           description: Error interno del servidor.
 
   /api/carts/{cid}/purchase:
-    get:
+    post:
       summary: Proceso de finalización de la compra. USER o PREMIUM token requerido.
       tags:
         - Carts
+      security:
+        - accessToken: []
       parameters:
       - name: cid
         in: path
@@ -184,6 +194,8 @@ paths:
       summary: Agrega un producto al carrito seleccionado. ADMIN token requerido.
       tags:
         - Carts
+      security:
+        - accessToken: []
       parameters:
       - name: pid
         in: path
@@ -235,6 +247,8 @@ paths:
       summary: Elimina un producto del carrito seleccionado. USER, PREMIUM o ADMIN token requerido.
       tags:
         - Carts
+      security:
+        - accessToken: []
       parameters:
       - name: pid
         in: path

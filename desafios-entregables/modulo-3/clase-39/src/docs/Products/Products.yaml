@@ -20,6 +20,8 @@ paths:
       summary: Crea un producto nuevo. ADMIN o PREMIUM token requerido.
       tags:
         - Products
+      security:
+        - accessToken: []
       requestBody:
         required: true
         content:
@@ -84,6 +86,8 @@ paths:
       summary: Modifica un producto obtenido a partir del pid. ADMIN o PREMIUM token requerido.
       tags:
         - Products
+      security:
+        - accessToken: []
       parameters:
       - name: pid
         in: path
@@ -123,6 +127,8 @@ paths:
       summary: Elimina un producto a partir del pid. ADMIN o PREMIUM token requerido.
       tags:
         - Products
+      security:
+        - accessToken: []
       parameters:
       - name: pid
         in: path
