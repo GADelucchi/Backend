@@ -87,12 +87,18 @@ class ProductRouter extends RouterClass {
 
                 const result = await productsController.createProduct(newProduct)
 
-                if (!result) {
-                    throw new Error(err)
-                }
+
+
                 res.sendSuccess(result)
             } catch (err) {
-                logger.error(err)
+                if (err.code === 11000) {
+                    return res.status(500).send({
+                        status: 'Error',
+                        payload: 'Código ya existente'
+                    })
+                } else {
+                    logger.error(err)
+                }
             }
         })
 

@@ -1,12 +1,12 @@
 paths:
   /api/carts/:
     get:
-      summary: Obtiene todos los carritos.
+      summary: Obtiene todos los carritos. ADMIN token requerido.
       tags:
         - Carts
       responses:
         "200":
-          description: Los carritos fueron obtenidos exitosamente.
+          description: Carritos obtenidos exitosamente.
           content:
             application/json:
               schema:
@@ -26,9 +26,10 @@ paths:
               schema:
                 $ref: '#components/messages/errors/forbiden'
         "500":
-          description: Error interno del servidor, generalmente producido por una query defectuosa.
+          description: Error interno del servidor.
+
     post:
-      summary: Crea un carrito nuevo.
+      summary: Crea un carrito nuevo. USER o PREMIUM token requerido.
       tags:
         - Carts
       requestBody:
@@ -57,10 +58,11 @@ paths:
               schema:
                 $ref: '#components/messages/errors/forbiden'
         "500":
-          description: Error interno del servidor, generalmente producido por una query defectuosa.
+          description: Error interno del servidor.
+
   /api/carts/{cid}:
     get:
-      summary: Obtiene un carrito a partir del cid/ID.
+      summary: Obtiene un carrito a partir del cid. USER o PREMIUM token requerido.
       tags:
         - Carts
       parameters:
@@ -72,7 +74,7 @@ paths:
           $type: String
       responses:
         "200":
-          description: El carrito fue obtenido exitosamente.
+          description: Carrito obtenido exitosamente.
           content:
             application/json:
               schema:
@@ -90,15 +92,16 @@ paths:
               schema:
                 $ref: '#components/messages/errors/forbiden'
         "404":
-          description: El carrito solicitado no fue encontrado.
+          description: Carrito no encontrado.
           content:
             application/json:
               schema:
                 $ref: '#components/messages/errors/notFound'
         "500":
-          description: Error interno del servidor, generalmente producido por una query defectuosa.
+          description: Error interno del servidor.
+
     delete:
-      summary: Borra todos los productos el carrito con el mismo cid/ID.
+      summary: Borra todos los productos el carrito con el mismo cid. USER o PREMIUM token requerido.
       tags:
         - Carts
       parameters:
@@ -110,7 +113,7 @@ paths:
           $type: String
       responses:
         "200":
-          description: Carrito borrado exitosamente.
+          description: Carrito vaciado exitosamente.
           content:
             application/json:
               schema:
@@ -128,16 +131,17 @@ paths:
               schema:
                 $ref: '#components/messages/errors/forbiden'
         "404":
-          description: El carrito solicitado no fue encontrado.
+          description: Carrito no encontrado.
           content:
             application/json:
               schema:
                 $ref: '#components/messages/errors/notFound'
         "500":
-          description: Error interno del servidor, generalmente producido por una query defectuosa.
+          description: Error interno del servidor.
+
   /api/carts/{cid}/purchase:
     get:
-      summary: Proceso de finalización de la compra.
+      summary: Proceso de finalización de la compra. USER o PREMIUM token requerido.
       tags:
         - Carts
       parameters:
@@ -167,16 +171,17 @@ paths:
               schema:
                 $ref: '#components/messages/errors/forbiden'
         "404":
-          description: El carrito solicitado no fue encontrado.
+          description: Carrito no encontrado.
           content:
             application/json:
               schema:
                 $ref: '#components/messages/errors/notFound'
         "500":
-          description: Error interno del servidor, generalmente producido por una query defectuosa.
-  /api/carts/:cid/product/:pid:
+          description: Error interno del servidor.
+
+  /api/carts/{cid}/product/{pid}:
     put:
-      summary: Agrega un producto al carrito seleccionado.
+      summary: Agrega un producto al carrito seleccionado. ADMIN token requerido.
       tags:
         - Carts
       parameters:
@@ -218,15 +223,16 @@ paths:
               schema:
                 $ref: '#components/messages/errors/forbiden'
         "404":
-          description: El carrito solicitado no fue encontrado.
+          description: Carrito no encontrado.
           content:
             application/json:
               schema:
                 $ref: '#components/messages/errors/notFound'
         "500":
-          description: Error interno del servidor, generalmente producido por una query defectuosa.
+          description: Error interno del servidor.
+
     delete:
-      summary: Elimina un producto del carrito seleccionado.
+      summary: Elimina un producto del carrito seleccionado. USER, PREMIUM o ADMIN token requerido.
       tags:
         - Carts
       parameters:
@@ -262,13 +268,14 @@ paths:
               schema:
                 $ref: '#components/messages/errors/forbiden'
         "404":
-          description: El carrito solicitado no fue encontrado.
+          description: Carrito no encontrado.
           content:
             application/json:
               schema:
                 $ref: '#components/messages/errors/notFound'
         "500":
-          description: Error interno del servidor, generalmente producido por una query defectuosa.
+          description: Error interno del servidor.
+
 components:
   schemas:
     Cart:
@@ -290,6 +297,7 @@ components:
           products: []
           owner: beguiristainmelina@hotmail.es
           __v: 0
+
   requestBodies:
     createCart:
       type: object
@@ -311,6 +319,7 @@ components:
           description: Cantidad de productos.
       example:
           quantity: 1
+
   messages:
     errors:
       unauthorized:
@@ -325,6 +334,7 @@ components:
         example:
           status: Error
           error: No authorization cookie detected.
+
       forbiden:
         type: object
         properties:
@@ -337,6 +347,7 @@ components:
         example:
           status: Error
           error: Not permission.
+
       notFound:
         type: object
         properties:
@@ -349,6 +360,7 @@ components:
         example:
           status: Error
           error: Not found.
+
     success:
       created:
         type: object
@@ -380,6 +392,7 @@ components:
             _id: "64d05f6777894430b30933c7",
             __v: 0
           }
+
       added:
         type: object
         properties:
@@ -392,6 +405,7 @@ components:
         example:
           status: Success
           payload: Producto agregado
+
       purchase:
         type: object
         properties:
@@ -411,6 +425,7 @@ components:
             _id: "64d071b46651985501f8a17e",
             __v: 0
           }
+
       deleted:
         type: object
         properties:

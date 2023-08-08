@@ -165,7 +165,7 @@ class CartsRouter extends RouterClass {
             }
         })
 
-        this.delete('/:cid/product/:pid', ['USER', 'ADMIN'], async (req, res) => {
+        this.delete('/:cid/product/:pid', ['USER', 'PREMIUM', 'ADMIN'], async (req, res) => {
             try {
                 const { cid, pid } = req.params
                 const findedProduct = await productsController.getProductById(pid)
