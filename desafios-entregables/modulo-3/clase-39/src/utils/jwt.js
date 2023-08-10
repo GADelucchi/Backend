@@ -6,22 +6,6 @@ const generateToken = (user) => {
     const token = jwt.sign({ user }, jwtPrivateKey, { expiresIn: '1d' })
     return token
 }
-
-const generateTokenRestorePass = (email) => {
-    const tokenRestorePass = jwt.sign({ email }, jwtPrivateKey, { expiresIn: '1h' })
-    return tokenRestorePass
-}
-
-const authTokenRestorePass = (req, res, next) => {
-    const { token } = req.params
-    jwt.verify(token, jwtPrivateKey, (error, credential) => {
-        if (error) {
-            return res.status(403).render('sendMailAgain')
-        }
-        next()
-    })
-}
-
 const authToken = (req, res, next) => {
     const authCookie = req.cookies
 
@@ -46,6 +30,31 @@ const authToken = (req, res, next) => {
         next()
     })
 }
+
+const generateTokenRestorePass = (email) => {
+    const tokenRestorePass = jwt.sign({ email }, jwtPrivateKey, { expiresIn: '1h' })
+    return tokenRestorePass
+}
+
+const authTokenRestorePass = (req, res, next) => {
+    const { token } = req.params
+
+    if (!token) {
+        return res.status(401).send({
+            status: `Error`,
+            error: `No authtentication cookie detected`
+        })
+    }
+    
+    jwt.verify(token, jwtPrivateKey, (error, credential) => {
+        if (error) {
+            return res.status(403).render('sendMailAgain')
+        }
+        req.email = credential.email
+        next()
+    })
+}
+
 
 module.exports = {
     generateToken,

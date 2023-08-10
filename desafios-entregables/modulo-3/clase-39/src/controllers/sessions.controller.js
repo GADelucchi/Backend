@@ -117,37 +117,50 @@ class SessionController {
 
     initRestorePass = (req, res) => res.status(200).render(`sendMailTo`)
 
-    sendMail = (req, res) => {
+    sendMail = async (req, res) => {
         const { email } = req.body
+        const user = await userService.getByEmail(email)
+
+        if (!user) {
+            return res.send({
+                status: 'Error',
+                message: 'Usuario no encontrado'
+            })
+        }
         const restore_token = generateTokenRestorePass(email)
 
         sendMail(email, 'Restablecimiento de clave solicitado',
-            `<form action="http://localhost:${port}/api/session/getrestorepass/${restore_token}" method="GET">
-                <button type="submit">Restablecer</button>
-            </form>`
+            `<a href="http://localhost:${port}/api/session/getrestorepass/${restore_token}">Restablecer</a>`
         )
 
-
-        res.status(200).render('mailSended')
+        res.status(200)
+            .cookie('restore_token', restore_token, { expiresIn: '1h', httpOnly: true })
+            .render('mailSended')
     }
 
     getRestorePass = async (req, res) => {
-        res.status(200).render('restorePass')
+        res.status(200).render('restorePass', { emailFromToken: req.email })
     }
 
     postRestorePass = async (req, res) => {
-        const { username, password } = req.body
-        const userDB = await userService.getByUsername(username)
+        const { email, password } = req.body
+
+        if (email !== req.body.email) {
+            return res.send({
+                status: 'Error',
+                message: 'Change your own password'
+            })
+        }
+
+        const userDB = await userService.getByEmail(email)
 
         if (!userDB) {
             return res.send({
                 status: `Error`,
-                message: `Username doesn't exist`
+                message: `Email doesn't exist`
             })
         }
 
-        
-        
         if (isValidPassword(password, userDB)) {
             return res.status(400).send({
                 status: 'Error',

@@ -1,8 +1,6 @@
 <div>
     <form action="/api/session/postrestorepass" method="POST">
-        <label>Usuario</label>
-        <input type="text" name="username">
-        <br>
+        <input type="hidden" name="email" value="{{emailFromToken}}">
         <label>Contraseña</label>
         <input type="password" name="password">
         <br>
