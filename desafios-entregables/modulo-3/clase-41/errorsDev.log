@@ -48,3 +48,4 @@ error: undefined {"code":11000,"index":0,"keyPattern":{"code":1},"keyValue":{"co
 error: undefined {"code":11000,"index":0,"keyPattern":{"code":1},"keyValue":{"code":"Mila"}}
 error: undefined {"code":11000,"index":0,"keyPattern":{"code":1},"keyValue":{"code":"Mila"}}
 error: undefined {"code":11000,"index":0,"keyPattern":{"code":1},"keyValue":{"code":"Mila"}}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"private\"","value":"private","valueType":"string"}

@@ -58,7 +58,7 @@ class SessionController {
 
     postRegister = async (req, res, next) => {
         try {
-            let { username,
+            let {
                 first_name,
                 last_name,
                 email,
@@ -83,7 +83,6 @@ class SessionController {
             }
 
             const newUser = {
-                username,
                 first_name,
                 last_name,
                 email,
@@ -95,7 +94,6 @@ class SessionController {
             let resultUser = await userService.create(newUser)
 
             const tokenUser = {
-                username: newUser.username,
                 first_name: newUser.first_name,
                 last_name: newUser.last_name,
                 email: newUser.email,

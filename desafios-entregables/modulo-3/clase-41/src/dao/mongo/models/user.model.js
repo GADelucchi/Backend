@@ -6,11 +6,6 @@ const collection = `users`
 
 // Schema –––––––––––––––––––––––––––––––––––––––––––––––––––
 const userSchema = new Schema({
-    username: {
-        type: String,
-        unique: true,
-        required: true,
-    },
     first_name: {
         type: String,
         required: true

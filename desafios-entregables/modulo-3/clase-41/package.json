@@ -1,11 +1,12 @@
 {
-  "name": "desafio-clase-39",
+  "name": "desafio-clase-41",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
     "start:dev": "nodemon src/app.js --mode development",
-    "start": "node src/app.js --mode production"
+    "start": "node src/app.js --mode production",
+    "test": "mocha test/supertest.test.js"
   },
   "keywords": [],
   "author": "",
@@ -39,5 +40,10 @@
     "swagger-ui-express": "^5.0.0",
     "twilio": "^4.13.0",
     "winston": "^3.10.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
+    "supertest": "^6.3.3"
   }
 }
