@@ -46,7 +46,7 @@ class SessionController {
             .send({
                 status: 'Success',
                 message: 'Login success',
-                userDB,
+                id: userDB._id,
                 access_token
             })
     }
