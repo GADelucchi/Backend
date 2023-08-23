@@ -6,7 +6,7 @@ const { logger } = require("../config/logger")
 // Configuraicón ––––––––––––––––––––––––––––––––––––––––––
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, `${dirname(__dirname)}/public/uploads`)
+        cb(null, `${dirname(__dirname)}/public/uploads/documents`)
     },
     filename: (req, file, cb) => {
         cb(null, `${Date.now()} - ${file.originalname}`)

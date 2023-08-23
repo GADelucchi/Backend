@@ -1,5 +1,6 @@
 const { logger } = require("../config/logger");
-const usersController = require("../controllers/users.controller");
+const usersController = require("../controllers/users.controller")
+const { uploader } = require("../utils/multer");
 const { RouterClass } = require("./routerClass");
 
 class UserRouter extends RouterClass {
@@ -46,6 +47,19 @@ class UserRouter extends RouterClass {
             }
         })
 
+        this.post('/:uid/documents', ['PUBLIC'], uploader.single(`myFile`), async (req, res) => {
+            try {
+                const { uid } = req.params
+
+                res.status(200).send({
+                    status: 'Success',
+                    message: 'Document successfully uploaded'
+                })
+            } catch (error) {
+                logger.error(error)
+            }
+        })
+
         this.put('/:uid', ['ADMIN'], async (req, res) => {
             try {
                 const { uid } = req.params
@@ -74,6 +88,18 @@ class UserRouter extends RouterClass {
             try {
                 const { uid } = req.params
                 const userSearched = await usersController.getUserById(uid)
+
+                if (!userSearched.identification ||
+                    !userSearched.proofOfAddress ||
+                    !userSearched.statementOfAccount ||
+                    userSearched.identification === 'off' ||
+                    userSearched.proofOfAddress === 'off' ||
+                    userSearched.statementOfAccount === 'off') {
+                    return res.status(400).send({
+                        status: 'Error',
+                        error: 'Require more documents to be premium'
+                    })
+                }
 
                 if (userSearched.role === 'premium') {
                     userSearched.role = 'user'
