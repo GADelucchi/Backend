@@ -1,0 +1,15 @@
+<div>
+    <h1>Formulario Login</h1>
+    {{!-- <form id="cookieForm" onsubmit="return false"> --}}
+    <form id="cookieForm" action="/pruebas/session" method="POST">
+        <label>Usuario</label>
+        <input type="text" name="username">
+        <br>    
+        <label>Contraseña</label>
+        {{!-- <input type="text" name="email"> --}}
+        <input type="password" name="password">
+        <input type="submit">
+    </form>
+    {{!-- <button onclick="getCookie()">Ver Cookie</button> --}}
+</div>
+{{!-- <script src="/static/js/cookieSetter.js"></script> --}}

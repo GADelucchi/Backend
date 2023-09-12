@@ -1,0 +1,395 @@
+paths:
+  /api/products/:
+    get:
+      summary: Obtiene todos los productos, ruta pública.
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Productos obtenidos exitosamente.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/Product'
+        "500":
+          description: Error interno del servidor, generalmente producido por una query defectuosa.
+
+    post:
+      summary: Crea un producto nuevo. ADMIN o PREMIUM token requerido.
+      tags:
+        - Products
+      security:
+        - accessToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/createProduct'
+      responses:
+        "201":
+          description: Producto creado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#components/messages/success/created'
+        "401":
+          description: No posees identificación.
+          content:
+            application/json:
+              schema:
+                $ref: '#components/messages/errors/unauthorized'
+        "403":
+          description: No posees autorización suficiente.
+          content:
+            application/json:
+              schema:
+                $ref: '#components/messages/errors/forbiden'
+        "500":
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                $ref: '#components/messages/errors/allreadyExist'
+
+  /api/products/{pid}:
+    get:
+      summary: Obtiene un producto a partir de pid, ruta pública.
+      tags:
+        - Products
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: ID del producto que desea buscar.
+        schema:
+          $type: String
+      responses:
+        "200":
+          description: Producto obtenido exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Product'
+        "404":
+          description: Producto no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#components/messages/errors/notFound'
+        "500":
+          description: Error interno del servidor.
+    
+    put:
+      summary: Modifica un producto obtenido a partir del pid. ADMIN o PREMIUM token requerido.
+      tags:
+        - Products
+      security:
+        - accessToken: []
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: ID del producto que desea buscar.
+        schema:
+          $type: String
+      responses:
+        "200":
+          description: Producto modificado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Product'
+        "401":
+          description: No posees identificación.
+          content:
+            application/json:
+              schema:
+                $ref: '#components/messages/errors/unauthorized'
+        "403":
+          description: No posees autorización suficiente.
+          content:
+            application/json:
+              schema:
+                $ref: '#components/messages/errors/forbiden'
+        "404":
+          description: Producto no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#components/messages/errors/notFound'
+        "500":
+          description: Error interno del servidor.
+    
+    delete:
+      summary: Elimina un producto a partir del pid. ADMIN o PREMIUM token requerido.
+      tags:
+        - Products
+      security:
+        - accessToken: []
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: ID del producto que desea buscar.
+        schema:
+          $type: String
+      responses:
+        "200":
+          description: Producto eliminado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Product'
+        "401":
+          description: No posees identificación.
+          content:
+            application/json:
+              schema:
+                $ref: '#components/messages/errors/unauthorized'
+        "403":
+          description: No posees autorización suficiente.
+          content:
+            application/json:
+              schema:
+                $ref: '#components/messages/errors/forbiden'
+        "404":
+          description: Producto no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#components/messages/errors/notFound'
+        "500":
+          description: Error interno del servidor.
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties: 
+        _id: 
+          type: string
+          description: ID autogenerado por Mongo.
+        title:
+          type: string
+          description: Nombre del producto.
+        description:
+          type: string
+          description: Descripción del producto.
+        price: 
+          type: number
+          description: Precio del producto.
+        thumbnail:
+          type: array
+          description: Imágenes del producto.
+        stock:
+          type: number
+          description: Stock del producto.
+        category:
+          type: string
+          description: Categoría del producto.
+        code:
+          type: string
+          description: Código irrepetible del producto.
+        owner:
+          type: string
+          description: Creador del producto.
+      example:
+        _id: ObjectId('646219b9d4018da62db37493')
+        title: Cosa 1
+        description: Descripción de cosa 1
+        price: 1234
+        thumbnail: []
+        stock: 5
+        category: Cosas
+        code: Cos1
+        owner: gdelucchi@me.com
+
+  requestBodies:
+    createProduct:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Nombre del producto.
+          required: true
+        description:
+          type: string
+          description: Descripción del producto.
+          required: true
+        price: 
+          type: number
+          description: Precio del producto.
+          required: true
+        thumbnail:
+          type: array
+          description: Imágenes del producto.
+        stock:
+          type: number
+          description: Stock del producto.
+          required: true
+        category:
+          type: string
+          description: Categoría del producto.
+          required: true
+        code:
+          type: string
+          description: Código irrepetible del producto.
+          required: true
+        owner:
+          type: string
+          description: Creador del producto.
+      example:
+        title: Milanesa
+        description: Descripción de milanesa
+        price: 1305
+        stock: 100
+        code: Mila
+        category: Comida
+
+    updateProduct:
+      type: object
+      properties:
+        quantity:
+          type: number
+          description: Cantidad de productos.
+      example:
+          quantity: 1
+
+  messages:
+    errors:
+      allreadyExist:
+        type: object
+        properties:
+          status: 
+            type: string
+            description: Estado de la solicitud.
+          error: 
+            type: string
+            description: Tipo de error.
+        example:
+          status: Error
+          error: Código ya existente
+
+      unauthorized:
+        type: object
+        properties:
+          status: 
+            type: string
+            description: Estado de la solicitud.
+          error: 
+            type: string
+            description: Tipo de error.
+        example:
+          status: Error
+          error: No authorization cookie detected.
+
+      forbiden:
+        type: object
+        properties:
+          status:
+            type: string
+            description: Estado de la solicitud.
+          error: 
+            type: string
+            description: Tipo de error.
+        example:
+          status: Error
+          error: Not permission.
+
+      notFound:
+        type: object
+        properties:
+          status:
+            type: string
+            description: Estado de la solicitud.
+          error: 
+            type: string
+            description: Tipo de error.
+        example:
+          status: Error
+          error: Not found.
+
+    success:
+      created:
+        type: object
+        properties:
+          status:
+            type: string
+            description: Estado de la solicitud.
+          payload:
+            type: object
+            description: Resultado de la solicitud.
+            properties:
+              _id:
+                type: string
+                description: ID autogenerado por Mongo.
+              title:
+                type: string
+                description: Nombre del producto.
+              description:
+                type: string
+                description: Descripción del producto.
+              price: 
+                type: number
+                description: Precio del producto.
+              thumbnail:
+                type: array
+                description: Imágenes del producto.
+              stock:
+                type: number
+                description: Stock del producto.
+              category:
+                type: string
+                description: Categoría del producto.
+              code:
+                type: string
+                description: Código irrepetible del producto.
+              owner:
+                type: string
+                description: Creador del producto.
+              __v:
+                type: number
+                description: Versión.
+        example:
+          status: Success
+          payload: {
+            title: "Milanesa",
+            description: "Descripción de milanesa",
+            price: 1305,
+            thumbnail: [],
+            stock: 100,
+            category: "Comida",
+            code: "Mila",
+            owner: "admin",
+            _id: "64d0e0e6f28389c28a25bd64",
+            __v: 0
+          }
+
+      added:
+        type: object
+        properties:
+          status:
+            type: string
+            description: Estado de la solicitud.
+          payload:
+            type: object
+            description: Resultado de la solicitud.
+        example:
+          status: Success
+          payload: Producto agregado
+
+      deleted:
+        type: object
+        properties:
+          status:
+            type: string
+            description: Estado de la solicitud.
+          payload:
+            type: object
+            description: Resultado de la solicitud.
+        example:
+          status: Success,
+          payload: Eliminado

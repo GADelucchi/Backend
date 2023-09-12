@@ -1,0 +1,15 @@
+{
+  "name": "3-calculadoraedad",
+  "version": "1.0.0",
+  "description": "",
+  "main": "3-calculadoraEdad.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "moment": "1.6.0"
+  }
+}

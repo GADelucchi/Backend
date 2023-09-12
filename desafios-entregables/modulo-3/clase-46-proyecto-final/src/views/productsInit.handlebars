@@ -1,12 +1,12 @@
 <div>
     {{#if userDB}}
-    <p>Hola <strong>{{this.first_name}}</strong>, estos son tus datos:</p>
+    <p>Hola <strong>{{userDB.first_name}}</strong>, estos son tus datos:</p>
     <br>
-    <p>Nombre: <strong>{{this.first_name}}</strong></p>
-    <p>Apellido: <strong>{{this.last_name}}</strong></p>
-    <p>Edad: <strong>{{this.age}}</strong></p>
-    <p>Email: <strong>{{this.email}}</strong></p>
-    <p>Rol: <strong>{{this.role}}</strong></p>
+    <p>Nombre: <strong>{{userDB.first_name}}</strong></p>
+    <p>Apellido: <strong>{{userDB.last_name}}</strong></p>
+    <p>Edad: <strong>{{userDB.age}}</strong></p>
+    <p>Email: <strong>{{userDB.email}}</strong></p>
+    <p>Rol: <strong>{{userDB.role}}</strong></p>
     {{/if}}
     <br>
     <a href="/login">

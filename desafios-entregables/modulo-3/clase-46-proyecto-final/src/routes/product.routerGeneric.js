@@ -32,9 +32,18 @@ class ProductRouter extends RouterClass {
                     throw new Error(error)
                 }
 
+                const authCookie = req.cookies
+                const token = authCookie.accessToken
+                let userDB
+
+                jwt.verify(token, jwtPrivateKey, (error, credential) => {
+                    return userDB = credential.user
+                })
+
                 const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = result
                 res.status(200).render(`products`, {
                     status: `Success`,
+                    userDB,
                     docs,
                     totalPages,
                     prevPage,
@@ -100,10 +109,7 @@ class ProductRouter extends RouterClass {
 
                 const result = await productsController.createProduct(newProduct)
 
-                res.status(200).render('realTimeProducts', {
-                    status: 'Success',
-                    message: 'Producto creado correctamente'
-                })
+                res.status(200).redirect(200, 'http://localhost:8080/api/products/paginated')
             } catch (err) {
                 if (err.code === 11000) {
                     return res.status(500).send({

@@ -18,6 +18,8 @@ class SessionController {
     postLogin = async (req, res) => {
         const { email, password } = req.body
         const userDB = await userService.getByEmail(email)
+        console.log(userDB);
+
         if (!userDB) {
             return res.send({
                 status: `Error`,
@@ -39,7 +41,8 @@ class SessionController {
             last_name: userDB.last_name,
             email: userDB.email,
             date_of_birth: userDB.date_of_birth,
-            role: userDB.role
+            role: userDB.role,
+            id: userDB._id
         }
         const access_token = generateToken(tokenUser)
 
@@ -47,12 +50,10 @@ class SessionController {
         const products = await productsController.getProductsPaginated(limit, page, category, sort)
         const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = products
 
-        res.status(200)
-            .cookie('accessToken', access_token, { expiresIn: '1d', httpOnly: true })
+        res.cookie('accessToken', access_token, { expiresIn: '1d', httpOnly: true })
             .render('products', {
                 status: 'Success',
                 message: 'Login success',
-                id: userDB._id,
                 userDB,
                 access_token,
                 docs,
