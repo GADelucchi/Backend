@@ -14,6 +14,8 @@ class CartRepository {
     deleteProductInCart = async (cid, pid) => await this.dao.deleteProductInCart(cid, pid)
 
     deleteProducts = async (cid) => await this.dao.deleteProducts(cid)
+
+    deleteCart = async (cid) => await this.dao.deleteCart(cid)
 }
 
 module.exports = {

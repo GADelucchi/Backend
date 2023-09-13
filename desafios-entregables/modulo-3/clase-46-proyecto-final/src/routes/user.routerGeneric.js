@@ -1,11 +1,10 @@
 const { logger } = require("../config/logger");
+const cartsController = require("../controllers/carts.controller");
 const usersController = require("../controllers/users.controller");
-const { userModel } = require("../dao/mongo/models/user.model");
 const { UserDto } = require("../dto/user.dto");
 const { uploaderDocument } = require("../utils/multer");
 const { sendMail } = require("../utils/sendMail");
 const { RouterClass } = require("./routerClass");
-const jwt = require('jsonwebtoken')
 
 class UserRouter extends RouterClass {
     init() {
@@ -126,22 +125,23 @@ class UserRouter extends RouterClass {
         this.delete('/', ['ADMIN'], async (req, res) => {
             try {
                 const connectionLimit = new Date();
-                connectionLimit.setDate(connectionLimit.getSeconds() - 2);
+                connectionLimit.setMinutes(connectionLimit.getMinutes() - 2)
+                console.log(connectionLimit)
 
                 const result = await usersController.findUsers(connectionLimit)
 
-                console.log(result);
+                for (const user of result) {
+                    const uid = user._id
+                    const cid = user.cart
 
-                // jwt.verify(token, jwtPrivateKey, (error, credential) => {
-                //     usersEmail = credential.user.email
-                // })
-
-                // sendMail(req.user.email, 'Compra finalizada', `<h1>Gracias por tu compra</h1>`)
+                    const deletedCart = await cartsController.deleteCart(cid)
+                    const deletedUser = await usersController.deleteUser(uid)
+                    sendMail(user.email, 'Cuenta eliminada', `<h1>Se eliminó tu cuenta por inactividad</h1>`)
+                }
 
                 res.send({
                     status: 'Success',
-                    message: 'Usuarios eliminados',
-                    result
+                    message: 'Usuarios y carritos eliminados',
                 })
             } catch (error) {
                 logger.error(error)

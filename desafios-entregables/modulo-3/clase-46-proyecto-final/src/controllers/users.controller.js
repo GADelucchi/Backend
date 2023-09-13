@@ -34,7 +34,7 @@ class UserController {
 
     deleteUser = async (uid) => await userService.delete(uid)
 
-    findUsers = async (connectionLimit) => await userService.finsUsers(connectionLimit)
+    findUsers = async (connectionLimit) => await userService.findUsers(connectionLimit)
 }
 
 // Export

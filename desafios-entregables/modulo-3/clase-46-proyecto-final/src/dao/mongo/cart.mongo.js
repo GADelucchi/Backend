@@ -47,6 +47,8 @@ class CartDaoMongo {
         { _id: cid },
         { $set: { products: [] } }
     )
+
+    deleteCart = async (cid) => await this.model.deleteOne({ _id: cid })
 }
 
 

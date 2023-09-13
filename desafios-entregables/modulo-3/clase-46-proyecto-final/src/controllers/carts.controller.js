@@ -14,6 +14,8 @@ class CartController {
     eraseProduct = async (cid, pid) => await cartService.deleteProductInCart(cid, pid)
 
     emptyCart = async (cid) => await cartService.deleteProducts(cid)
+
+    deleteCart = async (cid) => await cartService.deleteCart(cid)
 }
 
 // Export
