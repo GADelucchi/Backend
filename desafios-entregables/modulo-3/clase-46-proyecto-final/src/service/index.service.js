@@ -1,4 +1,5 @@
 const { UserDao, ProductDao, TicketDao, CartDao } = require('../dao/factory');
+const { UserDto } = require('../dto/user.dto');
 const { CartRepository } = require('../repositories/cart.repository');
 const { ProductRepository } = require('../repositories/product.repository');
 const { TicketRepository } = require('../repositories/ticket.repository');

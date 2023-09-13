@@ -1,11 +1,11 @@
-// Imports externos –––––––––––––––––––––––––––––––––––––––––
+// Imports externos
 const { Schema, model } = require(`mongoose`)
 const mongoosePaginate = require(`mongoose-paginate-v2`)
 
-// Configuración ––––––––––––––––––––––––––––––––––––––––––––
+// Configuración
 const collection = `products`
 
-// Schema –––––––––––––––––––––––––––––––––––––––––––––––––––
+// Schema
 const productSchema = new Schema({
     title: {
         type: String,
@@ -42,11 +42,11 @@ const productSchema = new Schema({
     }
 })
 
-// Configuración ––––––––––––––––––––––––––––––––––––––––––––
+// Configuración
 productSchema.plugin(mongoosePaginate)
 const productModel = model(collection, productSchema)
 
-// Export –––––––––––––––––––––––––––––––––––––––––––––––––––
+// Export
 module.exports = {
     productModel
 }

@@ -1,5 +1,5 @@
 // Import
-const { userService, productService } = require("../service/index.service");
+const { userService, productService, cartService } = require("../service/index.service");
 const { sendMail } = require('../utils/sendMail')
 const { port } = require('../../process/config')
 const { createHash, isValidPassword } = require('../utils/bcryptHash.js')
@@ -18,7 +18,6 @@ class SessionController {
     postLogin = async (req, res) => {
         const { email, password } = req.body
         const userDB = await userService.getByEmail(email)
-        console.log(userDB);
 
         if (!userDB) {
             return res.send({
@@ -42,19 +41,24 @@ class SessionController {
             email: userDB.email,
             date_of_birth: userDB.date_of_birth,
             role: userDB.role,
-            id: userDB._id
+            id: JSON.stringify(userDB._id),
+            cart: userDB.cart
         }
         const access_token = generateToken(tokenUser)
 
         const { limit = 10, page = 1, category = {}, sort = {} } = req.query
         const products = await productsController.getProductsPaginated(limit, page, category, sort)
         const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = products
+        const { first_name,last_name, role, id, cart } = userDB
 
         res.cookie('accessToken', access_token, { expiresIn: '1d', httpOnly: true })
             .render('products', {
-                status: 'Success',
-                message: 'Login success',
-                userDB,
+                first_name,
+                last_name,
+                email,
+                role,
+                id,
+                cart,
                 access_token,
                 docs,
                 totalPages,
@@ -97,13 +101,17 @@ class SessionController {
                 role = 'user'
             }
 
+            const createCart = await cartService.create({ owner: email })
+            const cartId = createCart.id
+
             const newUser = {
                 first_name,
                 last_name,
                 email,
                 age,
                 password: createHash(password),
-                role: role
+                role: role,
+                cart: cartId
             }
 
             let resultUser = await userService.create(newUser)
@@ -113,11 +121,12 @@ class SessionController {
                 last_name: newUser.last_name,
                 email: newUser.email,
                 age: newUser.age,
-                role: newUser.role
+                role: newUser.role,
+                cart: newUser.cart
             }
             const regiter_token = generateToken(tokenUser)
 
-            res.status(200).send({
+            res.render('login', {
                 status: `Success`,
                 message: `User succesfully created`,
                 payload: resultUser,

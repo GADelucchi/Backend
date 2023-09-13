@@ -1,18 +1,16 @@
 <div>
-    {{#if userDB}}
-    <p>Hola <strong>{{userDB.first_name}}</strong>, estos son tus datos:</p>
+    <p>Hola <strong>{{first_name}}</strong>, estos son tus datos:</p>
     <br>
-    <p>Nombre: <strong>{{userDB.first_name}}</strong></p>
-    <p>Apellido: <strong>{{userDB.last_name}}</strong></p>
-    <p>Edad: <strong>{{userDB.age}}</strong></p>
-    <p>Email: <strong>{{userDB.email}}</strong></p>
-    <p>Rol: <strong>{{userDB.role}}</strong></p>
-    {{/if}}
+    <p>Nombre: <strong>{{first_name}}</strong></p>
+    <p>Apellido: <strong>{{last_name}}</strong></p>
+    <p>Email: <strong>{{email}}</strong></p>
+    <p>Rol: <strong>{{role}}</strong></p>
+    <p>Carrito número: <strong>{{cart}}</strong></p>
     <br>
     <a href="/api/products/create">
         <button>Crear producto</button>
     </a>
-    <a href="/api/carts/{{userDB._id}}">
+    <a href="/api/carts/:{{cart}}">
         <button>Mostrar carrito</button>
     </a>
     <a href="/api/session/logout">

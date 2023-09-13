@@ -33,6 +33,8 @@ class UserController {
     updateUser = async (uid, userToReplace) => await userService.update(uid, userToReplace)
 
     deleteUser = async (uid) => await userService.delete(uid)
+
+    findUsers = async (connectionLimit) => await userService.finsUsers(connectionLimit)
 }
 
 // Export

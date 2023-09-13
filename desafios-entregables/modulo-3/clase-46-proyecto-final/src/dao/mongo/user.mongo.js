@@ -22,7 +22,9 @@ class UserDaoMongo {
     updateLastConection = async (email) => await this.model.updateOne({ email }, { $currentDate: { "last_connection": { $type: "date" } } })
 
     delete = async (uid) => await this.model.deleteOne({ _id: uid })
+
+    findUsers = async (connectionLimit) => await this.model.find({ last_connection: { $lt: connectionLimit } })
 }
 
-// Export –––––––––––––––––––––––––––––––––––––––––––––––––––
+// Export
 module.exports = UserDaoMongo

@@ -1,14 +1,16 @@
-// Imports externos –––––––––––––––––––––––––––––––––––––––––
+// Imports externos
 const { Schema, model } = require(`mongoose`)
+const mongoosePaginate = require(`mongoose-paginate-v2`)
 
-// Configuración ––––––––––––––––––––––––––––––––––––––––––––
+// Configuración
 const collection = `users`
 
-// Schema –––––––––––––––––––––––––––––––––––––––––––––––––––
+// Schema
 const userSchema = new Schema({
     first_name: {
         type: String,
-        required: true
+        required: true,
+        allowedProtoProperties: true
     },
     last_name: {
         type: String,
@@ -33,13 +35,15 @@ const userSchema = new Schema({
     documents: [{
         name: String,
         ref: String
-    }]
+    }],
+    cart: String
 })
 
-// Configuración ––––––––––––––––––––––––––––––––––––––––––––
+// Configuración
+userSchema.plugin(mongoosePaginate)
 const userModel = model(collection, userSchema)
 
-// Export –––––––––––––––––––––––––––––––––––––––––––––––––––
+// Export
 module.exports = {
     userModel
 }

@@ -1,13 +1,4 @@
 <div>
-    {{#if userDB}}
-    <p>Hola <strong>{{userDB.first_name}}</strong>, estos son tus datos:</p>
-    <br>
-    <p>Nombre: <strong>{{userDB.first_name}}</strong></p>
-    <p>Apellido: <strong>{{userDB.last_name}}</strong></p>
-    <p>Edad: <strong>{{userDB.age}}</strong></p>
-    <p>Email: <strong>{{userDB.email}}</strong></p>
-    <p>Rol: <strong>{{userDB.role}}</strong></p>
-    {{/if}}
     <br>
     <a href="/login">
         <button>Iniciar sesión</button>
@@ -21,11 +12,9 @@
         <li style="list-style: none;">
             <img src="{{this.thumbnail}}" alt="Imagen del producto">
             <h2>{{this.title}}</h2>
-            <p>Descripción: {{this.description}}</p>
             <p>Precio: ${{this.price}}</p>
             <p>Stock: {{this.stock}}</p>
-            <p>Categoría: {{this.category}}</p>
-            <p>Código único: {{this.code}}</p>
+            <p style="display: none">Id: {{this.id}}</p>
             <button>Ver más</button>
             <button>Agregar al carrito</button>
             <br>

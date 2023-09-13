@@ -20,6 +20,8 @@ class UserRepository {
     updateLastConection = async (email) => await this.dao.updateLastConection(email)
 
     delete = async (uid) => await this.dao.delete(uid)
+
+    findUsers = async (connectionLimit) => await this.dao.findUsers(connectionLimit)
 }
 
 module.exports = {

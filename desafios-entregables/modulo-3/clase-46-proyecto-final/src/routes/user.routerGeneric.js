@@ -1,23 +1,31 @@
 const { logger } = require("../config/logger");
-const usersController = require("../controllers/users.controller")
+const usersController = require("../controllers/users.controller");
+const { userModel } = require("../dao/mongo/models/user.model");
+const { UserDto } = require("../dto/user.dto");
 const { uploaderDocument } = require("../utils/multer");
+const { sendMail } = require("../utils/sendMail");
 const { RouterClass } = require("./routerClass");
+const jwt = require('jsonwebtoken')
 
 class UserRouter extends RouterClass {
     init() {
-        this.get('/', ['PUBLIC'], async (req, res) => {
+        this.get('/', ['ADMIN'], async (req, res) => {
             try {
                 let users = await usersController.getUsers()
 
                 if (users === null) {
                     throw new Error(error)
                 }
-                res.sendSuccess(users)
+
+                const userDtos = users.map(user => new UserDto(user));
+
+                res.send({
+                    users: userDtos
+                })
             } catch (error) {
                 logger.error(error)
             }
-        }
-        )
+        })
 
         this.get('/:uid', ['PUBLIC'], async (req, res) => {
             try {
@@ -110,6 +118,31 @@ class UserRouter extends RouterClass {
                     const result = await usersController.updateUser(uid, userSearched)
                     return res.sendSuccess(result)
                 }
+            } catch (error) {
+                logger.error(error)
+            }
+        })
+
+        this.delete('/', ['ADMIN'], async (req, res) => {
+            try {
+                const connectionLimit = new Date();
+                connectionLimit.setDate(connectionLimit.getSeconds() - 2);
+
+                const result = await usersController.findUsers(connectionLimit)
+
+                console.log(result);
+
+                // jwt.verify(token, jwtPrivateKey, (error, credential) => {
+                //     usersEmail = credential.user.email
+                // })
+
+                // sendMail(req.user.email, 'Compra finalizada', `<h1>Gracias por tu compra</h1>`)
+
+                res.send({
+                    status: 'Success',
+                    message: 'Usuarios eliminados',
+                    result
+                })
             } catch (error) {
                 logger.error(error)
             }
