@@ -26,6 +26,8 @@ class UserController {
         }
     }
 
+    getUserByEmail = async (email) => await userService.getByEmail(email)
+
     getUserById = async (uid) => await userService.getById(uid)
 
     createUser = async (newUser) => await userService.create(newUser)

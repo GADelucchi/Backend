@@ -6,7 +6,9 @@ const { CustomError } = require("../utils/CustomError/CustomError");
 const { generateProductErrorInfo } = require("../utils/CustomError/info");
 const { uploaderProductImg } = require("../utils/multer");
 const { RouterClass } = require("./routerClass");
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const { sendMail } = require("../utils/sendMail");
+const usersController = require("../controllers/users.controller");
 
 class ProductRouter extends RouterClass {
     init() {
@@ -99,7 +101,7 @@ class ProductRouter extends RouterClass {
                 const authCookie = req.cookies.accessToken
                 const user = jwt.verify(authCookie, jwtPrivateKey)
 
-                if (user.user.role === 'premium') {
+                if (user.user.role === 'premium' || 'admin') {
                     newProduct.owner = user.user.email
                 }
 
@@ -158,9 +160,13 @@ class ProductRouter extends RouterClass {
                 const authCookie = req.cookies.accessToken
                 const user = jwt.verify(authCookie, jwtPrivateKey)
 
+                const { email } = product
+                const ownerOfProduct = usersController.getUserByEmail(email)
+
                 if (user.user.role === 'premium') {
                     if (product.owner === user.user.email) {
                         const result = await productsController.deleteProduct(pid)
+
                         return res.sendSuccess(result)
                     } else {
                         return res.send({
@@ -168,8 +174,12 @@ class ProductRouter extends RouterClass {
                             message: 'You are not the owner of this product. You can delete it'
                         })
                     }
-                } else {
+                } else if (user.user.role === 'admin') {
+                    if (ownerOfProduct.role === 'premium') {
+                        sendMail(user.user.email, 'Producto eliminado', `<h1>Se ha eliminado tu producto</h1>`)
+                    }
                     const result = await productsController.deleteProduct(pid)
+
                     return res.sendSuccess(result)
                 }
             } catch (error) {

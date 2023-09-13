@@ -14,7 +14,6 @@ const { initPassport } = require("./passport-jwt/passport.config")
 const { errorHandler } = require("./middlewares/error.middleware")
 const { logger } = require('./config/logger')
 const { port } = require("../process/config")
-const productsController = require("./controllers/products.controller")
 
 // Instancia
 const app = express()

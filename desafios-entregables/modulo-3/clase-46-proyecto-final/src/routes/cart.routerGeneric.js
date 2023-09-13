@@ -23,7 +23,7 @@ class CartsRouter extends RouterClass {
         }
         )
 
-        this.get('/:cid', ['USER', 'PREMIUM'], async (req, res) => {
+        this.get('/:cid', ['USER', 'PREMIUM', 'ADMIN'], async (req, res) => {
             try {
                 const { cid } = req.params
                 const result = await cartsController.getCartById(cid)
