@@ -8,6 +8,9 @@
     "start": "node src/app.js --mode production",
     "test": "mocha test/supertest.test.js"
   },
+  "engines": {
+    "node": "18"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
