@@ -1,7 +1,7 @@
 <div>
-    <h2>Carrito: {{payload._id}}</h2>
+    <h2>Carrito: {{cart._id}}</h2>
     <br>
-    {{#each payload.products}}
+    {{#each cart.products}}
     <div>
         <h3>Producto: {{this.product.title}}</h3>
         <p>Precio: {{this.product.price}}</p>

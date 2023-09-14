@@ -9,7 +9,7 @@ class CartDaoMongo {
 
     get = async () => await this.model.find({})
 
-    getById = async (cid) => await this.model.findOne({ _id: cid })
+    getById = async (cid) => await this.model.findOne({ _id: cid }).lean()
 
     create = async (newCart) => await this.model.create(newCart)
 

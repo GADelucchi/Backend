@@ -1,2 +1,15 @@
 GET http://localhost:8080/api/products
 ###
+GET http://localhost:8080/api/carts/65021452873f6c96069bfc00
+###
+POST http://localhost:8080/api/session/login
+Content-Type: application/json
+
+{
+  "email": "gdelucchi@me.com",
+  "password": "1234"
+}
+###
+GET http://localhost:8080/api/carts/65021452873f6c96069bfc00
+###
+PUT http://localhost:8080/api/carts/65021452873f6c96069bfc00/product/6500b5d53d3461608954019e

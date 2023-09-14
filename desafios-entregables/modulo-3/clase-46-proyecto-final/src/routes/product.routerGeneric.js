@@ -165,6 +165,9 @@ class ProductRouter extends RouterClass {
 
                 if (user.user.role === 'premium') {
                     if (product.owner === user.user.email) {
+                        if (ownerOfProduct.role === 'premium') {
+                            sendMail(user.user.email, 'Producto eliminado', `<h1>Se ha eliminado tu producto</h1>`)
+                        }
                         const result = await productsController.deleteProduct(pid)
 
                         return res.sendSuccess(result)

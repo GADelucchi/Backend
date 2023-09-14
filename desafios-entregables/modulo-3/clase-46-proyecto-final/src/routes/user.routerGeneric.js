@@ -125,7 +125,7 @@ class UserRouter extends RouterClass {
         this.delete('/', ['ADMIN'], async (req, res) => {
             try {
                 const connectionLimit = new Date();
-                connectionLimit.setMinutes(connectionLimit.getMinutes() - 2)
+                connectionLimit.setDate(connectionLimit.getDate() - 2)
                 console.log(connectionLimit)
 
                 const result = await usersController.findUsers(connectionLimit)
