@@ -36,12 +36,8 @@
             <p>Stock: {{this.stock}}</p>
             <p>Categoría: {{this.category}}</p>
             <p>Código único: {{this.code}}</p>
-            <p>ID de carrito: {{this.cartId}}</p>
-            <p>ID de producto: {{this._id}}</p>
-            <button>Ver más</button>
-            {{!-- <a href="/api/carts/{{this.cartId}}/product/{{this._id}}"> --}}
-                <button id="agregarAlCarrito" data-cart-id="{{this.cartId}}" data-product-id="{{this._id}}">Agregar al carrito</button>
-            {{!-- </a> --}}
+            <button id="verMas" data-product-id="{{this._id}}">Ver más</button>
+            <button id="agregarAlCarrito" data-cart-id="{{this.cartId}}" data-product-id="{{this._id}}">Agregar al carrito</button>
             <br>
             <br>
             <br>
