@@ -14,39 +14,33 @@ class ProductRouter extends RouterClass {
     init() {
         this.get('/', ['PUBLIC'], async (req, res) => {
             try {
-                let result = await productsController.getProducts()
-
-                if (!result) {
-                    throw new Error(error)
-                }
-                res.sendSuccess(result)
-            } catch (error) {
-                logger.error(error)
-            }
-        })
-
-        this.get('/paginated', ['PUBLIC'], async (req, res) => {
-            try {
                 const { limit = 10, page = 1, category = {}, sort = {} } = req.query
-                const result = await productsController.getProductsPaginated(limit, page, category, sort)
+                const products = await productsController.getProductsPaginated(limit, page, category, sort)
+                const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = products
 
-                if (!result) {
+                if (!products) {
                     throw new Error(error)
                 }
 
-                const authCookie = req.cookies
-                const token = authCookie.accessToken
                 let userDB
 
-                jwt.verify(token, jwtPrivateKey, (error, credential) => {
-                    return userDB = credential.user
-                })
+                if (req.cookies.accessToken) {
+                    const token = req.cookies.accessToken
+                    jwt.verify(token, jwtPrivateKey, (error, credential) => {
+                        userDB = credential.user
+                    })
+                }
+                const productsWithCartId = req.cookies.accessToken
+                    ? docs.map((product) => ({
+                        ...product,
+                        cartId: userDB.cart,
+                    }))
+                    : undefined
 
-                const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = result
                 res.status(200).render(`products`, {
                     status: `Success`,
                     userDB,
-                    docs,
+                    docs: productsWithCartId ? productsWithCartId : docs,
                     totalPages,
                     prevPage,
                     nextPage,

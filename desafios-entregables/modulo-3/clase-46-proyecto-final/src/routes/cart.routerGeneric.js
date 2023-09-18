@@ -27,11 +27,6 @@ class CartsRouter extends RouterClass {
             try {
                 const { cid } = req.params
                 const cart = await cartsController.getCartById(cid)
-                console.log(cart)
-
-                const { _id, products } = cart
-                const id = JSON.stringify(_id)
-                console.log(products)
 
                 if (cart === null) {
                     return res.status(400).send({

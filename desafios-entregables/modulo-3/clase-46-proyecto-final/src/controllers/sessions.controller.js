@@ -17,7 +17,7 @@ class SessionController {
 
     postLogin = async (req, res) => {
         const { email, password } = req.body
-        const userDB = await userService.getByEmail(email)
+        let userDB = await userService.getByEmail(email)
 
         if (!userDB) {
             return res.send({
@@ -36,12 +36,12 @@ class SessionController {
         await userService.updateLastConection(email)
 
         const tokenUser = {
+            id: userDB._id,
             first_name: userDB.first_name,
             last_name: userDB.last_name,
             email: userDB.email,
             date_of_birth: userDB.date_of_birth,
             role: userDB.role,
-            id: JSON.stringify(userDB._id),
             cart: userDB.cart
         }
         const access_token = generateToken(tokenUser)
@@ -49,18 +49,26 @@ class SessionController {
         const { limit = 10, page = 1, category = {}, sort = {} } = req.query
         const products = await productsController.getProductsPaginated(limit, page, category, sort)
         const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = products
-        const { first_name,last_name, role, id, cart } = userDB
+
+        if (req.cookies.accessToken) {
+            const token = req.cookies.accessToken
+            jwt.verify(token, jwtPrivateKey, (error, credential) => {
+                userDB = credential.user
+            })
+        }
+
+        const productsWithCartId = docs.map((product) => {
+            return {
+                ...product,
+                cartId: userDB.cart,
+            };
+        })
 
         res.cookie('accessToken', access_token, { expiresIn: '1d', httpOnly: true })
             .render('products', {
-                first_name,
-                last_name,
-                email,
-                role,
-                id,
-                cart,
+                userDB,
                 access_token,
-                docs,
+                docs: productsWithCartId,
                 totalPages,
                 prevPage,
                 nextPage,

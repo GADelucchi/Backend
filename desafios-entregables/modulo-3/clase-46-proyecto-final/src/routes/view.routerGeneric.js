@@ -1,6 +1,8 @@
+const { jwtPrivateKey } = require("../../process/config");
 const { logger } = require("../config/logger");
 const productsController = require("../controllers/products.controller");
 const { RouterClass } = require("./routerClass");
+const jwt = require('jsonwebtoken')
 
 class ViewRouter extends RouterClass {
     init() {
@@ -9,11 +11,27 @@ class ViewRouter extends RouterClass {
 
                 const { limit = 10, page = 1, category = {}, sort = {} } = req.query
                 const products = await productsController.getProductsPaginated(limit, page, category, sort)
+                let userDB
+
+                if (req.cookies.accessToken) {
+                    const token = req.cookies.accessToken
+                    jwt.verify(token, jwtPrivateKey, (error, credential) => {
+                        userDB = credential.user
+                    })
+                }
 
                 const { docs, hasPrevPage, hasNextPage, totalPages, prevPage, nextPage } = products
-                res.status(200).render(`productsInit`, {
+                const productsWithCartId = req.cookies.accessToken
+                    ? docs.map((product) => ({
+                        ...product,
+                        cartId: userDB.cart,
+                    }))
+                    : undefined
+
+                res.status(200).render(`products`, {
                     status: `Success`,
-                    docs,
+                    userDB,
+                    docs: productsWithCartId ? productsWithCartId : docs,
                     totalPages,
                     prevPage,
                     nextPage,

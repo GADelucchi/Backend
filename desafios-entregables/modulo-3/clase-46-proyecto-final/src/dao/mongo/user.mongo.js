@@ -13,7 +13,7 @@ class UserDaoMongo {
 
     getById = async (uid) => await this.model.findOne({ _id: uid })
 
-    getByEmail = async (email) => await this.model.findOne({ email })
+    getByEmail = async (email) => await this.model.findOne({ email }).lean()
 
     create = async (newUser) => await this.model.create(newUser)
 

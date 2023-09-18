@@ -1,26 +1,36 @@
 console.log('Este es el index')
 
-const form = document.querySelector('#cookieForm')
+let botonAgregarACarrito
+let cartId
+let productId
+let response
 
-form.addEventListener('submit', (event) => {
-    event.preventDefault()
+function inicializarElemento() {
+    botonAgregarACarrito = document.querySelectorAll('#agregarAlCarrito').forEach((button) => {
+        button.addEventListener('click', clickAgregar);
+    })
+}
 
-    const data = new FormData(form)
+async function clickAgregar() {
+    botonAgregarACarrito = event.target
+    cartId = botonAgregarACarrito.getAttribute('data-cart-id');
+    productId = botonAgregarACarrito.getAttribute('data-product-id')
 
-    const obj = {}
-    data.forEach((value, key) => obj[key] = value)
-
-    fetch('/api/session/login', {
-        method: 'POST',
+    response = await fetch(`http://localhost:8080/api/carts/${cartId}/product/${productId}`, {
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('respuesta.access_token')}`
         },
-        body: JSON.stringify(obj)
-    })
-    .then(respuesta => respuesta.json())
-    .then(respuesta => {
-        console.log(respuesta),
-        localStorage.setItem('token', respuesta.access_token)
-    })
-})
+    }).then((res) => console.log(res.url))
+
+    Toastify({
+        text: "Producto agregado",
+        duration: 5000,
+        close: true,
+        gravity: "top",
+        position: "right",
+        stopOnFocus: true,
+    }).showToast()
+}
+
+inicializarElemento()
