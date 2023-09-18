@@ -8,7 +8,6 @@ class ViewRouter extends RouterClass {
     init() {
         this.get('/', ['PUBLIC'], async (req, res) => {
             try {
-
                 const { limit = 10, page = 1, category = {}, sort = {} } = req.query
                 const products = await productsController.getProductsPaginated(limit, page, category, sort)
                 let userDB

@@ -11,7 +11,6 @@ const swaggerJsDoc = require('swagger-jsdoc')
 const swaggerUiExpress = require('swagger-ui-express')
 const routerServer = require(`./routes/index.router`)
 const { initPassport } = require("./passport-jwt/passport.config")
-// const { errorHandler } = require("./middlewares/error.middleware")
 const { logger } = require('./config/logger')
 const { port } = require("../process/config")
 
@@ -78,7 +77,6 @@ const swaggerOptions = {
 const specs = swaggerJsDoc(swaggerOptions)
 
 // Rutas
-
 app.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 app.use(`/static`, express.static(__dirname + `/public`))
 app.use(routerServer)

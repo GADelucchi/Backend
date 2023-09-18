@@ -1,6 +1,7 @@
 console.log('Este es el index')
 
 let botonAgregarACarrito
+let botonVerMas
 let cartId
 let productId
 let response
@@ -8,6 +9,9 @@ let response
 function inicializarElemento() {
     botonAgregarACarrito = document.querySelectorAll('#agregarAlCarrito').forEach((button) => {
         button.addEventListener('click', clickAgregar);
+    })
+    botonVerMas = document.querySelectorAll('#verMas').forEach((button) => {
+        button.addEventListener('click', clickVerMas);
     })
 }
 
@@ -31,6 +35,11 @@ async function clickAgregar() {
         position: "right",
         stopOnFocus: true,
     }).showToast()
+}
+
+async function verMas() {
+    botonVerMas = event.target
+    productId = botonAgregarACarrito.getAttribute('data-product-id')
 }
 
 inicializarElemento()

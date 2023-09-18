@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken')
 const { jwtPrivateKey } = require('../../process/config')
-const { logger } = require('../config/logger')
 
 const generateToken = (user) => {
     const token = jwt.sign({ user }, jwtPrivateKey, { expiresIn: '1d' })
