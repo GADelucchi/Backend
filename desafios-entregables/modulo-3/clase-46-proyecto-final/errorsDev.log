@@ -60,3 +60,5 @@ error: undefined
 error: undefined
 error: undefined
 error: undefined
+error: undefined {"_message":"tickets validation failed","errors":{"amount":{"kind":"Number","message":"Cast to Number failed for value \"$0\" (type string) at path \"amount\"","name":"CastError","path":"amount","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"$0\"","value":"$0","valueType":"string"}}}
+error: undefined {"_message":"tickets validation failed","errors":{"amount":{"kind":"Number","message":"Cast to Number failed for value \"$0\" (type string) at path \"amount\"","name":"CastError","path":"amount","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"$0\"","value":"$0","valueType":"string"}}}

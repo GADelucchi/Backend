@@ -43,7 +43,7 @@ class CartsRouter extends RouterClass {
             }
         })
 
-        this.post('/:cid/purchase', ['USER', 'PREMIUM'], async (req, res) => {
+        this.post('/:cid/purchase', ['USER', 'PREMIUM', 'ADMIN'], async (req, res) => {
             try {
                 const { cid } = req.params
                 const cart = await cartsController.getCartById(cid)
@@ -72,7 +72,7 @@ class CartsRouter extends RouterClass {
 
                 if (insufficientStock.length > 0) {
                     const insufficientProducts = insufficientStock.map((product) => product.name);
-                    throw new Error('Stock insuficiente');
+                    throw new Error('Stock insuficiente' + insufficientProducts);
                 }
 
                 for (const cartProduct of cart.products) {
@@ -111,12 +111,15 @@ class CartsRouter extends RouterClass {
                 const ticket = await ticketsController.createTicket({
                     code: generateTicketCode(),
                     purchase_datatime: new Date,
-                    amount: totalAmount,
+                    amount: `$${totalAmount}`,
                     purchaser: req.user.email
                 })
 
                 sendMail(req.user.email, 'Compra finalizada', `<h1>Gracias por tu compra</h1>`)
 
+                const result = await cartsController.emptyCart(cid)
+
+                console.log(ticket);
                 res.sendSuccess(ticket)
             } catch (error) {
                 logger.error(error)
@@ -192,7 +195,7 @@ class CartsRouter extends RouterClass {
                 if (result === null) {
                     throw new Error(error)
                 }
-                res.sendSuccess('Eliminado')
+                res.sendSuccess('Carrito vaciado')
             } catch (error) {
                 logger.error(error)
             }

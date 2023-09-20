@@ -36,7 +36,9 @@
             <p>Stock: {{this.stock}}</p>
             <p>Categoría: {{this.category}}</p>
             <p>Código único: {{this.code}}</p>
-            <button id="verMas" data-product-id="{{this._id}}">Ver más</button>
+            <a href="/api/products/{{this._id}}">
+                <button id="verMas" data-product-id="{{this._id}}">Ver más</button>
+            </a>
             <button id="agregarAlCarrito" data-cart-id="{{this.cartId}}" data-product-id="{{this._id}}">Agregar al carrito</button>
             <br>
             <br>

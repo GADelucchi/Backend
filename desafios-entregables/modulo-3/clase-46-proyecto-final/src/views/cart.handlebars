@@ -1,6 +1,9 @@
 <div>
     <h2>Carrito: {{cart._id}}</h2>
     <br>
+    <button id="botonPagar" data-cart-id="{{cart._id}}">Pagar</button>
+    <br>
+    <br>
     {{#each cart.products}}
     <div>
         <h3>Producto: {{this.product.title}}</h3>
@@ -10,3 +13,5 @@
     <hr>
     {{/each}}
 </div>
+
+<script src="/static/js/index.js"></script>
